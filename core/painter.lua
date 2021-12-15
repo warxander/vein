@@ -1,0 +1,273 @@
+painter = { }
+painter.__index = painter
+
+function painter:beginWindow()
+	self._contextState = self._context:getState()
+
+	self._x = self._window.x - (self._window.w / 2)
+	self._y = self._window.y - (self._window.h / 2)
+
+	self:drawWindow()
+end
+
+function painter:endWindow()
+	self._window.w = self._layout.isValid and self._layout.w + self._style.window.offset.h * 2 or 0
+	self._window.h = self._layout.isValid and self._layout.h + self._style.window.offset.v * 2 or 0
+
+	self._layout.isValid = self._layout.w ~= 0 and self._layout.h ~= 0
+	self._layout.isFirstWidget = true
+
+	self._layout.w = 0
+	self._layout.h = 0
+end
+
+function painter:drawWindow()
+	if not self._layout.isValid then
+		return
+	end
+
+	local doh = self._style.window.offset.h / 4
+	local dov = self._style.window.offset.v / 4
+
+	local w = self._style.window.offset.h / 2
+	local h = self._style.window.offset.v / 2
+
+	local input = self._context:getInput()
+	local isDragWidgetHovered = input:isMouseInRect(self._x + doh, self._y + dov, w, h)
+
+	if not self._drag.isInProcess then
+		if isDragWidgetHovered and input:isMousePressed() then
+			self._drag.origin.x = input:getMousePosX()
+			self._drag.origin.y = input:getMousePosY()
+			self._drag.isInProcess = true
+		end
+	else
+		if input:isMouseDown() then
+			local x = input:getMousePosX()
+			local y = input:getMousePosY()
+			self._drag.x = x - self._drag.origin.x
+			self._drag.y = y - self._drag.origin.y
+			self._window.x = self._window.x + self._drag.x
+			self._window.y = self._window.y + self._drag.y
+			self._drag.origin.x = x
+			self._drag.origin.y = y
+		else
+			self._drag.isInProcess = false
+		end
+	end
+
+	local outlineWidth = self._style.window.outlineWidth
+	local outlineHeight = outlineWidth * GetAspectRatio()
+
+	self:move(-outlineWidth, -outlineHeight)
+	self:setColor(self._style.color.widget)
+	self:drawRect(self._window.w + outlineWidth * 2, self._window.h + outlineHeight * 2)
+	self:move(outlineWidth, outlineHeight)
+
+	self:setColor(self._style.color.window)
+	self:drawRect(self._window.w, self._window.h)
+
+	self:move(doh, dov)
+
+	self:setColor((isDragWidgetHovered or self._drag.isInProcess) and self._style.color.hover or self._style.color.widget)
+	self:drawRect(w, h)
+
+	self:move(-doh, -dov)
+end
+
+function painter:getX()
+	return self._x
+end
+
+function painter:getY()
+	return self._y
+end
+
+function painter:beginRow()
+	if not self._row.isActive then
+		self._row.isActive = true
+		self._row.isFirstWidget = true
+	end
+end
+
+function painter:endRow()
+	if not self._row.isActive then
+		return
+	end
+
+	self._layout.w = math.max(self._layout.w, self._row.w)
+	self._layout.h = self._layout.h + self._row.h
+
+	self:setPos(self._window.x - (self._window.w / 2) + self._style.window.offset.h, self._y + self._row.h)
+
+	self._row.isActive = false
+	self._row.isFirstWidget = true
+
+	self._row.w = 0
+	self._row.h = 0
+end
+
+function painter:beginDraw()
+	if self._layout.isFirstWidget then
+		self:move(self._style.window.offset.h, self._style.window.offset.v)
+	else
+		local ho = 0
+		if not self._row.isFirstWidget then ho = self._style.window.spacing.h end
+
+		if self._row.isActive then
+			self._row.w = self._row.w + ho
+		else
+			self._layout.w = self._layout.w + ho
+		end
+
+		local vo = 0
+		if not self._row.isActive or self._row.isFirstWidget then vo = self._style.window.spacing.v end
+		self._layout.h = self._layout.h + vo
+
+		self:move(ho, vo)
+	end
+
+	self._widget.x = self._x
+	self._widget.y = self._y
+end
+
+function painter:endDraw(w, h)
+	self:drawDebug(w, h)
+
+	if self._row.isActive then
+		self._row.w = self._row.w + w
+		self._row.h = math.max(self._row.h, h)
+		self._row.isFirstWidget = false
+
+		self:setPos(self._widget.x + w, self._widget.y)
+	else
+		self._layout.w = math.max(w, self._layout.w)
+		self._layout.h = self._layout.h + h
+		self._row.isFirstWidget = true
+
+		self:setPos(self._widget.x, self._widget.y + h)
+	end
+
+	self._layout.isFirstWidget = false
+end
+
+function painter:setPos(x, y)
+	self._x = x
+	self._y = y
+end
+
+function painter:move(x, y)
+	self._x = self._x + x
+	self._y = self._y + y
+end
+
+function painter:getWidgetWidth()
+	return self._contextState.widget and self._contextState.widget.w
+end
+
+function painter:spacing(count)
+	count = count or 1
+
+	self:beginDraw()
+
+	local w = self._row.isActive and self._style.window.spacing.h * count or 0
+	local h = self._row.isActive and 0 or self._style.window.spacing.v * count
+
+	self:endDraw(w, h)
+end
+
+function painter:getStyle()
+	return self._style
+end
+
+function painter:setColor(color)
+	self._color = color
+end
+
+function painter:drawRect(w, h)
+	if self._layout.isValid then
+		DrawRect(self._x + w / 2, self._y + h / 2, w, h, table.unpack(self._color))
+	end
+end
+
+function painter:drawSprite(dict, name, w, h)
+	if self._layout.isValid then
+		DrawSprite(dict, name, self._x + w / 2, self._y + h / 2, w, h, 0., table.unpack(self._color))
+	end
+end
+
+function painter:getTextWidth()
+	if not self._contextState.text then
+		return 0
+	end
+
+	BeginTextCommandGetWidth(self._contextState.text.entry)
+	utils.addTextComponents(self._contextState.text.components)
+	return EndTextCommandGetWidth(true)
+end
+
+function painter:setText(text)
+	if text then
+		self._context:pushTextEntry('STRING', text)
+	end
+end
+
+function painter:setTextOpts(font, scale)
+	if self._contextState.text then
+		SetTextFont(font or self._style.widget.text.font)
+
+		scale = scale or self._style.widget.text.scale
+		SetTextScale(scale * GetAspectRatio(), scale)
+	end
+end
+
+function painter:drawText(offset)
+	if self._contextState.text then
+		SetTextColour(table.unpack(self._color))
+		BeginTextCommandDisplayText(self._contextState.text.entry)
+		utils.addTextComponents(self._contextState.text.components)
+		EndTextCommandDisplayText(self._x, self._y - (offset or self._style.widget.text.offset))
+	end
+end
+
+function painter:drawDebug(w, h)
+	if w ~= 0 and h ~= 0 and self._context:isDebugEnabled() then
+		self:setPos(self._widget.x, self._widget.y)
+		self:setColor(self._style.color.debug)
+		self:drawRect(w, h or self._style.widget.height)
+	end
+end
+
+function painter.new(context)
+	local self = { }
+	setmetatable(self, painter)
+
+	self._context = context
+	self._style = style.new()
+
+	self._layout = {
+		w = 0,
+		h = 0,
+	}
+
+	self._drag = {
+		x = 0,
+		y = 0,
+		origin = { },
+	}
+
+	self._row = {
+		w = 0,
+		h = 0,
+	}
+
+	self._widget = { }
+	self._window = {
+		x = 0.5,
+		y = 0.5,
+		w = 0,
+		h = 0,
+	}
+
+	return self
+end
