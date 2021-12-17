@@ -94,7 +94,7 @@ function style.new()
 		},
 		window = {
 			outlineWidth = 0.0005,
-			offset = { h = 0.01 , v = 0.017 },
+			margins = { h = 0.01, v = 0.018 },
 			spacing = { h = 0.005, v = 0.01 },
 		},
 	}

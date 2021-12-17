@@ -9,8 +9,8 @@ function painter:beginWindow()
 end
 
 function painter:endWindow()
-	self._window.w = self._layout.isValid and self._layout.w + self._style.window.offset.h * 2 or 0
-	self._window.h = self._layout.isValid and self._layout.h + self._style.window.offset.v * 2 or 0
+	self._window.w = self._layout.isValid and self._layout.w + self._style.window.margins.h * 2 or 0
+	self._window.h = self._layout.isValid and self._layout.h + self._style.window.margins.v * 2 or 0
 
 	self._layout.isValid = self._layout.w ~= 0 and self._layout.h ~= 0
 	self._layout.isFirstWidget = true
@@ -24,11 +24,11 @@ function painter:drawWindow()
 		return
 	end
 
-	local doh = self._style.window.offset.h / 4
-	local dov = self._style.window.offset.v / 4
+	local doh = self._style.window.margins.h / 4
+	local dov = self._style.window.margins.v / 4
 
-	local w = self._style.window.offset.h / 2
-	local h = self._style.window.offset.v / 2
+	local w = self._style.window.margins.h / 2
+	local h = self._style.window.margins.v / 2
 
 	local input = self._context:getInput()
 	local isDragWidgetHovered = input:isMouseInRect(self._x + doh, self._y + dov, w, h)
@@ -96,7 +96,7 @@ function painter:endRow()
 	self._layout.w = math.max(self._layout.w, self._row.w)
 	self._layout.h = self._layout.h + self._row.h
 
-	self:setPos(self._window.x - (self._window.w / 2) + self._style.window.offset.h, self._y + self._row.h)
+	self:setPos(self._window.x - (self._window.w / 2) + self._style.window.margins.h, self._y + self._row.h)
 
 	self._row.isActive = false
 	self._row.isFirstWidget = true
@@ -111,7 +111,7 @@ end
 
 function painter:beginDraw()
 	if self._layout.isFirstWidget then
-		self:move(self._style.window.offset.h, self._style.window.offset.v)
+		self:move(self._style.window.margins.h, self._style.window.margins.v)
 	else
 		local ho = 0
 		if not self._row.isFirstWidget then ho = self._style.window.spacing.h end
