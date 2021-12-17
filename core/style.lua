@@ -16,14 +16,14 @@ end
 
 local function createLightColorTheme()
 	return {
-		debug = { 105, 255, 89, 32 },
+		debug = { 85, 235, 69, 48 },
 		default = { 0, 0, 0, 255 },
 		hover = { 244, 5, 82, 255 },
 		primary = { 22, 25, 35, 255 },
 		progress = { 0, 155, 103, 255 },
 		secondary = { 22, 25, 35, 255 },
 		widget = { 248, 248, 236, 255 },
-		window = { 237, 237, 230, 255 },
+		window = { 230, 230, 223, 255 },
 	}
 end
 
