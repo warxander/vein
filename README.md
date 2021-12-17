@@ -50,41 +50,129 @@ These features are not supported by design (can be a subject to change though):
 ## API
 ### General
 ```lua
+--! @brief setDebugEnabled
+--! @param enabled: boolean
 setDebugEnabled([enabled])
-local isEnabled --[[boolean]] = isDebugEnabled()
 
+--! @brief isDebugEnabled
+--! @return isEnabled: boolean
+local isEnabled = isDebugEnabled()
+
+--! @brief beginWindow
+--! @param x: number
+--! @param y: number
 beginWindow([x, y])
-local x --[[number]], y --[[number]] = endWindow()
+
+--! @brief endWindow
+--! @return x: number
+--! @return y: number
+local x, y = endWindow()
 ```
 ### Layout
 ```lua
+--! @brief beginRow
 beginRow()
+
+--! @brief endRow
 endRow()
 
-spacing([count]) -- Horizontal if in row mode, otherwise vertical
+--! @brief spacing
+--! @comment Horizontal if in row mode, otherwise vertical
+--! @param count: number
+spacing([count])
 ```
 ### Color Themes
 ```lua
+--! @brief setDarkColorTheme
 setDarkColorTheme()
+
+--! @brief setLightColorTheme
 setLightColorTheme()
 ```
 ### Widgets
 ```lua
-pushTextEntry(entry, ...) -- Apply specified text entry until popTextEntry() will be called
+--! @brief pushTextEntry
+--! @comment Apply specified text entry until popTextEntry() will be called
+--! @param entry: string
+pushTextEntry(entry [, ...])
+
+--! @brief popTextEntry
 popTextEntry()
 
-pushWidgetWidth(w) -- Apply specified width until popWidgetWidth() will be called
+--! @brief pushWidgetWidth
+--! @comment Apply specified width until popWidgetWidth() will be called
+--! @param w: number
+pushWidgetWidth(w)
+
+--! @brief popWidgetWidth
 popWidgetWidth()
 
-local hasPressed --[[boolean]] = button([text])
-local hasChecked --[[boolean]] = checkBox(isChecked [, text])
+--! @brief button
+--! @param text: string
+--! @return hasChecked: boolean
+local hasPressed = button([text])
+
+--! @brief checkBox
+--! @param isChecked: boolean
+--! @param text: string
+--! @return hasChecked: boolean
+local hasChecked = checkBox(isChecked [, text])
+
+--! @brief dummy
+--! @param w: number
+--! @param h: number
 dummy(w, h)
+
+--! @brief heading
+--! @param text: string
 heading([text])
+
+--! @brief label
+--! @param text: string
 label([text])
-progressBar(min, value, max [, w]) -- Requires to specify width or use pushWidgetWidth(w)
+
+--! @brief progressBar
+--! @comment Requires to specify width or use pushWidgetWidth(w)
+--! @param min: number
+--! @param value: number
+--! @param max: number
+--! @param w: number
+progressBar(min, value, max [, w])
+
+--! @brief separator
+--! @param w: number
 separator([w])
-local hasValueChanged --[[boolean]], value --[[number]] = slider(min, value, max [, w]) -- Requires to specify width or use pushWidgetWidth(w)
+
+--! @brief slider
+--! @comment Requires to specify width or use pushWidgetWidth(w)
+--! @param min: number
+--! @param value: number
+--! @param max: number
+--! @param w: number
+--! @return hasValueChanged: boolean
+--! @return value: number
+local hasValueChanged, value = slider(min, value, max [, w])
+
+--! @brief sprite
+--! @param dict: string
+--! @param name: string
+--! @param w: number
+--! @param h: number
 sprite(dict, name, w, h)
-local hasPressed --[[boolean]] = spriteButton(dict, name [, text])
-local hasTextChanged --[[boolean]], text --[[string]] = textEdit(text, keyboardTitle, maxTextLength [, isSecretMode])
+
+--! @brief spriteButton
+--! @param dict: string
+--! @param name: string
+--! @param text: string
+--! @return hasPressed: boolean
+local hasPressed = spriteButton(dict, name [, text])
+
+--! @brief textEdit
+--! @param text: string
+--! @param keyboardTitle: string
+--! @param maxTextLength: number
+--! @param isSecretMode: boolean
+--! @return hasTextChanged: boolean
+--! @return text: string
+local hasTextChanged, text = textEdit(text, keyboardTitle, maxTextLength [, isSecretMode])
 ```
