@@ -91,6 +91,11 @@ setLightColorTheme()
 ```
 ### Widgets
 ```lua
+--! @brief setNextTextEntry
+--! @comment Apply specified text entry for next drawing widget
+--! @param entry: string
+setNextTextEntry(entry [, ...])
+
 --! @brief pushTextEntry
 --! @comment Apply specified text entry until popTextEntry() will be called
 --! @param entry: string

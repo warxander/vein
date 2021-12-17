@@ -30,6 +30,10 @@ exports('endRow', function()
 	_painter:endRow()
 end)
 
+exports('setNextTextEntry', function(entry, ...)
+	_context:setNextTextEntry(entry, ...)
+end)
+
 exports('pushTextEntry', function(entry, ...)
 	_context:pushTextEntry(entry, ...)
 end)

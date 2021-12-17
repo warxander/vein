@@ -15,6 +15,7 @@ end
 
 function context:beginWindow(x, y)
 	self._state = { }
+	self._nextState = { }
 
 	self._input:beginWindow()
 	self._painter:beginWindow(x, y)
@@ -30,15 +31,13 @@ function context:endWindow()
 end
 
 function context:beginDraw()
-	self._nextState = { }
-
 	self._painter:beginDraw()
 end
 
 function context:endDraw(w, h)
 	self._painter:endDraw(w, h)
 
-	self._nextState = nil
+	self._nextState = { }
 end
 
 function context:setDebugEnabled(enabled)
