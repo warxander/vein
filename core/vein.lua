@@ -14,12 +14,12 @@ exports('isDebugEnabled', function()
 	return _context:isDebugEnabled()
 end)
 
-exports('beginWindow', function()
-	_context:beginWindow()
+exports('beginWindow', function(x, y)
+	_context:beginWindow(x, y)
 end)
 
 exports('endWindow', function()
-	_context:endWindow()
+	return _context:endWindow()
 end)
 
 exports('beginRow', function()

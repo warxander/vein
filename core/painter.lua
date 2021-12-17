@@ -1,14 +1,21 @@
 painter = { }
 painter.__index = painter
 
-function painter:beginWindow()
+function painter:beginWindow(x, y)
+	self._window.x = x or 0.5
+	self._window.y = y or 0.5
+
 	self._x = self._window.x - (self._window.w / 2)
 	self._y = self._window.y - (self._window.h / 2)
 
 	self:drawWindow()
+
+	self:beginDrag()
 end
 
 function painter:endWindow()
+	self:endDrag()
+
 	self._window.w = self._layout.isValid and self._layout.w + self._style.window.margins.h * 2 or 0
 	self._window.h = self._layout.isValid and self._layout.h + self._style.window.margins.v * 2 or 0
 
@@ -17,41 +24,13 @@ function painter:endWindow()
 
 	self._layout.w = 0
 	self._layout.h = 0
+
+	return self._window.x, self._window.y
 end
 
 function painter:drawWindow()
 	if not self._layout.isValid then
 		return
-	end
-
-	local doh = self._style.window.margins.h / 4
-	local dov = self._style.window.margins.v / 4
-
-	local w = self._style.window.margins.h / 2
-	local h = self._style.window.margins.v / 2
-
-	local input = self._context:getInput()
-	local isDragWidgetHovered = input:isMouseInRect(self._x + doh, self._y + dov, w, h)
-
-	if not self._drag.isInProcess then
-		if isDragWidgetHovered and input:isMousePressed() then
-			self._drag.origin.x = input:getMousePosX()
-			self._drag.origin.y = input:getMousePosY()
-			self._drag.isInProcess = true
-		end
-	else
-		if input:isMouseDown() then
-			local x = input:getMousePosX()
-			local y = input:getMousePosY()
-			self._drag.x = x - self._drag.origin.x
-			self._drag.y = y - self._drag.origin.y
-			self._window.x = self._window.x + self._drag.x
-			self._window.y = self._window.y + self._drag.y
-			self._drag.origin.x = x
-			self._drag.origin.y = y
-		else
-			self._drag.isInProcess = false
-		end
 	end
 
 	local outlineWidth = self._style.window.outlineWidth
@@ -64,6 +43,24 @@ function painter:drawWindow()
 
 	self:setColor(self._style.color.window)
 	self:drawRect(self._window.w, self._window.h)
+end
+
+function painter:beginDrag()
+	local doh = self._style.window.margins.h / 4
+	local dov = self._style.window.margins.v / 4
+
+	local w = self._style.window.margins.h / 2
+	local h = self._style.window.margins.v / 2
+
+	local input = self._context:getInput()
+	local isDragWidgetHovered = input:isMouseInRect(self._x + doh, self._y + dov, w, h)
+
+	if not self._drag.isInProcess and isDragWidgetHovered and input:isMousePressed() then
+		self._drag.origin.x = input:getMousePosX()
+		self._drag.origin.y = input:getMousePosY()
+
+		self._drag.isInProcess = true
+	end
 
 	self:move(doh, dov)
 
@@ -71,6 +68,27 @@ function painter:drawWindow()
 	self:drawRect(w, h)
 
 	self:move(-doh, -dov)
+end
+
+function painter:endDrag()
+	if not self._drag.isInProcess then
+		return
+	end
+
+	local input = self._context:getInput()
+
+	if input:isMouseDown() then
+		local x = input:getMousePosX()
+		local y = input:getMousePosY()
+
+		self._window.x = self._window.x + x - self._drag.origin.x
+		self._window.y = self._window.y + y - self._drag.origin.y
+
+		self._drag.origin.x = x
+		self._drag.origin.y = y
+	else
+		self._drag.isInProcess = false
+	end
 end
 
 function painter:getX()
@@ -246,9 +264,10 @@ function painter.new(context)
 	}
 
 	self._drag = {
-		x = 0,
-		y = 0,
-		origin = { },
+		origin = {
+			x = 0,
+			y = 0,
+		},
 	}
 
 	self._row = {
@@ -257,9 +276,8 @@ function painter.new(context)
 	}
 
 	self._widget = { }
+
 	self._window = {
-		x = 0.5,
-		y = 0.5,
 		w = 0,
 		h = 0,
 	}

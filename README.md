@@ -16,22 +16,23 @@ Organizing and managing data for it is user task as a programmer.
 Here is the example to illustrate IMGUI concepts:
 ```lua
 local vein = exports.vein -- Store it in local variable for performance reasons
+local windowX, windowY
 
 while true do
 	Citizen.Wait(0)
 
-	vein:beginWindow() -- Mandatory
+	vein:beginWindow(windowX, windowY) -- Mandatory
 
 	-- Draw widgets in column
 	if vein:button('Press Me Carefully!') then -- Draw button and check if it were pressed
-		break
+		break -- Stop drawing window
 	end
 
 	vein:beginRow()
 		-- Draw widgets in row
 	vein:endRow()
 
-	vein:endWindow() -- Mandatory
+	windowX, windowY = vein:endWindow() -- Mandatory
 end
 ```
 Check this [repository](https://github.com/warxander/vein-demo) to learn more from Vein demo.
@@ -52,8 +53,8 @@ These features are not supported by design (can be a subject to change though):
 setDebugEnabled([enabled])
 local isEnabled --[[boolean]] = isDebugEnabled()
 
-beginWindow()
-endWindow()
+beginWindow([x, y])
+local x --[[number]], y --[[number]] = endWindow()
 ```
 ### Layout
 ```lua

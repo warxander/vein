@@ -13,18 +13,20 @@ function context.new()
 	return self
 end
 
-function context:beginWindow()
+function context:beginWindow(x, y)
 	self._state = { }
 
 	self._input:beginWindow()
-	self._painter:beginWindow()
+	self._painter:beginWindow(x, y)
 end
 
 function context:endWindow()
-	self._painter:endWindow()
-	self._input:endWindow()
+	local x, y = self._painter:endWindow()
 
+	self._input:endWindow()
 	self._state = nil
+
+	return x, y
 end
 
 function context:beginDraw()
