@@ -4,12 +4,12 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('button', function(text)
-	_painter:beginDraw()
+	_context:beginDraw()
 
 	_painter:setText(text)
 	_painter:setTextOpts()
 
-	local w = _painter:getWidgetWidth() or _painter:getTextWidth() + _style.button.spacing * 2
+	local w = _context:getWidgetWidth() or _painter:calculateTextWidth() + _style.button.spacing * 2
 	local h = _style.widget.height
 
 	local isHovered = _input:isMouseInRect(_painter:getX(), _painter:getY(), w, h)
@@ -21,7 +21,7 @@ exports('button', function(text)
 	_painter:move(_style.button.spacing, 0)
 	_painter:drawText()
 
-	_painter:endDraw(w, h)
+	_context:endDraw(w, h)
 
 	return isHovered and _input:isMousePressed()
 end)

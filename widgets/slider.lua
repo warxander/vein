@@ -4,11 +4,11 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('slider', function(min, value, max, w)
-	_painter:beginDraw()
+	_context:beginDraw()
 
 	local sliderStyle = _style.slider
 
-	local w = w or _painter:getWidgetWidth()
+	local w = w or _context:getWidgetWidth()
 	local h = _style.widget.height
 
 	local newValue = value
@@ -32,7 +32,7 @@ exports('slider', function(min, value, max, w)
 	_painter:move(tx, ty)
 	_painter:drawRect(sliderStyle.tickMark.width, sliderStyle.tickMark.height)
 
-	_painter:endDraw(w, h)
+	_context:endDraw(w, h)
 
 	return newValue ~= value, newValue
 end)

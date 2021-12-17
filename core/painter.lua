@@ -2,8 +2,6 @@ painter = { }
 painter.__index = painter
 
 function painter:beginWindow()
-	self._contextState = self._context:getState()
-
 	self._x = self._window.x - (self._window.w / 2)
 	self._y = self._window.y - (self._window.h / 2)
 
@@ -107,6 +105,10 @@ function painter:endRow()
 	self._row.h = 0
 end
 
+function painter:isRowMode()
+	return self._row.isActive
+end
+
 function painter:beginDraw()
 	if self._layout.isFirstWidget then
 		self:move(self._style.window.offset.h, self._style.window.offset.v)
@@ -161,21 +163,6 @@ function painter:move(x, y)
 	self._y = self._y + y
 end
 
-function painter:getWidgetWidth()
-	return self._contextState.widget and self._contextState.widget.w
-end
-
-function painter:spacing(count)
-	count = count or 1
-
-	self:beginDraw()
-
-	local w = self._row.isActive and self._style.window.spacing.h * count or 0
-	local h = self._row.isActive and 0 or self._style.window.spacing.v * count
-
-	self:endDraw(w, h)
-end
-
 function painter:getStyle()
 	return self._style
 end
@@ -196,38 +183,46 @@ function painter:drawSprite(dict, name, w, h)
 	end
 end
 
-function painter:getTextWidth()
-	if not self._contextState.text then
-		return 0
+function painter:calculateTextWidth()
+	local tw = 0
+
+	local textEntry = self._context:getTextEntry()
+	if textEntry then
+		BeginTextCommandGetWidth(textEntry.entry)
+		utils.addTextComponents(textEntry.components)
+		return EndTextCommandGetWidth(true)
 	end
 
-	BeginTextCommandGetWidth(self._contextState.text.entry)
-	utils.addTextComponents(self._contextState.text.components)
-	return EndTextCommandGetWidth(true)
+	return tw
 end
 
 function painter:setText(text)
 	if text then
-		self._context:pushTextEntry('STRING', text)
+		self._context:setNextTextEntry('STRING', text)
 	end
 end
 
 function painter:setTextOpts(font, scale)
-	if self._contextState.text then
-		SetTextFont(font or self._style.widget.text.font)
-
-		scale = scale or self._style.widget.text.scale
-		SetTextScale(scale * GetAspectRatio(), scale)
+	if not self._context:getTextEntry() then
+		return
 	end
+
+	SetTextFont(font or self._style.widget.text.font)
+
+	scale = scale or self._style.widget.text.scale
+	SetTextScale(scale * GetAspectRatio(), scale)
 end
 
 function painter:drawText(offset)
-	if self._contextState.text then
-		SetTextColour(table.unpack(self._color))
-		BeginTextCommandDisplayText(self._contextState.text.entry)
-		utils.addTextComponents(self._contextState.text.components)
-		EndTextCommandDisplayText(self._x, self._y - (offset or self._style.widget.text.offset))
+	local textEntry = self._context:getTextEntry()
+	if not textEntry then
+		return
 	end
+
+	SetTextColour(table.unpack(self._color))
+	BeginTextCommandDisplayText(textEntry.entry)
+	utils.addTextComponents(textEntry.components)
+	EndTextCommandDisplayText(self._x, self._y - (offset or self._style.widget.text.offset))
 end
 
 function painter:drawDebug(w, h)

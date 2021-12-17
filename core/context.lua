@@ -27,6 +27,18 @@ function context:endWindow()
 	self._state = nil
 end
 
+function context:beginDraw()
+	self._nextState = { }
+
+	self._painter:beginDraw()
+end
+
+function context:endDraw(w, h)
+	self._painter:endDraw(w, h)
+
+	self._nextState = nil
+end
+
 function context:setDebugEnabled(enabled)
 	self._isDebug = enabled
 end
@@ -35,25 +47,36 @@ function context:isDebugEnabled()
 	return self._isDebug
 end
 
-function context:pushTextEntry(entry, ...)
-	if not self._state.text then
-		self._state.text = { }
+function context:__setTextEntry(state, entry, ...)
+	if not state.text then
+		state.text = { }
 	end
-	self._state.text.entry = entry
-	self._state.text.components = { ... }
+
+	state.text.entry = entry
+	state.text.components = { ... }
+end
+
+function context:setNextTextEntry(entry, ...)
+	self:__setTextEntry(self._nextState, entry, ...)
+end
+
+function context:pushTextEntry(entry, ...)
+	self:__setTextEntry(self._state, entry, ...)
 end
 
 function context:popTextEntry()
-	if self._state.text then
-		self._state.text.entry = nil
-		self._state.text.components = nil
-	end
+	self._state.text = nil
+end
+
+function context:getTextEntry()
+	return self._nextState.text or self._state.text
 end
 
 function context:pushWidgetWidth(w)
 	if not self._state.widget then
 		self._state.widget = { }
 	end
+
 	self._state.widget.w = w
 end
 
@@ -63,8 +86,8 @@ function context:popWidgetWidth()
 	end
 end
 
-function context:getState()
-	return self._state
+function context:getWidgetWidth()
+	return self._state.widget and self._state.widget.w
 end
 
 function context:getInput()

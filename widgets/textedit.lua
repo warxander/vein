@@ -6,9 +6,9 @@ local _style = _painter:getStyle()
 local _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE'
 
 exports('textEdit', function(text, keyboardTitle, maxTextLength, isSecretMode)
-	_painter:beginDraw()
+	_context:beginDraw()
 
-	local w = _painter:getWidgetWidth() or maxTextLength * _style.edit.symbolWidth
+	local w = _context:getWidgetWidth() or maxTextLength * _style.edit.symbolWidth
 	local h = _style.widget.height
 
 	local newText = text
@@ -50,7 +50,7 @@ exports('textEdit', function(text, keyboardTitle, maxTextLength, isSecretMode)
 	_painter:setColor(_style.color.primary)
 	_painter:drawText()
 
-	_painter:endDraw(w, h)
+	_context:endDraw(w, h)
 
 	return newText ~= text, newText
 end)

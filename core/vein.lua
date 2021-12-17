@@ -1,6 +1,5 @@
 local _context = context.new()
 
-local _input = _context:getInput()
 local _painter = _context:getPainter()
 
 function getContext()
@@ -29,10 +28,6 @@ end)
 
 exports('endRow', function()
 	_painter:endRow()
-end)
-
-exports('spacing', function(count)
-	_painter:spacing(count)
 end)
 
 exports('pushTextEntry', function(entry, ...)

@@ -4,7 +4,7 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('checkBox', function(isChecked, text)
-	_painter:beginDraw()
+	_context:beginDraw()
 
 	_painter:setText(text)
 	_painter:setTextOpts()
@@ -13,7 +13,7 @@ exports('checkBox', function(isChecked, text)
 	local checkboxStyle = _style.checkbox
 	local cw = checkboxStyle.height / aspectRatio
 
-	local w = _painter:getWidgetWidth() or (cw + checkboxStyle.spacing + _painter:getTextWidth())
+	local w = _context:getWidgetWidth() or (cw + checkboxStyle.spacing + _painter:calculateTextWidth())
 	local h = _style.widget.height
 
 	local isHovered = _input:isMouseInRect(_painter:getX(), _painter:getY(), w, h)
@@ -49,7 +49,7 @@ exports('checkBox', function(isChecked, text)
 	_painter:move(checkboxStyle.height / aspectRatio + checkboxStyle.spacing * 2, 0)
 	_painter:drawText()
 
-	_painter:endDraw(w, _style.widget.height)
+	_context:endDraw(w, _style.widget.height)
 
 	return isChecked
 end)
