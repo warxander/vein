@@ -54,9 +54,9 @@ function style.new()
 			height = 0.045,
 			lineHeight = 0.001,
 			text = {
-				font = 2,
-				scale = 0.675,
-				offset = 0,
+				font = 4,
+				scale = 0.725,
+				offset = 0.003,
 			},
 		},
 		label = {
