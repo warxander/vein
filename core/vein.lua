@@ -42,6 +42,10 @@ exports('popTextEntry', function()
 	_context:popTextEntry()
 end)
 
+exports('setNextWidgetWidth', function(w)
+	_context:setNextWidgetWidth(w)
+end)
+
 exports('pushWidgetWidth', function(w)
 	_context:pushWidgetWidth(w)
 end)

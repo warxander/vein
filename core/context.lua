@@ -49,12 +49,8 @@ function context:isDebugEnabled()
 end
 
 function context:__setTextEntry(state, entry, ...)
-	if not state.text then
-		state.text = { }
-	end
-
-	state.text.entry = entry
-	state.text.components = { ... }
+	state.textEntry = entry
+	state.textComponents = { ... }
 end
 
 function context:setNextTextEntry(entry, ...)
@@ -66,29 +62,36 @@ function context:pushTextEntry(entry, ...)
 end
 
 function context:popTextEntry()
-	self._state.text = nil
+	self._state.textEntry = nil
+	self._state.textComponents = nil
 end
 
 function context:getTextEntry()
-	return self._nextState.text or self._state.text
+	return self._nextState.textEntry or self._state.textEntry
+end
+
+function context:getTextComponents()
+	return self._nextState.textComponents or self._state.textComponents
+end
+
+function context:__setWidgetWidth(state, w)
+	state.widgetWidth = w
+end
+
+function context:setNextWidgetWidth(w)
+	self:__setWidgetWidth(self._nextState, w)
 end
 
 function context:pushWidgetWidth(w)
-	if not self._state.widget then
-		self._state.widget = { }
-	end
-
-	self._state.widget.w = w
+	self:__setWidgetWidth(self._state, w)
 end
 
 function context:popWidgetWidth()
-	if self._state.widget then
-		self._state.widget.w = nil
-	end
+	self._state.widgetWidth = nil
 end
 
 function context:getWidgetWidth()
-	return self._state.widget and self._state.widget.w
+	return self._nextState.widgetWidth or self._state.widgetWidth
 end
 
 function context:getInput()

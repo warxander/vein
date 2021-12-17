@@ -206,8 +206,9 @@ function painter:calculateTextWidth()
 
 	local textEntry = self._context:getTextEntry()
 	if textEntry then
-		BeginTextCommandGetWidth(textEntry.entry)
-		utils.addTextComponents(textEntry.components)
+		BeginTextCommandGetWidth(textEntry)
+		local textComponents = self._context:getTextComponents()
+		if textComponents then utils.addTextComponents(textComponents) end
 		return EndTextCommandGetWidth(true)
 	end
 
@@ -238,8 +239,9 @@ function painter:drawText(offset)
 	end
 
 	SetTextColour(table.unpack(self._color))
-	BeginTextCommandDisplayText(textEntry.entry)
-	utils.addTextComponents(textEntry.components)
+	BeginTextCommandDisplayText(textEntry)
+	local textComponents = self._context:getTextComponents()
+	if textComponents then utils.addTextComponents(textComponents) end
 	EndTextCommandDisplayText(self._x, self._y - (offset or self._style.widget.text.offset))
 end
 

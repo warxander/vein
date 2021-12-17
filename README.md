@@ -104,6 +104,11 @@ pushTextEntry(entry [, ...])
 --! @brief popTextEntry
 popTextEntry()
 
+--! @brief setNextWidgetWidth
+--! @comment Apply specified width for next drawing widget
+--! @param w: number
+setNextWidgetWidth(w)
+
 --! @brief pushWidgetWidth
 --! @comment Apply specified width until popWidgetWidth() will be called
 --! @param w: number
