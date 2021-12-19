@@ -16,21 +16,24 @@ Organizing and managing data for it is user task as a programmer.
 Here is the example to illustrate IMGUI concepts:
 ```lua
 local vein = exports.vein -- Store it in local variable for performance reasons
-local windowX, windowY
 
-while true do
+local windowX, windowY
+local isWindowOpened = true
+
+while isWindowOpened do
 	Citizen.Wait(0)
 
 	vein:beginWindow(windowX, windowY) -- Mandatory
 
 	-- Draw widgets in column
-	if vein:button('Press Me Carefully!') then -- Draw button and check if it were pressed
-		break -- Stop drawing window
-	end
 
 	vein:beginRow()
 		-- Draw widgets in row
 	vein:endRow()
+
+	if vein:button('Close Window') then -- Draw button and check if it were pressed
+		isWindowOpened = false
+	end
 
 	windowX, windowY = vein:endWindow() -- Mandatory
 end
