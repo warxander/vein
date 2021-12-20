@@ -202,17 +202,34 @@ function painter:drawSprite(dict, name, w, h)
 end
 
 function painter:calculateTextWidth()
-	local tw = 0
-
 	local textEntry = self._context:getTextEntry()
-	if textEntry then
-		BeginTextCommandGetWidth(textEntry)
-		local textComponents = self._context:getTextComponents()
-		if textComponents then utils.addTextComponents(textComponents) end
-		return EndTextCommandGetWidth(true)
+	if not textEntry then
+		return 0
 	end
 
-	return tw
+	BeginTextCommandGetWidth(textEntry)
+	local textComponents = self._context:getTextComponents()
+	if textComponents then utils.addTextComponents(textComponents) end
+	return EndTextCommandGetWidth(true)
+end
+
+function painter:calculateTextLineHeight(scale, font)
+	scale = scale or self._style.widget.text.scale
+	font = font or self._style.widget.text.font
+
+	return GetRenderedCharacterHeight(scale, font)
+end
+
+function painter:calculateTextLineCount()
+	local textEntry = self._context:getTextEntry()
+	if not textEntry then
+		return 0
+	end
+
+	BeginTextCommandLineCount(textEntry)
+	local textComponents = self._context:getTextComponents()
+	if textComponents then utils.addTextComponents(textComponents) end
+	return EndTextCommandLineCount(self._x, self._y)
 end
 
 function painter:setText(text)
@@ -230,6 +247,12 @@ function painter:setTextOpts(font, scale)
 
 	scale = scale or self._style.widget.text.scale
 	SetTextScale(scale * GetAspectRatio(), scale)
+end
+
+function painter:setTextMaxWidth(w)
+	if self._context:getTextEntry() then
+		SetTextWrap(self._x, self._x + w)
+	end
 end
 
 function painter:drawText(offset)

@@ -145,7 +145,7 @@ heading([text])
 label([text])
 
 --! @brief progressBar
---! @comment Requires to specify width or use pushWidgetWidth(w)
+--! @comment Width is required
 --! @param min: number
 --! @param value: number
 --! @param max: number
@@ -157,7 +157,7 @@ progressBar(min, value, max [, w])
 separator([w])
 
 --! @brief slider
---! @comment Requires to specify width or use pushWidgetWidth(w)
+--! @comment Width is required
 --! @param min: number
 --! @param value: number
 --! @param max: number
@@ -179,6 +179,13 @@ sprite(dict, name, w, h)
 --! @param text: string
 --! @return hasPressed: boolean
 local hasPressed = spriteButton(dict, name [, text])
+
+--! @brief textArea
+--! @comment Displays multiline text
+--! @comment Width is required
+--! @param text: string
+--! @param w: number
+textArea([text, w])
 
 --! @brief textEdit
 --! @param text: string

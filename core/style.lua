@@ -46,10 +46,6 @@ function style.new()
 			inlineHeight = 0.002,
 			outlineHeight = 0.002,
 		},
-		edit = {
-			lineHeight = 0.002,
-			symbolWidth = 0.01,
-		},
 		heading = {
 			height = 0.045,
 			lineHeight = 0.001,
@@ -83,6 +79,15 @@ function style.new()
 		},
 		sprite = {
 			color = { 254, 254, 254, 255 },
+		},
+		textArea = {
+			text = {
+				offset = -0.005,
+			},
+		},
+		textEdit = {
+			lineHeight = 0.002,
+			symbolWidth = 0.01,
 		},
 		widget = {
 			height = 0.035,
