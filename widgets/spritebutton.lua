@@ -15,7 +15,7 @@ exports('spriteButton', function(dict, name, text)
 	local w = _context:getWidgetWidth() or (_painter:calculateTextWidth() + _style.button.spacing * 2 + spriteButtonStyle.spacing + sw)
 	local h = _style.widget.height
 
-	local isHovered = _input:isMouseInRect(_painter:getX(), _painter:getY(), w, h)
+	local isHovered = _input:isRectHovered(_painter:getX(), _painter:getY(), w, h)
 
 	_painter:setColor(isHovered and _style.color.hover or _style.color.widget)
 	_painter:drawRect(w, h)

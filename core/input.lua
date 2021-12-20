@@ -59,7 +59,7 @@ function input:isMouseReleased()
 	return self._state.isMouseReleased
 end
 
-function input:isMouseInRect(x, y, w, h)
+function input:isRectHovered(x, y, w, h)
 	return not (self._state.mousePosX < x or self._state.mousePosX > x + w or self._state.mousePosY < y or self._state.mousePosY > y + h)
 end
 

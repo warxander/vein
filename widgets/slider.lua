@@ -13,7 +13,7 @@ exports('slider', function(min, value, max, w)
 
 	local newValue = value
 
-	local isHovered = _input:isMouseInRect(_painter:getX() - sliderStyle.tickMark.width / 2, _painter:getY(), w + sliderStyle.tickMark.width, h)
+	local isHovered = _input:isRectHovered(_painter:getX() - sliderStyle.tickMark.width / 2, _painter:getY(), w + sliderStyle.tickMark.width, h)
 	if isHovered and (_input:isMouseDown() or _input:isMousePressed()) then
 		newValue = math.min(max, math.max(min, min + ((_input:getMousePosX() - _painter:getX()) / w * (max + min))))
 	end

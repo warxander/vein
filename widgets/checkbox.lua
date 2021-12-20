@@ -16,7 +16,7 @@ exports('checkBox', function(isChecked, text)
 	local w = _context:getWidgetWidth() or (cw + checkboxStyle.spacing + _painter:calculateTextWidth())
 	local h = _style.widget.height
 
-	local isHovered = _input:isMouseInRect(_painter:getX(), _painter:getY(), w, h)
+	local isHovered = _input:isRectHovered(_painter:getX(), _painter:getY(), w, h)
 	if isHovered and _input:isMousePressed() then
 		isChecked = not isChecked
 	end

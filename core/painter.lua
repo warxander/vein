@@ -8,9 +8,12 @@ function painter:beginWindow(x, y)
 	self._x = self._window.x - (self._window.w / 2)
 	self._y = self._window.y - (self._window.h / 2)
 
-	self:drawWindow()
+	if not self._layout.isValid then
+		return
+	end
 
 	self:beginDrag()
+	self:drawWindow()
 end
 
 function painter:endWindow()
@@ -29,10 +32,6 @@ function painter:endWindow()
 end
 
 function painter:drawWindow()
-	if not self._layout.isValid then
-		return
-	end
-
 	local outlineWidth = self._style.window.outlineWidth
 	local outlineHeight = outlineWidth * GetAspectRatio()
 
@@ -46,28 +45,18 @@ function painter:drawWindow()
 end
 
 function painter:beginDrag()
-	local doh = self._style.window.margins.h / 4
-	local dov = self._style.window.margins.v / 4
-
-	local w = self._style.window.margins.h / 2
-	local h = self._style.window.margins.v / 2
+	if self._drag.isInProcess then
+		return
+	end
 
 	local input = self._context:getInput()
-	local isDragWidgetHovered = input:isMouseInRect(self._x + doh, self._y + dov, w, h)
 
-	if not self._drag.isInProcess and isDragWidgetHovered and input:isMousePressed() then
+	if input:isRectHovered(self._x, self._y, self._window.w, self._style.window.margins.v) and input:isMousePressed() then
 		self._drag.origin.x = input:getMousePosX()
 		self._drag.origin.y = input:getMousePosY()
 
 		self._drag.isInProcess = true
 	end
-
-	self:move(doh, dov)
-
-	self:setColor((isDragWidgetHovered or self._drag.isInProcess) and self._style.color.hover or self._style.color.widget)
-	self:drawRect(w, h)
-
-	self:move(-doh, -dov)
 end
 
 function painter:endDrag()

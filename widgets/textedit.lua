@@ -13,7 +13,7 @@ exports('textEdit', function(text, keyboardTitle, maxTextLength, isSecretMode)
 
 	local newText = text
 
-	local isHovered = _input:isMouseInRect(_painter:getX(), _painter:getY(), w, h)
+	local isHovered = _input:isRectHovered(_painter:getX(), _painter:getY(), w, h)
 
 	if isHovered and _input:isMousePressed() then
 		AddTextEntry(_keyboardTitleEntry, keyboardTitle)
