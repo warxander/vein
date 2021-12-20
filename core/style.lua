@@ -21,7 +21,7 @@ local function createLightColorTheme()
 		hover = { 244, 5, 82, 255 },
 		primary = { 22, 25, 35, 255 },
 		progress = { 0, 155, 103, 255 },
-		secondary = { 22, 25, 35, 255 },
+		secondary = { 135, 137, 136, 255 },
 		widget = { 248, 248, 236, 255 },
 		window = { 230, 230, 223, 255 },
 	}
@@ -69,8 +69,8 @@ function style.new()
 		slider = {
 			height = 0.004,
 			tickMark = {
-				width = 0.010,
-				height = 0.008,
+				width = 0.012,
+				height = 0.007,
 			},
 		},
 		spriteButton = {

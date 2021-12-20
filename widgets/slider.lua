@@ -28,7 +28,7 @@ exports('slider', function(min, value, max, w)
 	local tx = sx - sliderStyle.tickMark.width / 2
 	local ty = -sliderStyle.tickMark.height / 4
 
-	_painter:setColor(isHovered and _style.color.hover or _style.color.secondary)
+	_painter:setColor(isHovered and _style.color.hover or _style.color.primary)
 	_painter:move(tx, ty)
 	_painter:drawRect(sliderStyle.tickMark.width, sliderStyle.tickMark.height)
 

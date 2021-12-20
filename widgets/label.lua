@@ -10,7 +10,7 @@ exports('label', function(text)
 
 	local w = _context:getWidgetWidth() or _painter:calculateTextWidth()
 
-	_painter:setColor(_style.color.secondary)
+	_painter:setColor(_style.color.primary)
 	_painter:drawText(_style.label.text.offset)
 
 	_context:endDraw(w, _style.widget.height)

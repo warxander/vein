@@ -40,7 +40,7 @@ exports('textEdit', function(text, keyboardTitle, maxTextLength, isSecretMode)
 	local lineOffset = h - _style.textEdit.lineHeight
 	_painter:move(0, lineOffset)
 
-	_painter:setColor(isHovered and _style.color.hover or _style.color.secondary)
+	_painter:setColor(isHovered and _style.color.hover or _style.color.primary)
 	_painter:drawRect(w, _style.textEdit.lineHeight)
 
 	_painter:move(0, -lineOffset)
