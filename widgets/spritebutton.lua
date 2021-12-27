@@ -1,11 +1,8 @@
 local _context = getContext()
-local _input = _context:getInput()
 local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('spriteButton', function(dict, name, text)
-	_context:beginDraw()
-
 	_painter:setText(text)
 	_painter:setTextOpts()
 
@@ -15,9 +12,9 @@ exports('spriteButton', function(dict, name, text)
 	local w = _context:getWidgetWidth() or (_painter:calculateTextWidth() + _style.button.spacing * 2 + spriteButtonStyle.spacing + sw)
 	local h = _style.widget.height
 
-	local isHovered = _input:isRectHovered(_painter:getX(), _painter:getY(), w, h)
+	_context:beginDraw(w, h)
 
-	_painter:setColor(isHovered and _style.color.hover or _style.color.widget)
+	_painter:setColor(_context:isWidgetHovered() and _style.color.hover or _style.color.widget)
 	_painter:drawRect(w, h)
 
 	local sh = sw * GetAspectRatio()
@@ -31,7 +28,7 @@ exports('spriteButton', function(dict, name, text)
 	_painter:move(sw + spriteButtonStyle.spacing, -so)
 	_painter:drawText()
 
-	_context:endDraw(w, h)
+	_context:endDraw()
 
-	return isHovered and _input:isMousePressed()
+	return _context:isWidgetClicked()
 end)

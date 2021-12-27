@@ -3,9 +3,10 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('progressBar', function(min, value, max, w)
-	_context:beginDraw()
-
 	local w = w or _context:getWidgetWidth()
+
+	_context:beginDraw(w, _style.widget.height)
+
 	local h = _style.progressBar.height
 
 	_painter:setColor(_style.color.widget)
@@ -19,5 +20,5 @@ exports('progressBar', function(min, value, max, w)
 		_painter:drawRect(pw, h)
 	end
 
-	_context:endDraw(w, _style.widget.height)
+	_context:endDraw()
 end)

@@ -121,7 +121,7 @@ function painter:isRowMode()
 	return self._row.isActive
 end
 
-function painter:beginDraw()
+function painter:beginDraw(w, h)
 	if self._layout.isFirstWidget then
 		self:move(self._style.window.margins.h, self._style.window.margins.v)
 	else
@@ -143,9 +143,14 @@ function painter:beginDraw()
 
 	self._widget.x = self._x
 	self._widget.y = self._y
+	self._widget.w = w
+	self._widget.h = h
 end
 
-function painter:endDraw(w, h)
+function painter:endDraw()
+	local w = self._widget.w
+	local h = self._widget.h
+
 	self:drawDebug(w, h)
 
 	if self._row.isActive then
@@ -163,6 +168,22 @@ function painter:endDraw(w, h)
 	end
 
 	self._layout.isFirstWidget = false
+end
+
+function painter:getWidgetX()
+	return self._widget.x
+end
+
+function painter:getWidgetY()
+	return self._widget.y
+end
+
+function painter:getWidgetWidth()
+	return self._widget.w
+end
+
+function painter:getWidgetHeight()
+	return self._widget.h
 end
 
 function painter:setPos(x, y)
@@ -294,7 +315,12 @@ function painter.new(context)
 		h = 0,
 	}
 
-	self._widget = { }
+	self._widget = {
+		x = 0,
+		y = 0,
+		w = 0,
+		h = 0,
+	}
 
 	self._window = {
 		w = 0,

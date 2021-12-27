@@ -38,12 +38,20 @@ function context:endWindow()
 	return x, y
 end
 
-function context:beginDraw()
-	self._painter:beginDraw()
+function context:isWidgetHovered()
+	return self._input:isRectHovered(self._painter:getWidgetX(), self._painter:getWidgetY(), self._painter:getWidgetWidth(), self._painter:getWidgetHeight())
 end
 
-function context:endDraw(w, h)
-	self._painter:endDraw(w, h)
+function context:isWidgetClicked()
+	return self._input:isMousePressed() and self:isWidgetHovered()
+end
+
+function context:beginDraw(w, h)
+	self._painter:beginDraw(w, h)
+end
+
+function context:endDraw()
+	self._painter:endDraw()
 
 	self._nextState = { }
 end

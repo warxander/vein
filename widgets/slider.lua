@@ -4,13 +4,12 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('slider', function(min, value, max, w)
-	_context:beginDraw()
-
-	local sliderStyle = _style.slider
-
 	local w = w or _context:getWidgetWidth()
 	local h = _style.widget.height
 
+	_context:beginDraw(w, h)
+
+	local sliderStyle = _style.slider
 	local newValue = value
 
 	local isHovered = _input:isRectHovered(_painter:getX() - sliderStyle.tickMark.width / 2, _painter:getY(), w + sliderStyle.tickMark.width, h)
@@ -32,7 +31,7 @@ exports('slider', function(min, value, max, w)
 	_painter:move(tx, ty)
 	_painter:drawRect(sliderStyle.tickMark.width, sliderStyle.tickMark.height)
 
-	_context:endDraw(w, h)
+	_context:endDraw()
 
 	return newValue ~= value, newValue
 end)

@@ -33,6 +33,14 @@ while isWindowOpened do
 		-- Draw widgets in row
 	vein:endRow()
 
+	vein:label('Hello Vein')
+	if vein:isWidgetHovered() then
+		--
+		if vein:isWidgetClicked() then
+			--
+		end
+	end
+
 	if vein:button('Close Window') then -- Draw button and check if it were pressed
 		isWindowOpened = false
 	end
@@ -77,6 +85,16 @@ beginWindow([x, y])
 --! @return x: number
 --! @return y: number
 local x, y = endWindow()
+
+--! @brief isWidgetHovered
+--! @comment Returns true is last drawn widget was hovered
+--! @return isWidgetHovered: boolean
+local isWidgetHovered = isWidgetHovered()
+
+--! @brief isWidgetClicked
+--! @comment Returns true is last drawn widget was clicked
+--! @return isWidgetClicked: boolean
+local isWidgetClicked = isWidgetClicked()
 ```
 ### Layout
 ```lua
@@ -102,12 +120,12 @@ setLightColorTheme()
 ### Widgets
 ```lua
 --! @brief setNextTextEntry
---! @comment Apply specified text entry for next drawing widget
+--! @comment Applies specified text entry for next drawn widget
 --! @param entry: string
 setNextTextEntry(entry [, ...])
 
 --! @brief pushTextEntry
---! @comment Apply specified text entry until popTextEntry() will be called
+--! @comment Applies specified text entry until popTextEntry() will be called
 --! @param entry: string
 pushTextEntry(entry [, ...])
 
@@ -115,12 +133,12 @@ pushTextEntry(entry [, ...])
 popTextEntry()
 
 --! @brief setNextWidgetWidth
---! @comment Apply specified width for next drawing widget
+--! @comment Applies specified width for next drawn widget
 --! @param w: number
 setNextWidgetWidth(w)
 
 --! @brief pushWidgetWidth
---! @comment Apply specified width until popWidgetWidth() will be called
+--! @comment Applies specified width until popWidgetWidth() will be called
 --! @param w: number
 pushWidgetWidth(w)
 

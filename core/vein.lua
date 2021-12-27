@@ -26,6 +26,14 @@ exports('endWindow', function()
 	return _context:endWindow()
 end)
 
+exports('isWidgetHovered', function()
+	return _context:isWidgetHovered()
+end)
+
+exports('isWidgetClicked', function()
+	return _context:isWidgetClicked()
+end)
+
 exports('beginRow', function()
 	_painter:beginRow()
 end)

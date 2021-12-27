@@ -1,21 +1,18 @@
 local _context = getContext()
-local _input = _context:getInput()
 local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 local _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE'
 
 exports('textEdit', function(text, keyboardTitle, maxTextLength, isSecretMode)
-	_context:beginDraw()
-
 	local w = _context:getWidgetWidth() or maxTextLength * _style.textEdit.symbolWidth
 	local h = _style.widget.height
 
+	_context:beginDraw(w, h)
+
 	local newText = text
 
-	local isHovered = _input:isRectHovered(_painter:getX(), _painter:getY(), w, h)
-
-	if isHovered and _input:isMousePressed() then
+	if _context:isWidgetClicked() then
 		AddTextEntry(_keyboardTitleEntry, keyboardTitle)
 		DisplayOnscreenKeyboard(1, _keyboardTitleEntry, '', text, '', '', '', maxTextLength)
 
@@ -40,7 +37,7 @@ exports('textEdit', function(text, keyboardTitle, maxTextLength, isSecretMode)
 	local lineOffset = h - _style.textEdit.lineHeight
 	_painter:move(0, lineOffset)
 
-	_painter:setColor(isHovered and _style.color.hover or _style.color.primary)
+	_painter:setColor(_context:isWidgetHovered() and _style.color.hover or _style.color.primary)
 	_painter:drawRect(w, _style.textEdit.lineHeight)
 
 	_painter:move(0, -lineOffset)
@@ -50,7 +47,7 @@ exports('textEdit', function(text, keyboardTitle, maxTextLength, isSecretMode)
 	_painter:setColor(_style.color.primary)
 	_painter:drawText()
 
-	_context:endDraw(w, h)
+	_context:endDraw()
 
 	return newText ~= text, newText
 end)
