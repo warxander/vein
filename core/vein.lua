@@ -14,6 +14,10 @@ exports('isDebugEnabled', function()
 	return _context:isDebugEnabled()
 end)
 
+exports('setNextWindowNoDrag', function(isNoDrag)
+	_context:setNextWindowNoDrag(isNoDrag)
+end)
+
 exports('beginWindow', function(x, y)
 	_context:beginWindow(x, y)
 end)

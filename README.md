@@ -23,6 +23,8 @@ local isWindowOpened = true
 while isWindowOpened do
 	Citizen.Wait(0)
 
+	-- Call setNextWindow* methods
+
 	vein:beginWindow(windowX, windowY) -- Mandatory
 
 	-- Draw widgets in column
@@ -60,6 +62,11 @@ setDebugEnabled([enabled])
 --! @brief isDebugEnabled
 --! @return isEnabled: boolean
 local isEnabled = isDebugEnabled()
+
+--! @brief setNextWindowNoDrag
+--! @comment False by default
+--! @param isNoDrag: boolean
+setNextWindowNoDrag(isNoDrag)
 
 --! @brief beginWindow
 --! @param x: number

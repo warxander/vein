@@ -12,12 +12,17 @@ function painter:beginWindow(x, y)
 		return
 	end
 
-	self:beginDrag()
+	if not self._context:isWindowNoDrag() then
+		self:beginDrag()
+	end
+
 	self:drawWindow()
 end
 
 function painter:endWindow()
-	self:endDrag()
+	if not self._context:isWindowNoDrag() then
+		self:endDrag()
+	end
 
 	self._window.w = self._layout.isValid and self._layout.w + self._style.window.margins.h * 2 or 0
 	self._window.h = self._layout.isValid and self._layout.h + self._style.window.margins.v * 2 or 0

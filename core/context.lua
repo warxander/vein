@@ -5,18 +5,25 @@ function context.new()
 	local self = { }
 	setmetatable(self, context)
 
-	self._isDebug = false
-
 	self._input = input.new(self)
 	self._painter = painter.new(self)
+
+	self._isDebug = false
+	self._state = { }
+	self._nextState = { }
 
 	return self
 end
 
-function context:beginWindow(x, y)
-	self._state = { }
-	self._nextState = { }
+function context:setNextWindowNoDrag(isNoDrag)
+	self._state.isNoDrag = isNoDrag
+end
 
+function context:isWindowNoDrag()
+	return self._state.isNoDrag
+end
+
+function context:beginWindow(x, y)
 	self._input:beginWindow()
 	self._painter:beginWindow(x, y)
 end
@@ -25,7 +32,8 @@ function context:endWindow()
 	local x, y = self._painter:endWindow()
 
 	self._input:endWindow()
-	self._state = nil
+
+	self._state = { }
 
 	return x, y
 end
