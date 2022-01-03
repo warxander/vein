@@ -64,7 +64,7 @@ function style.new()
 			height = 0.004,
 		},
 		separator = {
-			height = 0.002,
+			height = 0.001,
 		},
 		slider = {
 			height = 0.004,

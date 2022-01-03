@@ -11,7 +11,7 @@ exports('label', function(text)
 
 	_context:beginDraw(w, h)
 
-	_painter:setColor(_style.color.primary)
+	_painter:setColor(_style.color.secondary)
 	_painter:drawText(_style.label.text.offset)
 
 	_context:endDraw()
