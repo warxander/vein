@@ -3,7 +3,7 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('spacing', function(count)
-	local count = count or 1
+	count = count or 1
 	local isRowMode = _painter:isRowMode()
 
 	local w = isRowMode and _style.window.spacing.h * count or 0

@@ -3,7 +3,7 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('progressBar', function(min, value, max, w)
-	local w = w or _context:getWidgetWidth()
+	w = w or _context:getWidgetWidth()
 
 	_context:beginDraw(w, _style.widget.height)
 

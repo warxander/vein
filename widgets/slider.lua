@@ -4,7 +4,7 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('slider', function(min, value, max, w)
-	local w = w or _context:getWidgetWidth()
+	w = w or _context:getWidgetWidth()
 	local h = _style.widget.height
 
 	_context:beginDraw(w, h)

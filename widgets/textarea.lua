@@ -3,10 +3,11 @@ local _painter = _context:getPainter()
 local _style = _painter:getStyle()
 
 exports('textArea', function(text, w)
+	w = w or _context:getWidgetWidth()
+
 	_painter:setText(text)
 	_painter:setTextOpts()
 
-	local w = w or _context:getWidgetWidth()
 	_painter:setTextMaxWidth(w)
 
 	local lc = _painter:calculateTextLineCount()
