@@ -1,14 +1,14 @@
 fx_version 'cerulean'
 game 'gta5'
-lua54 'yes'
 
 client_scripts {
-	'core/utils.lua',
-	'core/style.lua',
-	'core/input.lua',
-	'core/painter.lua',
-	'core/context.lua',
-	'core/vein.lua',
+	'core/utils.js',
+	'core/style.js',
+	'core/input.js',
+	'core/painter.js',
+	'core/context.js',
 
-	'widgets/*.lua',
+	'core/index.js',
+
+	'widgets/*.js',
 }

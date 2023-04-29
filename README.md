@@ -1,7 +1,7 @@
 # Vein
 Vein is a FiveM [IMGUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) framework.
 
-It's written on Lua and uses [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) to be available for other resources.
+It's written on JavaScript and uses [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) to be available for other resources.
 
 ![alt text](https://raw.githubusercontent.com/warxander/vein-demo/master/demo.png)
 
@@ -84,7 +84,7 @@ beginWindow([x, y])
 --! @brief endWindow
 --! @return x: number
 --! @return y: number
-local x, y = endWindow()
+local x, y = table.unpack(endWindow())
 
 --! @brief isWidgetHovered
 --! @comment Returns true is last drawn widget was hovered
@@ -189,7 +189,7 @@ separator([w])
 --! @param w: number
 --! @return hasValueChanged: boolean
 --! @return value: number
-local hasValueChanged, value = slider(min, value, max [, w])
+local hasValueChanged, value = table.unpack(slider(min, value, max [, w]))
 
 --! @brief sprite
 --! @param dict: string
@@ -219,5 +219,5 @@ textArea([text, w])
 --! @param isSecretMode: boolean
 --! @return hasTextChanged: boolean
 --! @return text: string
-local hasTextChanged, text = textEdit(text, keyboardTitle, maxTextLength [, isSecretMode])
+local hasTextChanged, text = table.unpack(textEdit(text, keyboardTitle, maxTextLength [, isSecretMode]))
 ```
