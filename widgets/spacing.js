@@ -1,5 +1,4 @@
-exports('spacing', function (count) {
-	count ??= 1
+exports('spacing', function (count = 1) {
 	const isRowMode = painter.isRowMode()
 
 	const w = isRowMode ? style.window.spacing.h * count : 0

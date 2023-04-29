@@ -264,11 +264,8 @@ class Painter {
 		return EndTextCommandGetWidth(true)
 	}
 
-	calculateTextLineHeight(scale, font) {
-		scale ??= this.#style.widget.text.scale
-		font ??= this.#style.widget.text.font
-
-		return GetRenderedCharacterHeight(scale, font)
+	calculateTextLineHeight() {
+		return GetRenderedCharacterHeight(this.#style.widget.text.scale, this.#style.widget.text.font)
 	}
 
 	calculateTextLineCount() {
@@ -290,14 +287,11 @@ class Painter {
 			this.#context.setNextTextEntry('STRING', text)
 	}
 
-	setTextOpts(font, scale) {
+	setTextOpts(font = this.#style.widget.text.font, scale = this.#style.widget.text.scale) {
 		if (!this.#context.getTextEntry())
 			return
 
-		font ??= this.#style.widget.text.font
 		SetTextFont(font)
-
-		scale ??= this.#style.widget.text.scale
 		SetTextScale(scale * GetAspectRatio(), scale)
 	}
 
@@ -306,7 +300,7 @@ class Painter {
 			SetTextWrap(this._x, this._x + w)
 	}
 
-	drawText(offset) {
+	drawText(offset = this.#style.widget.text.offset) {
 		const textEntry = this.#context.getTextEntry()
 		if (!textEntry)
 			return
@@ -319,15 +313,13 @@ class Painter {
 		if (textComponents)
 			addTextComponents(textComponents)
 
-		offset ??= this.#style.widget.text.offset
 		EndTextCommandDisplayText(this._x, this._y - offset)
 	}
 
-	drawDebug(w, h) {
+	drawDebug(w, h = this.#style.widget.height) {
 		if (w != 0 && this.#context.isDebugEnabled()) {
 			this.setPos(this.#widget.x, this.#widget.y)
 			this.setColor(this.#style.color.debug)
-			h ??= this.#style.widget.height
 			this.drawRect(w, h)
 		}
 	}

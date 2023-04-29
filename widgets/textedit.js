@@ -1,7 +1,5 @@
 
-exports('textEdit', async function (text, keyboardTitle, maxTextLength, isSecretMode) {
-	text ??= ''
-
+exports('textEdit', async function (text = '', keyboardTitle, maxTextLength, isSecretMode) {
 	const _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE'
 
 	const w = context.getWidgetWidth() || maxTextLength * style.textEdit.symbolWidth

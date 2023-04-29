@@ -1,8 +1,7 @@
-exports('textArea', function (text, w) {
+exports('textArea', function (text, w = context.getWidgetWidth()) {
 	painter.setText(text)
 	painter.setTextOpts()
 
-	w ??= context.getWidgetWidth()
 	painter.setTextMaxWidth(w)
 
 	const lc = painter.calculateTextLineCount()

@@ -1,5 +1,4 @@
-exports('slider', function (min, value, max, w) {
-	w ??= context.getWidgetWidth()
+exports('slider', function (min, value, max, w = context.getWidgetWidth()) {
 	const h = style.widget.height
 
 	context.beginDraw(w, h)

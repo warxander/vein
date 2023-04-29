@@ -1,6 +1,4 @@
-exports('progressBar', function (min, value, max, w) {
-	w ??= context.getWidgetWidth()
-
+exports('progressBar', function (min, value, max, w = context.getWidgetWidth()) {
 	context.beginDraw(w, style.widget.height)
 
 	const h = style.progressBar.height

@@ -1,5 +1,4 @@
-exports('separator', function (w) {
-	w ??= context.getWidgetWidth()
+exports('separator', function (w = context.getWidgetWidth()) {
 	const h = style.widget.height
 
 	context.beginDraw(w, h)
