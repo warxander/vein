@@ -70,7 +70,7 @@ class Painter {
 		this.#layout.w = 0
 		this.#layout.h = 0
 
-		return [this.#window.x, this.#window.y]
+		return { x: this.#window.x, y: this.#window.y }
 	}
 
 	drawWindow() {

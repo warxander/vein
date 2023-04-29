@@ -17,7 +17,7 @@ Here is the example to illustrate IMGUI concepts:
 ```lua
 local vein = exports.vein -- Store it in local variable for performance reasons
 
-local windowX, windowY
+local windowPos = { }
 local isWindowOpened = true
 
 while isWindowOpened do
@@ -25,7 +25,7 @@ while isWindowOpened do
 
 	-- Call setNextWindow* methods
 
-	vein:beginWindow(windowX, windowY) -- Mandatory
+	vein:beginWindow(windowPos) -- Mandatory
 
 	-- Draw widgets in column
 
@@ -45,7 +45,7 @@ while isWindowOpened do
 		isWindowOpened = false
 	end
 
-	windowX, windowY = table.unpack(vein:endWindow()) -- Mandatory
+	windowPos = vein:endWindow() -- Mandatory
 end
 ```
 Check this [repository](https://github.com/warxander/vein-demo) to learn more from Vein demo.
@@ -82,9 +82,9 @@ setNextWindowNoDrag(isNoDrag)
 beginWindow([x, y])
 
 --! @brief endWindow
---! @return x: number
---! @return y: number
-local x, y = table.unpack(endWindow())
+--! @return windowPos.x: number
+--! @return windowPos.y: number
+local windowPos = endWindow()
 
 --! @brief isWidgetHovered
 --! @comment Returns true is last drawn widget was hovered
