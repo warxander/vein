@@ -23,7 +23,7 @@ exports('slider', function(min, value, max, w)
 	_painter:move(0, sh)
 	_painter:drawRect(w, sliderStyle.height)
 
-	local sx = w * (returnValue or value) / (max + min)
+	local sx = w * value / (max + min)
 	local tx = sx - sliderStyle.tickMark.width / 2
 	local ty = -sliderStyle.tickMark.height / 4
 
