@@ -45,7 +45,7 @@ while isWindowOpened do
 		isWindowOpened = false
 	end
 
-	windowX, windowY = vein:endWindow() -- Mandatory
+	windowX, windowY = table.unpack(vein:endWindow()) -- Mandatory
 end
 ```
 Check this [repository](https://github.com/warxander/vein-demo) to learn more from Vein demo.
