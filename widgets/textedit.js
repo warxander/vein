@@ -46,5 +46,5 @@ exports('textEdit', async function (text = '', keyboardTitle, maxTextLength, isS
 
 	context.endDraw()
 
-	return [newText != text, newText]
+	return { isTextChanged: newText != text, text: newText }
 })

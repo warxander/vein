@@ -217,7 +217,7 @@ textArea([text, w])
 --! @param keyboardTitle: string
 --! @param maxTextLength: number
 --! @param isSecretMode: boolean
---! @return hasTextChanged: boolean
---! @return text: string
-local hasTextChanged, text = table.unpack(textEdit(text, keyboardTitle, maxTextLength [, isSecretMode]))
+--! @return textEditResult.isTextChanged: boolean
+--! @return textEditResult.text: string
+local textEditResult = textEdit(text, keyboardTitle, maxTextLength [, isSecretMode])
 ```
