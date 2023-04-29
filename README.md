@@ -187,9 +187,9 @@ separator([w])
 --! @param value: number
 --! @param max: number
 --! @param w: number
---! @return hasValueChanged: boolean
---! @return value: number
-local hasValueChanged, value = table.unpack(slider(min, value, max [, w]))
+--! @return sliderResult.isValueChanged: boolean
+--! @return sliderResult.value: number
+local sliderResult = slider(min, value, max [, w])
 
 --! @brief sprite
 --! @param dict: string

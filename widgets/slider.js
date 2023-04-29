@@ -27,5 +27,5 @@ exports('slider', function (min, value, max, w = context.getWidgetWidth()) {
 
 	context.endDraw()
 
-	return [newValue != value, newValue]
+	return { isValueChanged: newValue != value, value: newValue }
 })
