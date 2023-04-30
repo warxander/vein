@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"outDir": "./dist",
+		"module": "ES6",
 		"target": "ES2017",
 		"types": [
 			"@citizenfx/client"
