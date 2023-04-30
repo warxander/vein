@@ -41,9 +41,9 @@ class Painter {
 		}
 	}
 
-	beginWindow(x, y) {
-		this.#window.x = x || 0.5
-		this.#window.y = y || 0.5
+	beginWindow(windowPos) {
+		this.#window.x = windowPos && windowPos.x ? windowPos.x : 0.5
+		this.#window.y = windowPos && windowPos.y ? windowPos.y : 0.5
 
 		this._x = this.#window.x - (this.#window.w / 2)
 		this._y = this.#window.y - (this.#window.h / 2)

@@ -31,9 +31,9 @@ class Context {
 		return this.#state.isNoDrag
 	}
 
-	beginWindow(x, y) {
+	beginWindow(windowPos) {
 		this.#input.beginWindow()
-		this.#painter.beginWindow(x, y)
+		this.#painter.beginWindow(windowPos)
 	}
 
 	endWindow() {

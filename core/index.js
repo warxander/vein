@@ -15,8 +15,8 @@ exports('setNextWindowNoDrag', function (isNoDrag) {
 	context.setNextWindowNoDrag(isNoDrag)
 })
 
-exports('beginWindow', function (x, y) {
-	context.beginWindow(x, y)
+exports('beginWindow', function (windowPos) {
+	context.beginWindow(windowPos)
 })
 
 exports('endWindow', function () {

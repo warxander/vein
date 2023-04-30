@@ -77,9 +77,9 @@ local isEnabled = isDebugEnabled()
 setNextWindowNoDrag(isNoDrag)
 
 --! @brief beginWindow
---! @param x: number
---! @param y: number
-beginWindow([x, y])
+--! @param windowPos.x: number
+--! @param windowPos.y: number
+beginWindow([windowPos])
 
 --! @brief endWindow
 --! @return windowPos.x: number
