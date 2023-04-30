@@ -1,72 +1,72 @@
-const context = new Context()
-const input = context.getInput()
-const painter = context.getPainter()
-const style = painter.getStyle()
+const context = new Context();
+const input = context.getInput();
+const painter = context.getPainter();
+const style = painter.getStyle();
 
 exports('setDebugEnabled', function (enabled) {
-	context.setDebugEnabled(enabled)
-})
+	context.setDebugEnabled(enabled);
+});
 
 exports('isDebugEnabled', function () {
-	return context.isDebugEnabled()
-})
+	return context.isDebugEnabled();
+});
 
 exports('setNextWindowNoDrag', function (isNoDrag) {
-	context.setNextWindowNoDrag(isNoDrag)
-})
+	context.setNextWindowNoDrag(isNoDrag);
+});
 
 exports('beginWindow', function (windowPos) {
-	context.beginWindow(windowPos)
-})
+	context.beginWindow(windowPos);
+});
 
 exports('endWindow', function () {
-	return context.endWindow()
-})
+	return context.endWindow();
+});
 
 exports('isWidgetHovered', function () {
-	return context.isWidgetHovered()
-})
+	return context.isWidgetHovered();
+});
 
 exports('isWidgetClicked', function () {
-	return context.isWidgetClicked()
-})
+	return context.isWidgetClicked();
+});
 
 exports('beginRow', function () {
-	painter.beginRow()
-})
+	painter.beginRow();
+});
 
 exports('endRow', function () {
-	painter.endRow()
-})
+	painter.endRow();
+});
 
 exports('setNextTextEntry', function (entry, ...args) {
-	context.setNextTextEntry(entry, ...args)
-})
+	context.setNextTextEntry(entry, ...args);
+});
 
 exports('pushTextEntry', function (entry, ...args) {
-	context.pushTextEntry(entry, ...args)
-})
+	context.pushTextEntry(entry, ...args);
+});
 
 exports('popTextEntry', function () {
-	context.popTextEntry()
-})
+	context.popTextEntry();
+});
 
 exports('setNextWidgetWidth', function (w) {
-	context.setNextWidgetWidth(w)
-})
+	context.setNextWidgetWidth(w);
+});
 
 exports('pushWidgetWidth', function (w) {
-	context.pushWidgetWidth(w)
-})
+	context.pushWidgetWidth(w);
+});
 
 exports('popWidgetWidth', function () {
-	context.popWidgetWidth()
-})
+	context.popWidgetWidth();
+});
 
 exports('setDarkColorTheme', function () {
-	painter.getStyle().setDarkColorTheme()
-})
+	painter.getStyle().setDarkColorTheme();
+});
 
 exports('setLightColorTheme', function () {
-	painter.getStyle().setLightColorTheme()
-})
+	painter.getStyle().setLightColorTheme();
+});

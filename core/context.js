@@ -1,119 +1,124 @@
 function setTextEntry(state, entry, ...args) {
-	state.textEntry = entry
-	state.textComponents = args
+	state.textEntry = entry;
+	state.textComponents = args;
 }
 
 function setWidgetWidth(state, w) {
-	state.widgetWidth = w
+	state.widgetWidth = w;
 }
 
 class Context {
-	#input
-	#painter
-	#isDebug
-	#state
-	#nextState
+	#input;
+	#painter;
+	#isDebug;
+	#state;
+	#nextState;
 
 	constructor() {
-		this.#input = new Input(this)
-		this.#painter = new Painter(this)
+		this.#input = new Input(this);
+		this.#painter = new Painter(this);
 
-		this.#isDebug = false
-		this.#state = {}
-		this.#nextState = {}
+		this.#isDebug = false;
+		this.#state = {};
+		this.#nextState = {};
 	}
 
 	setNextWindowNoDrag(isNoDrag) {
-		this.#state.isNoDrag = isNoDrag
+		this.#state.isNoDrag = isNoDrag;
 	}
 
 	isWindowNoDrag() {
-		return this.#state.isNoDrag
+		return this.#state.isNoDrag;
 	}
 
 	beginWindow(windowPos) {
-		this.#input.beginWindow()
-		this.#painter.beginWindow(windowPos)
+		this.#input.beginWindow();
+		this.#painter.beginWindow(windowPos);
 	}
 
 	endWindow() {
-		const windowPos = this.#painter.endWindow()
+		const windowPos = this.#painter.endWindow();
 
-		this.#input.endWindow()
+		this.#input.endWindow();
 
-		this.#state = {}
+		this.#state = {};
 
-		return windowPos
+		return windowPos;
 	}
 
 	isWidgetHovered() {
-		return this.#input.isRectHovered(this.#painter.getWidgetX(), this.#painter.getWidgetY(), this.#painter.getWidgetWidth(), this.#painter.getWidgetHeight())
+		return this.#input.isRectHovered(
+			this.#painter.getWidgetX(),
+			this.#painter.getWidgetY(),
+			this.#painter.getWidgetWidth(),
+			this.#painter.getWidgetHeight()
+		);
 	}
 
 	isWidgetClicked() {
-		return this.#input.isMousePressed() && this.isWidgetHovered()
+		return this.#input.isMousePressed() && this.isWidgetHovered();
 	}
 
 	beginDraw(w, h) {
-		this.#painter.beginDraw(w, h)
+		this.#painter.beginDraw(w, h);
 	}
 
 	endDraw() {
-		this.#painter.endDraw()
+		this.#painter.endDraw();
 
-		this.#nextState = {}
+		this.#nextState = {};
 	}
 
 	setDebugEnabled(enabled) {
-		this.#isDebug = enabled
+		this.#isDebug = enabled;
 	}
 
 	isDebugEnabled() {
-		return this.#isDebug
+		return this.#isDebug;
 	}
 
 	setNextTextEntry(entry, ...args) {
-		setTextEntry(this.#nextState, entry, ...args)
+		setTextEntry(this.#nextState, entry, ...args);
 	}
 
 	pushTextEntry(entry, ...args) {
-		setTextEntry(this.#state, entry, ...args)
+		setTextEntry(this.#state, entry, ...args);
 	}
 
 	popTextEntry() {
-		this.#state.textEntry = null
-		this.#state.textComponents = null
+		this.#state.textEntry = null;
+		this.#state.textComponents = null;
 	}
 
 	getTextEntry() {
-		return this.#nextState.textEntry || this.#state.textEntry
+		return this.#nextState.textEntry || this.#state.textEntry;
 	}
 
 	getTextComponents() {
-		return this.#nextState.textComponents || this.#state.textComponents
+		return this.#nextState.textComponents || this.#state.textComponents;
 	}
 
 	setNextWidgetWidth(w) {
-		setWidgetWidth(this.#nextState, w)
+		setWidgetWidth(this.#nextState, w);
 	}
 
 	pushWidgetWidth(w) {
-		setWidgetWidth(this.#state, w)
+		setWidgetWidth(this.#state, w);
 	}
 
 	popWidgetWidth() {
-		this.#state.widgetWidth = nil
+		this.#state.widgetWidth = nil;
 	}
 
 	getWidgetWidth() {
-		return this.#nextState.widgetWidth || this.#state.widgetWidth
+		return this.#nextState.widgetWidth || this.#state.widgetWidth;
 	}
 
 	getInput() {
-		return this.#input
+		return this.#input;
 	}
 
 	getPainter() {
-		return this.#painter
+		return this.#painter;
 	}
 }

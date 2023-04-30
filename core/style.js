@@ -8,7 +8,7 @@ function createDarkColorTheme() {
 		secondary: [181, 181, 173, 255],
 		widget: [22, 25, 35, 255],
 		window: [34, 37, 45, 255]
-	}
+	};
 }
 
 function createLightColorTheme() {
@@ -21,21 +21,21 @@ function createLightColorTheme() {
 		secondary: [135, 137, 136, 255],
 		widget: [248, 248, 236, 255],
 		window: [230, 230, 223, 255]
-	}
+	};
 }
 
 class Style {
 	constructor() {
 		this.button = {
 			spacing: 0.005
-		}
+		};
 
 		this.checkbox = {
 			height: 0.02,
 			spacing: 0.0025,
 			inlineHeight: 0.002,
 			outlineHeight: 0.002
-		}
+		};
 
 		this.heading = {
 			height: 0.045,
@@ -45,21 +45,21 @@ class Style {
 				scale: 0.725,
 				offset: 0.003
 			}
-		}
+		};
 
 		this.label = {
 			text: {
 				offset: -0.005
 			}
-		}
+		};
 
 		this.progressBar = {
 			height: 0.004
-		}
+		};
 
 		this.separator = {
 			height: 0.001
-		}
+		};
 
 		this.slider = {
 			height: 0.004,
@@ -67,27 +67,27 @@ class Style {
 				width: 0.012,
 				height: 0.007
 			}
-		}
+		};
 
 		this.spriteButton = {
 			spriteWidth: 0.016,
 			spacing: 0.001
-		}
+		};
 
 		this.sprite = {
 			color: [254, 254, 254, 255]
-		}
+		};
 
 		this.textArea = {
 			text: {
 				offset: -0.005
 			}
-		}
+		};
 
 		this.textEdit = {
 			lineHeight: 0.002,
 			symbolWidth: 0.01
-		}
+		};
 
 		this.widget = {
 			height: 0.035,
@@ -96,7 +96,7 @@ class Style {
 				offset: -0.0035,
 				scale: 0.325
 			}
-		}
+		};
 
 		this.window = {
 			outlineWidth: 0.0005,
@@ -108,16 +108,16 @@ class Style {
 				h: 0.005,
 				v: 0.01
 			}
-		}
+		};
 
-		this.setDarkColorTheme()
+		this.setDarkColorTheme();
 	}
 
 	setDarkColorTheme() {
-		this.color = createDarkColorTheme()
+		this.color = createDarkColorTheme();
 	}
 
 	setLightColorTheme() {
-		this.color = createLightColorTheme()
+		this.color = createLightColorTheme();
 	}
 }

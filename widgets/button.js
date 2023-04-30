@@ -1,20 +1,20 @@
 exports('button', function (text) {
-	painter.setText(text)
-	painter.setTextOpts()
+	painter.setText(text);
+	painter.setTextOpts();
 
-	const w = context.getWidgetWidth() || (painter.calculateTextWidth() + style.button.spacing * 2)
-	const h = style.widget.height
+	const w = context.getWidgetWidth() || painter.calculateTextWidth() + style.button.spacing * 2;
+	const h = style.widget.height;
 
-	context.beginDraw(w, h)
+	context.beginDraw(w, h);
 
-	painter.setColor(context.isWidgetHovered() ? style.color.hover : style.color.widget)
-	painter.drawRect(w, h)
+	painter.setColor(context.isWidgetHovered() ? style.color.hover : style.color.widget);
+	painter.drawRect(w, h);
 
-	painter.setColor(style.color.primary)
-	painter.move(style.button.spacing, 0)
-	painter.drawText()
+	painter.setColor(style.color.primary);
+	painter.move(style.button.spacing, 0);
+	painter.drawText();
 
-	context.endDraw()
+	context.endDraw();
 
-	return context.isWidgetClicked()
-})
+	return context.isWidgetClicked();
+});
