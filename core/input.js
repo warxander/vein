@@ -1,5 +1,4 @@
 class Input {
-	#context;
 	#state;
 
 	static disabledControls = [
@@ -9,8 +8,7 @@ class Input {
 
 	static disabledControlsInVehicle = [80, 106, 122, 135, 282, 283, 284, 285];
 
-	constructor(context) {
-		this.#context = context;
+	constructor() {
 		this.#state = {};
 	}
 

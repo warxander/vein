@@ -15,7 +15,7 @@ class Context {
 	#nextState;
 
 	constructor() {
-		this.#input = new Input(this);
+		this.#input = new Input();
 		this.#painter = new Painter(this);
 
 		this.#isDebug = false;
