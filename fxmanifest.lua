@@ -2,13 +2,13 @@ fx_version 'cerulean'
 game 'gta5'
 
 client_scripts {
-	'core/utils.js',
-	'core/style.js',
-	'core/input.js',
-	'core/painter.js',
-	'core/context.js',
+	'src/core/utils.js',
+	'src/core/style.js',
+	'src/core/input.js',
+	'src/core/painter.js',
+	'src/core/context.js',
 
-	'core/index.js',
+	'src/core/index.js',
 
-	'widgets/*.js',
+	'src/widgets/*.js',
 }
