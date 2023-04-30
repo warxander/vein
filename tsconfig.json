@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"outDir": "./dist",
-		"allowJs": true,
 		"target": "ES2017",
 		"types": [
 			"@citizenfx/client"
