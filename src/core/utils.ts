@@ -1,4 +1,4 @@
-function addTextComponents(components) {
+export function addTextComponents(components) {
 	for (const component of components) {
 		switch (typeof component) {
 			case 'string':
@@ -13,7 +13,7 @@ function addTextComponents(components) {
 	}
 }
 
-function wait(ms) {
+export function wait(ms) {
 	return new Promise(function (res) {
 		setTimeout(res, ms);
 	});

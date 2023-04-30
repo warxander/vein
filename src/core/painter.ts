@@ -1,6 +1,12 @@
-class Painter {
+import { Style } from "./style";
+import { addTextComponents } from "./utils";
+
+export class Painter {
 	#context;
 	#style;
+	#x;
+	#y;
+	#color;
 	#layout;
 	#drag;
 	#row;
@@ -10,6 +16,11 @@ class Painter {
 	constructor(context) {
 		this.#context = context;
 		this.#style = new Style();
+
+		this.#x = 0;
+		this.#y = 0;
+
+		this.#color = {};
 
 		this.#layout = {
 			w: 0,
@@ -45,8 +56,8 @@ class Painter {
 		this.#window.x = windowPos && windowPos.x ? windowPos.x : 0.5;
 		this.#window.y = windowPos && windowPos.y ? windowPos.y : 0.5;
 
-		this._x = this.#window.x - this.#window.w / 2;
-		this._y = this.#window.y - this.#window.h / 2;
+		this.#x = this.#window.x - this.#window.w / 2;
+		this.#y = this.#window.y - this.#window.h / 2;
 
 		if (!this.#layout.isValid) return;
 
@@ -72,7 +83,7 @@ class Painter {
 
 	drawWindow() {
 		const outlineWidth = this.#style.window.outlineWidth;
-		const outlineHeight = outlineWidth * GetAspectRatio();
+		const outlineHeight = outlineWidth * GetAspectRatio(false);
 
 		this.move(-outlineWidth, -outlineHeight);
 		this.setColor(this.#style.color.widget);
@@ -89,7 +100,7 @@ class Painter {
 		const input = this.#context.getInput();
 
 		if (
-			input.isRectHovered(this._x, this._y, this.#window.w, this.#style.window.margins.v) &&
+			input.isRectHovered(this.#x, this.#y, this.#window.w, this.#style.window.margins.v) &&
 			input.isMousePressed()
 		) {
 			this.#drag.origin.x = input.getMousePosX();
@@ -117,11 +128,11 @@ class Painter {
 	}
 
 	getX() {
-		return this._x;
+		return this.#x;
 	}
 
 	getY() {
-		return this._y;
+		return this.#y;
 	}
 
 	beginRow() {
@@ -137,7 +148,7 @@ class Painter {
 		this.#layout.w = Math.max(this.#layout.w, this.#row.w);
 		this.#layout.h = this.#layout.h + this.#row.h;
 
-		this.setPos(this.#window.x - this.#window.w / 2 + this.#style.window.margins.h, this._y + this.#row.h);
+		this.setPos(this.#window.x - this.#window.w / 2 + this.#style.window.margins.h, this.#y + this.#row.h);
 
 		this.#row.isActive = false;
 		this.#row.isFirstWidget = true;
@@ -167,8 +178,8 @@ class Painter {
 			this.move(ho, vo);
 		}
 
-		this.#widget.x = this._x;
-		this.#widget.y = this._y;
+		this.#widget.x = this.#x;
+		this.#widget.y = this.#y;
 		this.#widget.w = w;
 		this.#widget.h = h;
 	}
@@ -213,13 +224,13 @@ class Painter {
 	}
 
 	setPos(x, y) {
-		this._x = x;
-		this._y = y;
+		this.#x = x;
+		this.#y = y;
 	}
 
 	move(x, y) {
-		this._x = this._x + x;
-		this._y = this._y + y;
+		this.#x = this.#x + x;
+		this.#y = this.#y + y;
 	}
 
 	getStyle() {
@@ -227,20 +238,20 @@ class Painter {
 	}
 
 	setColor(color) {
-		this._color = color;
+		this.#color = color;
 	}
 
 	drawRect(w, h) {
 		if (this.#layout.isValid)
 			DrawRect(
-				this._x + w / 2,
-				this._y + h / 2,
+				this.#x + w / 2,
+				this.#y + h / 2,
 				w,
 				h,
-				this._color[0],
-				this._color[1],
-				this._color[2],
-				this._color[3]
+				this.#color[0],
+				this.#color[1],
+				this.#color[2],
+				this.#color[3]
 			);
 	}
 
@@ -249,15 +260,15 @@ class Painter {
 			DrawSprite(
 				dict,
 				name,
-				this._x + w / 2,
-				this._y + h / 2,
+				this.#x + w / 2,
+				this.#y + h / 2,
 				w,
 				h,
 				0,
-				this._color[0],
-				this._color[1],
-				this._color[2],
-				this._color[3]
+				this.#color[0],
+				this.#color[1],
+				this.#color[2],
+				this.#color[3]
 			);
 	}
 
@@ -286,7 +297,7 @@ class Painter {
 		const textComponents = this.#context.getTextComponents();
 		if (textComponents) addTextComponents(textComponents);
 
-		return EndTextCommandLineCount(this._x, this._y);
+		return EndTextCommandLineCount(this.#x, this.#y);
 	}
 
 	setText(text) {
@@ -297,25 +308,25 @@ class Painter {
 		if (!this.#context.getTextEntry()) return;
 
 		SetTextFont(font);
-		SetTextScale(scale * GetAspectRatio(), scale);
+		SetTextScale(scale * GetAspectRatio(false), scale);
 	}
 
 	setTextMaxWidth(w) {
-		if (this.#context.getTextEntry()) SetTextWrap(this._x, this._x + w);
+		if (this.#context.getTextEntry()) SetTextWrap(this.#x, this.#x + w);
 	}
 
 	drawText(offset = this.#style.widget.text.offset) {
 		const textEntry = this.#context.getTextEntry();
 		if (!textEntry) return;
 
-		SetTextColour(this._color[0], this._color[1], this._color[2], this._color[3]);
+		SetTextColour(this.#color[0], this.#color[1], this.#color[2], this.#color[3]);
 
 		BeginTextCommandDisplayText(textEntry);
 
 		const textComponents = this.#context.getTextComponents();
 		if (textComponents) addTextComponents(textComponents);
 
-		EndTextCommandDisplayText(this._x, this._y - offset);
+		EndTextCommandDisplayText(this.#x, this.#y - offset);
 	}
 
 	drawDebug(w, h = this.#style.widget.height) {

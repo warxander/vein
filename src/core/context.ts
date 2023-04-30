@@ -1,4 +1,7 @@
-class Context {
+import { Input } from "./input";
+import { Painter } from "./painter";
+
+export class Context {
 	#input;
 	#painter;
 	#isDebug;
@@ -98,7 +101,7 @@ class Context {
 	}
 
 	popWidgetWidth() {
-		this.#state.widgetWidth = nil;
+		this.#state.widgetWidth = null;
 	}
 
 	getWidgetWidth() {

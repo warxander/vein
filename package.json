@@ -1,0 +1,10 @@
+{
+	"name": "vein",
+	"devDependencies": {
+		"@citizenfx/client": "^2.0.6427-1",
+		"ts-loader": "~8.2.0",
+		"typescript": "latest",
+		"webpack": "^4.41.2",
+		"webpack-cli": "^3.3.11"
+	}
+}

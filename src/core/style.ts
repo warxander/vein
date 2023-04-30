@@ -24,7 +24,22 @@ function createLightColorTheme() {
 	};
 }
 
-class Style {
+export class Style {
+	color;
+	button;
+	checkbox;
+	heading;
+	label;
+	progressBar;
+	separator;
+	slider;
+	spriteButton;
+	sprite;
+	textArea;
+	textEdit;
+	widget;
+	window;
+
 	constructor() {
 		this.button = {
 			spacing: 0.005

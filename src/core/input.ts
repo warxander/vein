@@ -1,4 +1,4 @@
-class Input {
+export class Input {
 	#state;
 
 	static disabledControls = [
@@ -15,7 +15,7 @@ class Input {
 	beginWindow() {
 		for (const control of Input.disabledControls) DisableControlAction(0, control, true);
 
-		if (IsPedInAnyVehicle(PlayerPedId()))
+		if (IsPedInAnyVehicle(PlayerPedId(), false))
 			for (const control of Input.disabledControlsInVehicle) DisableControlAction(0, control, true);
 
 		SetMouseCursorActiveThisFrame();
