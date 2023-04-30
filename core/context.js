@@ -1,12 +1,3 @@
-function setTextEntry(state, entry, ...args) {
-	state.textEntry = entry;
-	state.textComponents = args;
-}
-
-function setWidgetWidth(state, w) {
-	state.widgetWidth = w;
-}
-
 class Context {
 	#input;
 	#painter;
@@ -78,11 +69,11 @@ class Context {
 	}
 
 	setNextTextEntry(entry, ...args) {
-		setTextEntry(this.#nextState, entry, ...args);
+		this.#setTextEntry(this.#nextState, entry, ...args);
 	}
 
 	pushTextEntry(entry, ...args) {
-		setTextEntry(this.#state, entry, ...args);
+		this.#setTextEntry(this.#state, entry, ...args);
 	}
 
 	popTextEntry() {
@@ -99,11 +90,11 @@ class Context {
 	}
 
 	setNextWidgetWidth(w) {
-		setWidgetWidth(this.#nextState, w);
+		this.#nextState.widgetWidth = w;
 	}
 
 	pushWidgetWidth(w) {
-		setWidgetWidth(this.#state, w);
+		this.#state.widgetWidth = w;
 	}
 
 	popWidgetWidth() {
@@ -120,5 +111,10 @@ class Context {
 
 	getPainter() {
 		return this.#painter;
+	}
+
+	#setTextEntry(state, entry, ...args) {
+		state.textEntry = entry;
+		state.textComponents = args;
 	}
 }
