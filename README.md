@@ -1,7 +1,7 @@
 # Vein
 Vein is a FiveM [IMGUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) framework.
 
-It's written on JavaScript and uses [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) to be available for other resources.
+It's written on TypeScript and uses [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) to be available for other resources.
 
 ![alt text](https://raw.githubusercontent.com/warxander/vein-demo/master/demo.png)
 
