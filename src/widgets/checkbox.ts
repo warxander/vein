@@ -4,7 +4,7 @@ export function declareExport(context: Context) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	globalThis.exports('checkBox', function (isChecked, text) {
+	globalThis.exports('checkBox', function (isChecked: boolean, text: string | undefined) {
 		painter.setText(text);
 		painter.setTextOpts();
 
@@ -12,7 +12,7 @@ export function declareExport(context: Context) {
 		const checkboxStyle = style.checkbox;
 		let cw = checkboxStyle.height / aspectRatio;
 
-		const w = context.getWidgetWidth() || cw + checkboxStyle.spacing + painter.calculateTextWidth();
+		const w = context.getWidgetWidth() ?? cw + checkboxStyle.spacing + painter.calculateTextWidth();
 		const h = style.widget.height;
 
 		context.beginDraw(w, h);

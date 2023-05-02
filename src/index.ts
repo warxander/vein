@@ -1,4 +1,6 @@
+import { Position, TextEntryComponents } from './common/types';
 import { Context } from './core/context';
+
 import * as Button from './widgets/button';
 import * as Checkbox from './widgets/checkbox';
 import * as Dummy from './widgets/dummy';
@@ -16,7 +18,7 @@ import * as TextEdit from './widgets/textedit';
 const context = new Context();
 const painter = context.getPainter();
 
-globalThis.exports('setDebugEnabled', function (enabled) {
+globalThis.exports('setDebugEnabled', function (enabled: boolean) {
 	context.setDebugEnabled(enabled);
 });
 
@@ -24,12 +26,12 @@ globalThis.exports('isDebugEnabled', function () {
 	return context.isDebugEnabled();
 });
 
-globalThis.exports('setNextWindowNoDrag', function (isNoDrag) {
+globalThis.exports('setNextWindowNoDrag', function (isNoDrag: boolean) {
 	context.setNextWindowNoDrag(isNoDrag);
 });
 
-globalThis.exports('beginWindow', function (windowPos) {
-	context.beginWindow(windowPos);
+globalThis.exports('beginWindow', function (pos: Position) {
+	context.beginWindow(pos);
 });
 
 globalThis.exports('endWindow', function () {
@@ -52,23 +54,23 @@ globalThis.exports('endRow', function () {
 	painter.endRow();
 });
 
-globalThis.exports('setNextTextEntry', function (entry, ...args) {
-	context.setNextTextEntry(entry, ...args);
+globalThis.exports('setNextTextEntry', function (entry: string, ...components: TextEntryComponents) {
+	context.setNextTextEntry(entry, ...components);
 });
 
-globalThis.exports('pushTextEntry', function (entry, ...args) {
-	context.pushTextEntry(entry, ...args);
+globalThis.exports('pushTextEntry', function (entry: string, ...components: TextEntryComponents) {
+	context.pushTextEntry(entry, ...components);
 });
 
 globalThis.exports('popTextEntry', function () {
 	context.popTextEntry();
 });
 
-globalThis.exports('setNextWidgetWidth', function (w) {
+globalThis.exports('setNextWidgetWidth', function (w: number) {
 	context.setNextWidgetWidth(w);
 });
 
-globalThis.exports('pushWidgetWidth', function (w) {
+globalThis.exports('pushWidgetWidth', function (w: number) {
 	context.pushWidgetWidth(w);
 });
 

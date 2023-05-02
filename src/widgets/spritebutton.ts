@@ -4,7 +4,7 @@ export function declareExport(context: Context) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	globalThis.exports('spriteButton', function (dict, name, text) {
+	globalThis.exports('spriteButton', function (dict: string, name: string, text: string | undefined) {
 		painter.setText(text);
 		painter.setTextOpts();
 

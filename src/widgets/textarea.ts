@@ -4,7 +4,7 @@ export function declareExport(context: Context) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	globalThis.exports('textArea', function (text, w = context.getWidgetWidth()) {
+	globalThis.exports('textArea', function (text: string, w = context.getWidgetWidth() as number) {
 		painter.setText(text);
 		painter.setTextOpts();
 

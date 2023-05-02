@@ -4,7 +4,7 @@ export function declareExport(context: Context) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	globalThis.exports('separator', function (w = context.getWidgetWidth()) {
+	globalThis.exports('separator', function (w = context.getWidgetWidth() as number) {
 		const h = style.widget.height;
 
 		context.beginDraw(w, h);

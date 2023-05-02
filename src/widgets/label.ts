@@ -4,11 +4,11 @@ export function declareExport(context: Context) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	globalThis.exports('label', function (text) {
+	globalThis.exports('label', function (text: string | undefined) {
 		painter.setText(text);
 		painter.setTextOpts();
 
-		const w = context.getWidgetWidth() || painter.calculateTextWidth();
+		const w = context.getWidgetWidth() ?? painter.calculateTextWidth();
 		const h = style.widget.height;
 
 		context.beginDraw(w, h);

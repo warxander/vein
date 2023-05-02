@@ -1,46 +1,84 @@
-import { Input } from "./input";
-import { Painter } from "./painter";
+import { Position, PositionObject, TextEntryComponents } from '../common/types';
+import { Input } from './input';
+import { Painter } from './painter';
+
+class TextDrawState {
+	entry: string;
+	components: TextEntryComponents;
+
+	constructor(entry: string, components: TextEntryComponents) {
+		this.entry = entry;
+		this.components = components;
+	}
+}
+
+class DrawState {
+	text?: TextDrawState;
+	widgetWidth?: number;
+
+	reset(): void {
+		this.text = undefined;
+		this.widgetWidth = undefined;
+	}
+}
+
+class WindowState {
+	text?: TextDrawState;
+	widgetWidth?: number;
+	isNoDrag: boolean;
+
+	constructor() {
+		this.isNoDrag = false;
+	}
+
+	reset(): void {
+		this.text = undefined;
+		this.widgetWidth = undefined;
+		this.isNoDrag = false;
+	}
+}
 
 export class Context {
-	#input;
-	#painter;
-	#isDebug;
-	#state;
-	#nextState;
+	#input: Input;
+	#painter: Painter;
+	#isDebugEnabled: boolean;
+	#state: WindowState;
+	#nextState: DrawState;
 
 	constructor() {
 		this.#input = new Input();
 		this.#painter = new Painter(this);
 
-		this.#isDebug = false;
-		this.#state = {};
-		this.#nextState = {};
+		this.#isDebugEnabled = false;
+
+		this.#state = new WindowState();
+		this.#nextState = new DrawState();
 	}
 
-	setNextWindowNoDrag(isNoDrag) {
+	setNextWindowNoDrag(isNoDrag: boolean): void {
 		this.#state.isNoDrag = isNoDrag;
 	}
 
-	isWindowNoDrag() {
+	isWindowNoDrag(): boolean {
 		return this.#state.isNoDrag;
 	}
 
-	beginWindow(windowPos) {
+	beginWindow(pos: Position): void {
 		this.#input.beginWindow();
-		this.#painter.beginWindow(windowPos);
+		this.#painter.beginWindow(pos);
 	}
 
-	endWindow() {
+	endWindow(): PositionObject {
 		const windowPos = this.#painter.endWindow();
 
 		this.#input.endWindow();
 
-		this.#state = {};
+		this.#state.reset();
 
 		return windowPos;
 	}
 
-	isWidgetHovered() {
+	isWidgetHovered(): boolean {
 		return this.#input.isRectHovered(
 			this.#painter.getWidgetX(),
 			this.#painter.getWidgetY(),
@@ -49,75 +87,79 @@ export class Context {
 		);
 	}
 
-	isWidgetClicked() {
-		return this.#input.isMousePressed() && this.isWidgetHovered();
+	isWidgetClicked(): boolean {
+		return this.#input.getIsLmbPressed() && this.isWidgetHovered();
 	}
 
-	beginDraw(w, h) {
+	beginDraw(w: number, h: number): void {
 		this.#painter.beginDraw(w, h);
 	}
 
-	endDraw() {
+	endDraw(): void {
 		this.#painter.endDraw();
 
-		this.#nextState = {};
+		this.#nextState.reset();
 	}
 
-	setDebugEnabled(enabled) {
-		this.#isDebug = enabled;
+	setDebugEnabled(enabled: boolean): void {
+		this.#isDebugEnabled = enabled;
 	}
 
-	isDebugEnabled() {
-		return this.#isDebug;
+	isDebugEnabled(): boolean {
+		return this.#isDebugEnabled;
 	}
 
-	setNextTextEntry(entry, ...args) {
-		this.#setTextEntry(this.#nextState, entry, ...args);
+	setNextTextEntry(entry: string, ...components: TextEntryComponents): void {
+		this.#nextState.text = {
+			entry: entry,
+			components: components
+		};
 	}
 
-	pushTextEntry(entry, ...args) {
-		this.#setTextEntry(this.#state, entry, ...args);
+	pushTextEntry(entry: string, ...components: TextEntryComponents): void {
+		this.#state.text = {
+			entry: entry,
+			components: components
+		};
 	}
 
-	popTextEntry() {
-		this.#state.textEntry = null;
-		this.#state.textComponents = null;
+	popTextEntry(): void {
+		this.#state.text = undefined;
 	}
 
-	getTextEntry() {
-		return this.#nextState.textEntry || this.#state.textEntry;
+	getTextEntry(): string | undefined {
+		if (this.#nextState.text) return this.#nextState.text.entry;
+		if (this.#state.text) return this.#state.text.entry;
+		return undefined;
 	}
 
-	getTextComponents() {
-		return this.#nextState.textComponents || this.#state.textComponents;
+	getTextComponents(): TextEntryComponents | undefined {
+		if (this.#nextState.text) return this.#nextState.text.components;
+		if (this.#state.text) return this.#state.text.components;
+		return undefined;
 	}
 
-	setNextWidgetWidth(w) {
+	setNextWidgetWidth(w: number): void {
 		this.#nextState.widgetWidth = w;
 	}
 
-	pushWidgetWidth(w) {
+	pushWidgetWidth(w: number): void {
 		this.#state.widgetWidth = w;
 	}
 
-	popWidgetWidth() {
-		this.#state.widgetWidth = null;
+	popWidgetWidth(): void {
+		this.#state.widgetWidth = undefined;
 	}
 
-	getWidgetWidth() {
-		return this.#nextState.widgetWidth || this.#state.widgetWidth;
+	getWidgetWidth(): number | undefined {
+		return this.#nextState.widgetWidth ?? this.#state.widgetWidth;
 	}
 
-	getInput() {
+	getInput(): Input {
 		return this.#input;
 	}
 
-	getPainter() {
+	getPainter(): Painter {
 		return this.#painter;
-	}
-
-	#setTextEntry(state, entry, ...args) {
-		state.textEntry = entry;
-		state.textComponents = args;
 	}
 }

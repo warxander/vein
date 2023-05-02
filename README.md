@@ -17,7 +17,7 @@ Here is the example to illustrate IMGUI concepts:
 ```lua
 local vein = exports.vein -- Store it in local variable for performance reasons
 
-local windowPos = { }
+local windowPos = { x = 0.5, y = 0.5 }
 local isWindowOpened = true
 
 while isWindowOpened do
@@ -64,8 +64,9 @@ These features are not supported by design (can be a subject to change though):
 ### General
 ```lua
 --! @brief setDebugEnabled
+--! @comment False by default
 --! @param enabled: boolean
-setDebugEnabled([enabled])
+setDebugEnabled(enabled)
 
 --! @brief isDebugEnabled
 --! @return isEnabled: boolean
@@ -79,7 +80,7 @@ setNextWindowNoDrag(isNoDrag)
 --! @brief beginWindow
 --! @param windowPos.x: number
 --! @param windowPos.y: number
-beginWindow([windowPos])
+beginWindow(windowPos)
 
 --! @brief endWindow
 --! @return windowPos.x: number

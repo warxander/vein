@@ -1,4 +1,6 @@
-export function addTextComponents(components) {
+import { TextEntryComponents } from '../common/types';
+
+export function addTextComponents(components: TextEntryComponents): void {
 	for (const component of components) {
 		switch (typeof component) {
 			case 'string':
@@ -13,8 +15,8 @@ export function addTextComponents(components) {
 	}
 }
 
-export function wait(ms) {
-	return new Promise(function (res) {
+export function wait(ms: number): Promise<unknown> {
+	return new Promise(function (res: TimerHandler) {
 		setTimeout(res, ms);
 	});
 }

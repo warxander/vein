@@ -1,14 +1,14 @@
-import { Context } from "../core/context";
+import { Context } from '../core/context';
 
 export function declareExport(context: Context) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	globalThis.exports('button', function (text) {
+	globalThis.exports('button', function (text: string | undefined) {
 		painter.setText(text);
 		painter.setTextOpts();
 
-		const w = context.getWidgetWidth() || painter.calculateTextWidth() + style.button.spacing * 2;
+		const w = context.getWidgetWidth() ?? painter.calculateTextWidth() + style.button.spacing * 2;
 		const h = style.widget.height;
 
 		context.beginDraw(w, h);

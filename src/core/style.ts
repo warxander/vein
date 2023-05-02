@@ -1,5 +1,34 @@
-function createDarkColorTheme() {
-	return {
+import { Color } from '../common/types';
+
+interface ColorTheme {
+	debug: Color;
+	default: Color;
+	hover: Color;
+	primary: Color;
+	progress: Color;
+	secondary: Color;
+	widget: Color;
+	window: Color;
+}
+
+export class Style {
+	color: ColorTheme;
+	readonly button;
+	readonly checkbox;
+	readonly heading;
+	readonly label;
+	readonly progressBar;
+	readonly separator;
+	readonly slider;
+	readonly spriteButton;
+	readonly textArea;
+	readonly textEdit;
+	readonly widget;
+	readonly window;
+
+	static readonly #spriteColor: Color = [254, 254, 254, 255];
+
+	static readonly #darkColorTheme: ColorTheme = {
 		debug: [105, 255, 89, 32],
 		default: [0, 0, 0, 255],
 		hover: [244, 5, 82, 255],
@@ -9,10 +38,8 @@ function createDarkColorTheme() {
 		widget: [22, 25, 35, 255],
 		window: [34, 37, 45, 255]
 	};
-}
 
-function createLightColorTheme() {
-	return {
+	static readonly #lightColorTheme: ColorTheme = {
 		debug: [85, 235, 69, 48],
 		default: [0, 0, 0, 255],
 		hover: [244, 5, 82, 255],
@@ -22,25 +49,10 @@ function createLightColorTheme() {
 		widget: [248, 248, 236, 255],
 		window: [230, 230, 223, 255]
 	};
-}
-
-export class Style {
-	color;
-	button;
-	checkbox;
-	heading;
-	label;
-	progressBar;
-	separator;
-	slider;
-	spriteButton;
-	sprite;
-	textArea;
-	textEdit;
-	widget;
-	window;
 
 	constructor() {
+		this.color = Style.#darkColorTheme;
+
 		this.button = {
 			spacing: 0.005
 		};
@@ -89,10 +101,6 @@ export class Style {
 			spacing: 0.001
 		};
 
-		this.sprite = {
-			color: [254, 254, 254, 255]
-		};
-
 		this.textArea = {
 			text: {
 				offset: -0.005
@@ -128,11 +136,15 @@ export class Style {
 		this.setDarkColorTheme();
 	}
 
-	setDarkColorTheme() {
-		this.color = createDarkColorTheme();
+	setDarkColorTheme(): void {
+		this.color = Style.#darkColorTheme;
 	}
 
-	setLightColorTheme() {
-		this.color = createLightColorTheme();
+	setLightColorTheme(): void {
+		this.color = Style.#lightColorTheme;
+	}
+
+	getSpriteColor(): Color {
+		return Style.#spriteColor;
 	}
 }

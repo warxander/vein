@@ -1,7 +1,7 @@
-import { Context } from "../core/context";
+import { Context } from '../core/context';
 
 export function declareExport(context: Context) {
-	globalThis.exports('dummy', function (w, h) {
+	globalThis.exports('dummy', function (w: number, h: number) {
 		context.beginDraw(w, h);
 		context.endDraw();
 	});

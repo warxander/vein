@@ -1,251 +1,283 @@
-import { Style } from "./style";
-import { addTextComponents } from "./utils";
+import { Color, Position, PositionObject, TextEntryComponents } from '../common/types';
+import { Context } from './context';
+import { Style } from './style';
+import { addTextComponents } from './utils';
 
-export class Painter {
-	#context;
-	#style;
-	#x;
-	#y;
-	#color;
-	#layout;
-	#drag;
-	#row;
-	#widget;
-	#window;
+class Size {
+	w: number;
+	h: number;
 
-	constructor(context) {
-		this.#context = context;
-		this.#style = new Style();
-
-		this.#x = 0;
-		this.#y = 0;
-
-		this.#color = {};
-
-		this.#layout = {
-			w: 0,
-			h: 0
-		};
-
-		this.#drag = {
-			origin: {
-				x: 0,
-				y: 0
-			}
-		};
-
-		this.#row = {
-			w: 0,
-			h: 0
-		};
-
-		this.#widget = {
-			x: 0,
-			y: 0,
-			w: 0,
-			h: 0
-		};
-
-		this.#window = {
-			w: 0,
-			h: 0
-		};
+	constructor() {
+		this.w = 0;
+		this.h = 0;
 	}
 
-	beginWindow(windowPos) {
-		this.#window.x = windowPos && windowPos.x ? windowPos.x : 0.5;
-		this.#window.y = windowPos && windowPos.y ? windowPos.y : 0.5;
+	set(w: number, h: number) {
+		this.w = w;
+		this.h = h;
+	}
+}
 
-		this.#x = this.#window.x - this.#window.w / 2;
-		this.#y = this.#window.y - this.#window.h / 2;
+class LayoutState {
+	isValid: boolean;
+	isFirstWidget: boolean;
+	size: Size;
 
-		if (!this.#layout.isValid) return;
+	constructor() {
+		this.isValid = false;
+		this.isFirstWidget = false;
+		this.size = new Size();
+	}
+}
+
+class RowState {
+	isActive: boolean;
+	isFirstWidget: boolean;
+	size: Size;
+
+	constructor() {
+		this.isActive = false;
+		this.isFirstWidget = false;
+		this.size = new Size();
+	}
+}
+
+class DragState {
+	isInProcess: boolean;
+	origin: Position;
+
+	constructor() {
+		this.isInProcess = false;
+		this.origin = new Position();
+	}
+}
+
+class Geometry {
+	pos: Position;
+	size: Size;
+
+	constructor() {
+		this.pos = new Position();
+		this.size = new Size();
+	}
+}
+
+export class Painter {
+	#context: Context;
+	#style: Style;
+	#pos: Position;
+	#color: Color;
+	#layoutState: LayoutState;
+	#dragState: DragState;
+	#rowState: RowState;
+	#widgetGeometry: Geometry;
+	#windowGeometry: Geometry;
+
+	constructor(context: Context) {
+		this.#context = context;
+		this.#style = new Style();
+		this.#pos = new Position();
+		this.#color = [0, 0, 0, 255];
+		this.#layoutState = new LayoutState();
+		this.#dragState = new DragState();
+		this.#rowState = new RowState();
+		this.#widgetGeometry = new Geometry();
+		this.#windowGeometry = new Geometry();
+	}
+
+	beginWindow(pos: Position): void {
+		this.#windowGeometry.pos.set(pos.x, pos.y);
+
+		this.setPos(
+			this.#windowGeometry.pos.x - this.#windowGeometry.size.w / 2,
+			this.#windowGeometry.pos.y - this.#windowGeometry.size.h / 2
+		);
+
+		if (!this.#layoutState.isValid) return;
 
 		if (!this.#context.isWindowNoDrag()) this.beginDrag();
 
 		this.drawWindow();
 	}
 
-	endWindow() {
+	endWindow(): PositionObject {
 		if (!this.#context.isWindowNoDrag()) this.endDrag();
 
-		this.#window.w = this.#layout.isValid ? this.#layout.w + this.#style.window.margins.h * 2 : 0;
-		this.#window.h = this.#layout.isValid ? this.#layout.h + this.#style.window.margins.v * 2 : 0;
+		this.#windowGeometry.size.set(
+			this.#layoutState.isValid ? this.#layoutState.size.w + this.#style.window.margins.h * 2 : 0,
+			this.#layoutState.isValid ? this.#layoutState.size.h + this.#style.window.margins.v * 2 : 0
+		);
 
-		this.#layout.isValid = this.#layout.w != 0 && this.#layout.h != 0;
-		this.#layout.isFirstWidget = true;
+		this.#layoutState.isValid = this.#layoutState.size.w != 0 && this.#layoutState.size.h != 0;
+		this.#layoutState.isFirstWidget = true;
 
-		this.#layout.w = 0;
-		this.#layout.h = 0;
+		this.#layoutState.size.set(0, 0);
 
-		return { x: this.#window.x, y: this.#window.y };
+		return { x: this.#windowGeometry.pos.x, y: this.#windowGeometry.pos.y };
 	}
 
-	drawWindow() {
+	drawWindow(): void {
 		const outlineWidth = this.#style.window.outlineWidth;
 		const outlineHeight = outlineWidth * GetAspectRatio(false);
 
 		this.move(-outlineWidth, -outlineHeight);
 		this.setColor(this.#style.color.widget);
-		this.drawRect(this.#window.w + outlineWidth * 2, this.#window.h + outlineHeight * 2);
+		this.drawRect(this.#windowGeometry.size.w + outlineWidth * 2, this.#windowGeometry.size.h + outlineHeight * 2);
 		this.move(outlineWidth, outlineHeight);
 
 		this.setColor(this.#style.color.window);
-		this.drawRect(this.#window.w, this.#window.h);
+		this.drawRect(this.#windowGeometry.size.w, this.#windowGeometry.size.h);
 	}
 
-	beginDrag() {
-		if (this.#drag.isInProcess) return;
+	beginDrag(): void {
+		if (this.#dragState.isInProcess) return;
 
 		const input = this.#context.getInput();
 
 		if (
-			input.isRectHovered(this.#x, this.#y, this.#window.w, this.#style.window.margins.v) &&
-			input.isMousePressed()
+			input.isRectHovered(this.#pos.x, this.#pos.y, this.#windowGeometry.size.w, this.#style.window.margins.v) &&
+			input.getIsLmbPressed()
 		) {
-			this.#drag.origin.x = input.getMousePosX();
-			this.#drag.origin.y = input.getMousePosY();
-
-			this.#drag.isInProcess = true;
+			const mousePos: Position = input.getMousePos();
+			this.#dragState.origin.set(mousePos.x, mousePos.y);
+			this.#dragState.isInProcess = true;
 		}
 	}
 
-	endDrag() {
-		if (!this.#drag.isInProcess) return;
+	endDrag(): void {
+		if (!this.#dragState.isInProcess) return;
 
 		const input = this.#context.getInput();
 
-		if (input.isMouseDown()) {
-			const x = input.getMousePosX();
-			const y = input.getMousePosY();
+		if (input.getIsLmbDown()) {
+			const mousePos: Position = input.getMousePos();
 
-			this.#window.x = this.#window.x + x - this.#drag.origin.x;
-			this.#window.y = this.#window.y + y - this.#drag.origin.y;
+			this.#windowGeometry.pos.set(
+				this.#windowGeometry.pos.x + mousePos.x - this.#dragState.origin.x,
+				this.#windowGeometry.pos.y + mousePos.y - this.#dragState.origin.y
+			);
 
-			this.#drag.origin.x = x;
-			this.#drag.origin.y = y;
-		} else this.#drag.isInProcess = false;
+			this.#dragState.origin.set(mousePos.x, mousePos.y);
+		} else this.#dragState.isInProcess = false;
 	}
 
-	getX() {
-		return this.#x;
+	getX(): number {
+		return this.#pos.x;
 	}
 
-	getY() {
-		return this.#y;
+	getY(): number {
+		return this.#pos.y;
 	}
 
-	beginRow() {
-		if (!this.#row.isActive) {
-			this.#row.isActive = true;
-			this.#row.isFirstWidget = true;
+	beginRow(): void {
+		if (!this.#rowState.isActive) {
+			this.#rowState.isActive = true;
+			this.#rowState.isFirstWidget = true;
 		}
 	}
 
-	endRow() {
-		if (!this.#row.isActive) return;
+	endRow(): void {
+		if (!this.#rowState.isActive) return;
 
-		this.#layout.w = Math.max(this.#layout.w, this.#row.w);
-		this.#layout.h = this.#layout.h + this.#row.h;
+		this.#layoutState.size.set(
+			Math.max(this.#layoutState.size.w, this.#rowState.size.w),
+			this.#layoutState.size.h + this.#rowState.size.h
+		);
 
-		this.setPos(this.#window.x - this.#window.w / 2 + this.#style.window.margins.h, this.#y + this.#row.h);
+		this.setPos(
+			this.#windowGeometry.pos.x - this.#windowGeometry.size.w / 2 + this.#style.window.margins.h,
+			this.#pos.y + this.#rowState.size.h
+		);
 
-		this.#row.isActive = false;
-		this.#row.isFirstWidget = true;
+		this.#rowState.isActive = false;
+		this.#rowState.isFirstWidget = true;
 
-		this.#row.w = 0;
-		this.#row.h = 0;
+		this.#rowState.size.set(0, 0);
 	}
 
-	isRowMode() {
-		return this.#row.isActive;
+	isRowMode(): boolean {
+		return this.#rowState.isActive;
 	}
 
-	beginDraw(w, h) {
-		if (this.#layout.isFirstWidget) this.move(this.#style.window.margins.h, this.#style.window.margins.v);
+	beginDraw(w: number, h: number): void {
+		if (this.#layoutState.isFirstWidget) this.move(this.#style.window.margins.h, this.#style.window.margins.v);
 		else {
 			let ho = 0;
-			if (!this.#row.isFirstWidget) ho = this.#style.window.spacing.h;
-
-			if (this.#row.isActive) this.#row.w = this.#row.w + ho;
-			else this.#layout.w = this.#layout.w + ho;
+			if (this.#rowState.isActive && !this.#rowState.isFirstWidget) {
+				ho = this.#style.window.spacing.h;
+				this.#rowState.size.w += ho;
+			}
 
 			let vo = 0;
-			if (!this.#row.isActive || this.#row.isFirstWidget) vo = this.#style.window.spacing.v;
+			if (!this.#rowState.isActive || this.#rowState.isFirstWidget) vo = this.#style.window.spacing.v;
 
-			this.#layout.h = this.#layout.h + vo;
+			this.#layoutState.size.w += ho;
+			this.#layoutState.size.h += vo;
 
 			this.move(ho, vo);
 		}
 
-		this.#widget.x = this.#x;
-		this.#widget.y = this.#y;
-		this.#widget.w = w;
-		this.#widget.h = h;
+		this.#widgetGeometry.pos.set(this.#pos.x, this.#pos.y);
+		this.#widgetGeometry.size.set(w, h);
 	}
 
-	endDraw() {
-		const w = this.#widget.w;
-		const h = this.#widget.h;
+	endDraw(): void {
+		const w = this.#widgetGeometry.size.w;
+		const h = this.#widgetGeometry.size.h;
 
 		this.drawDebug(w, h);
 
-		if (this.#row.isActive) {
-			this.#row.w = this.#row.w + w;
-			this.#row.h = Math.max(this.#row.h, h);
-			this.#row.isFirstWidget = false;
-
-			this.setPos(this.#widget.x + w, this.#widget.y);
+		if (this.#rowState.isActive) {
+			this.#rowState.size.set(this.#rowState.size.w + w, Math.max(this.#rowState.size.h, h));
+			this.setPos(this.#widgetGeometry.pos.x + w, this.#widgetGeometry.pos.y);
+			this.#rowState.isFirstWidget = false;
 		} else {
-			this.#layout.w = Math.max(w, this.#layout.w);
-			this.#layout.h = this.#layout.h + h;
-			this.#row.isFirstWidget = true;
-
-			this.setPos(this.#widget.x, this.#widget.y + h);
+			this.#layoutState.size.set(Math.max(w, this.#layoutState.size.w), this.#layoutState.size.h + h);
+			this.setPos(this.#widgetGeometry.pos.x, this.#widgetGeometry.pos.y + h);
 		}
 
-		this.#layout.isFirstWidget = false;
+		this.#layoutState.isFirstWidget = false;
 	}
 
-	getWidgetX() {
-		return this.#widget.x;
+	getWidgetX(): number {
+		return this.#widgetGeometry.pos.x;
 	}
 
-	getWidgetY() {
-		return this.#widget.y;
+	getWidgetY(): number {
+		return this.#widgetGeometry.pos.y;
 	}
 
-	getWidgetWidth() {
-		return this.#widget.w;
+	getWidgetWidth(): number {
+		return this.#widgetGeometry.size.w;
 	}
 
-	getWidgetHeight() {
-		return this.#widget.h;
+	getWidgetHeight(): number {
+		return this.#widgetGeometry.size.h;
 	}
 
-	setPos(x, y) {
-		this.#x = x;
-		this.#y = y;
+	setPos(x: number, y: number): void {
+		this.#pos.x = x;
+		this.#pos.y = y;
 	}
 
-	move(x, y) {
-		this.#x = this.#x + x;
-		this.#y = this.#y + y;
+	move(x: number, y: number): void {
+		this.#pos.x += x;
+		this.#pos.y += y;
 	}
 
-	getStyle() {
+	getStyle(): Style {
 		return this.#style;
 	}
 
-	setColor(color) {
+	setColor(color: Color): void {
 		this.#color = color;
 	}
 
-	drawRect(w, h) {
-		if (this.#layout.isValid)
+	drawRect(w: number, h: number): void {
+		if (this.#layoutState.isValid)
 			DrawRect(
-				this.#x + w / 2,
-				this.#y + h / 2,
+				this.#pos.x + w / 2,
+				this.#pos.y + h / 2,
 				w,
 				h,
 				this.#color[0],
@@ -255,13 +287,13 @@ export class Painter {
 			);
 	}
 
-	drawSprite(dict, name, w, h) {
-		if (this.#layout.isValid)
+	drawSprite(dict: string, name: string, w: number, h: number): void {
+		if (this.#layoutState.isValid)
 			DrawSprite(
 				dict,
 				name,
-				this.#x + w / 2,
-				this.#y + h / 2,
+				this.#pos.x + w / 2,
+				this.#pos.y + h / 2,
 				w,
 				h,
 				0,
@@ -272,66 +304,66 @@ export class Painter {
 			);
 	}
 
-	calculateTextWidth() {
-		const textEntry = this.#context.getTextEntry();
+	calculateTextWidth(): number {
+		const textEntry: string | undefined = this.#context.getTextEntry();
 		if (!textEntry) return 0;
 
 		BeginTextCommandGetWidth(textEntry);
 
-		const textComponents = this.#context.getTextComponents();
+		const textComponents: TextEntryComponents | undefined = this.#context.getTextComponents();
 		if (textComponents) addTextComponents(textComponents);
 
 		return EndTextCommandGetWidth(true);
 	}
 
-	calculateTextLineHeight() {
+	calculateTextLineHeight(): number {
 		return GetRenderedCharacterHeight(this.#style.widget.text.scale, this.#style.widget.text.font);
 	}
 
-	calculateTextLineCount() {
-		const textEntry = this.#context.getTextEntry();
+	calculateTextLineCount(): number {
+		const textEntry: string | undefined = this.#context.getTextEntry();
 		if (!textEntry) return 0;
 
 		BeginTextCommandLineCount(textEntry);
 
-		const textComponents = this.#context.getTextComponents();
+		const textComponents: TextEntryComponents | undefined = this.#context.getTextComponents();
 		if (textComponents) addTextComponents(textComponents);
 
-		return EndTextCommandLineCount(this.#x, this.#y);
+		return EndTextCommandLineCount(this.#pos.x, this.#pos.y);
 	}
 
-	setText(text) {
+	setText(text: string | undefined): void {
 		if (text) this.#context.setNextTextEntry('STRING', text);
 	}
 
-	setTextOpts(font = this.#style.widget.text.font, scale = this.#style.widget.text.scale) {
+	setTextOpts(font = this.#style.widget.text.font, scale = this.#style.widget.text.scale): void {
 		if (!this.#context.getTextEntry()) return;
 
 		SetTextFont(font);
 		SetTextScale(scale * GetAspectRatio(false), scale);
 	}
 
-	setTextMaxWidth(w) {
-		if (this.#context.getTextEntry()) SetTextWrap(this.#x, this.#x + w);
+	setTextMaxWidth(w: number): void {
+		if (this.#context.getTextEntry()) SetTextWrap(this.#pos.x, this.#pos.x + w);
 	}
 
-	drawText(offset = this.#style.widget.text.offset) {
-		const textEntry = this.#context.getTextEntry();
+	drawText(offset = this.#style.widget.text.offset): void {
+		const textEntry: string | undefined = this.#context.getTextEntry();
 		if (!textEntry) return;
 
 		SetTextColour(this.#color[0], this.#color[1], this.#color[2], this.#color[3]);
 
 		BeginTextCommandDisplayText(textEntry);
 
-		const textComponents = this.#context.getTextComponents();
+		const textComponents: TextEntryComponents | undefined = this.#context.getTextComponents();
 		if (textComponents) addTextComponents(textComponents);
 
-		EndTextCommandDisplayText(this.#x, this.#y - offset);
+		EndTextCommandDisplayText(this.#pos.x, this.#pos.y - offset);
 	}
 
-	drawDebug(w, h = this.#style.widget.height) {
-		if (w != 0 && this.#context.isDebugEnabled()) {
-			this.setPos(this.#widget.x, this.#widget.y);
+	drawDebug(w: number, h: number = this.#style.widget.height): void {
+		if (w != 0 && h != 0 && this.#context.isDebugEnabled()) {
+			this.setPos(this.#widgetGeometry.pos.x, this.#widgetGeometry.pos.y);
 			this.setColor(this.#style.color.debug);
 			this.drawRect(w, h);
 		}

@@ -4,7 +4,7 @@ export function declareExport(context: Context) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	globalThis.exports('spacing', function (count = 1) {
+	globalThis.exports('spacing', function (count: number = 1) {
 		const isRowMode = painter.isRowMode();
 
 		const w = isRowMode ? style.window.spacing.h * count : 0;
