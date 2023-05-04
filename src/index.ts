@@ -30,8 +30,8 @@ globalThis.exports('setNextWindowNoDrag', function (isNoDrag: boolean) {
 	context.setNextWindowNoDrag(isNoDrag);
 });
 
-globalThis.exports('beginWindow', function (pos: Position) {
-	context.beginWindow(pos);
+globalThis.exports('beginWindow', function (x?: number, y?: number) {
+	context.beginWindow(x, y);
 });
 
 globalThis.exports('endWindow', function () {

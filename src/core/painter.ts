@@ -85,8 +85,8 @@ export class Painter {
 		this.#windowGeometry = new Geometry();
 	}
 
-	beginWindow(pos: Position): void {
-		this.#windowGeometry.pos.set(pos.x, pos.y);
+	beginWindow(x?: number, y?: number): void {
+		this.#windowGeometry.pos.set(x ?? 0.5, y ?? 0.5);
 
 		this.setPos(
 			this.#windowGeometry.pos.x - this.#windowGeometry.size.w / 2,

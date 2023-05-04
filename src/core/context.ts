@@ -1,4 +1,4 @@
-import { Position, PositionObject, TextEntryComponents } from '../common/types';
+import { PositionObject, TextEntryComponents } from '../common/types';
 import { Input } from './input';
 import { Painter } from './painter';
 
@@ -63,9 +63,9 @@ export class Context {
 		return this.#state.isNoDrag;
 	}
 
-	beginWindow(pos: Position): void {
+	beginWindow(x?: number, y?: number): void {
 		this.#input.beginWindow();
-		this.#painter.beginWindow(pos);
+		this.#painter.beginWindow(x, y);
 	}
 
 	endWindow(): PositionObject {
