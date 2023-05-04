@@ -348,6 +348,8 @@ export class Painter {
 	}
 
 	drawText(offset = this.#style.widget.text.offset): void {
+		if (!this.#layoutState.isValid) return;
+
 		const textEntry: string | undefined = this.#context.getTextEntry();
 		if (!textEntry) return;
 
@@ -361,11 +363,11 @@ export class Painter {
 		EndTextCommandDisplayText(this.#pos.x, this.#pos.y - offset);
 	}
 
-	drawDebug(w: number, h: number = this.#style.widget.height): void {
-		if (w != 0 && h != 0 && this.#context.isDebugEnabled()) {
-			this.setPos(this.#widgetGeometry.pos.x, this.#widgetGeometry.pos.y);
-			this.setColor(this.#style.color.debug);
-			this.drawRect(w, h);
-		}
+	drawDebug(w: number, h = this.#style.widget.height): void {
+		if (!this.#layoutState.isValid || !this.#context.isDebugEnabled()) return;
+
+		this.setPos(this.#widgetGeometry.pos.x, this.#widgetGeometry.pos.y);
+		this.setColor(this.#style.color.debug);
+		this.drawRect(w, h);
 	}
 }
