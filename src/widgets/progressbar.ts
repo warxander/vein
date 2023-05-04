@@ -1,4 +1,5 @@
 import { Context } from '../core/context';
+import { numberEquals } from '../core/utils';
 
 export function declareExport(context: Context) {
 	const painter = context.getPainter();
@@ -15,8 +16,8 @@ export function declareExport(context: Context) {
 			painter.move(0, (style.widget.height - h) / 2);
 			painter.drawRect(w, h);
 
-			if (value != min) {
-				const pw = value == max ? w : ((value - min) / (max - min)) * w;
+			if (!numberEquals(value, min)) {
+				const pw = numberEquals(value, max) ? w : ((value - min) / (max - min)) * w;
 
 				painter.setColor(style.color.progress);
 				painter.drawRect(pw, h);

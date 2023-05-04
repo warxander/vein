@@ -1,4 +1,5 @@
 import { Context } from '../core/context';
+import { numberEquals } from '../core/utils';
 
 export function declareExport(context: Context) {
 	const input = context.getInput();
@@ -45,7 +46,7 @@ export function declareExport(context: Context) {
 
 			context.endDraw();
 
-			return { isValueChanged: newValue != value, value: newValue };
+			return { isValueChanged: !numberEquals(newValue, value), value: newValue };
 		}
 	);
 }
