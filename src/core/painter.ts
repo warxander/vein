@@ -85,8 +85,8 @@ export class Painter {
 		this.#windowGeometry = new Geometry();
 	}
 
-	beginWindow(x?: number, y?: number): void {
-		this.#windowGeometry.pos.set(x ?? 0.5, y ?? 0.5);
+	beginWindow(x: number, y: number): void {
+		this.#windowGeometry.pos.set(x, y);
 
 		this.setPos(
 			this.#windowGeometry.pos.x - this.#windowGeometry.size.w / 2,
@@ -95,13 +95,13 @@ export class Painter {
 
 		if (!this.#layoutState.isValid) return;
 
-		if (!this.#context.isWindowNoDrag()) this.beginDrag();
+		if (!this.#context.isWindowNoDrag()) this.#beginDrag();
 
-		this.drawWindow();
+		this.#drawWindow();
 	}
 
 	endWindow(): PositionObject {
-		if (!this.#context.isWindowNoDrag()) this.endDrag();
+		if (!this.#context.isWindowNoDrag()) this.#endDrag();
 
 		this.#windowGeometry.size.set(
 			this.#layoutState.isValid ? this.#layoutState.size.w + this.#style.window.margins.h * 2 : 0,
@@ -116,7 +116,7 @@ export class Painter {
 		return { x: this.#windowGeometry.pos.x, y: this.#windowGeometry.pos.y };
 	}
 
-	drawWindow(): void {
+	#drawWindow(): void {
 		const outlineWidth = this.#style.window.outlineWidth;
 		const outlineHeight = outlineWidth * GetAspectRatio(false);
 
@@ -129,7 +129,7 @@ export class Painter {
 		this.drawRect(this.#windowGeometry.size.w, this.#windowGeometry.size.h);
 	}
 
-	beginDrag(): void {
+	#beginDrag(): void {
 		if (this.#dragState.isInProcess) return;
 
 		const input = this.#context.getInput();
@@ -144,7 +144,7 @@ export class Painter {
 		}
 	}
 
-	endDrag(): void {
+	#endDrag(): void {
 		if (!this.#dragState.isInProcess) return;
 
 		const input = this.#context.getInput();

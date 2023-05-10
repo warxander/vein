@@ -65,7 +65,7 @@ export class Context {
 
 	beginWindow(x?: number, y?: number): void {
 		this.#input.beginWindow();
-		this.#painter.beginWindow(x, y);
+		this.#painter.beginWindow(x ?? 0.5, y ?? 0.5);
 	}
 
 	endWindow(): PositionObject {
