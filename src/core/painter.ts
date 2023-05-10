@@ -97,7 +97,7 @@ export class Painter {
 
 		if (!this.#context.isWindowNoDrag()) this.#beginDrag();
 
-		this.#drawWindow();
+		if (!this.#context.isWindowNoBackground()) this.#drawWindowBackground();
 	}
 
 	endWindow(): PositionObject {
@@ -116,7 +116,7 @@ export class Painter {
 		return { x: this.#windowGeometry.pos.x, y: this.#windowGeometry.pos.y };
 	}
 
-	#drawWindow(): void {
+	#drawWindowBackground(): void {
 		const outlineWidth = this.#style.window.outlineWidth;
 		const outlineHeight = outlineWidth * GetAspectRatio(false);
 

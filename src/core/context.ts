@@ -22,19 +22,25 @@ class DrawState {
 	}
 }
 
+enum WindowFlags {
+	None,
+	NoDrag = 1 << 1,
+	NoBackground = 1 << 2
+}
+
 class WindowState {
 	text?: TextDrawState;
 	widgetWidth?: number;
-	isNoDrag: boolean;
+	windowFlags: WindowFlags;
 
 	constructor() {
-		this.isNoDrag = false;
+		this.windowFlags = WindowFlags.None;
 	}
 
 	reset(): void {
 		this.text = undefined;
 		this.widgetWidth = undefined;
-		this.isNoDrag = false;
+		this.windowFlags = WindowFlags.None;
 	}
 }
 
@@ -56,11 +62,21 @@ export class Context {
 	}
 
 	setNextWindowNoDrag(isNoDrag: boolean): void {
-		this.#state.isNoDrag = isNoDrag;
+		if (isNoDrag) this.#state.windowFlags |= WindowFlags.NoDrag;
+		else this.#state.windowFlags &= ~WindowFlags.NoDrag;
+	}
+
+	setNextWindowNoBackground(isNoBackground: boolean): void {
+		if (isNoBackground) this.#state.windowFlags |= WindowFlags.NoBackground;
+		else this.#state.windowFlags &= ~WindowFlags.NoBackground;
 	}
 
 	isWindowNoDrag(): boolean {
-		return this.#state.isNoDrag;
+		return !!(this.#state.windowFlags & WindowFlags.NoDrag);
+	}
+
+	isWindowNoBackground(): boolean {
+		return !!(this.#state.windowFlags & WindowFlags.NoBackground);
 	}
 
 	beginWindow(x?: number, y?: number): void {

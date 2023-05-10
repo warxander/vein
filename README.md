@@ -77,6 +77,11 @@ local isEnabled = isDebugEnabled()
 --! @param isNoDrag: boolean
 setNextWindowNoDrag(isNoDrag)
 
+--! @brief setNextWindowNoBackground
+--! @comment False by default
+--! @param isNoBackground: boolean
+setNextWindowNoBackground(isNoBackground)
+
 --! @brief beginWindow
 --! @param x: number
 --! @param y: number
