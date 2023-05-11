@@ -93,7 +93,7 @@ export class Painter {
 			this.#windowGeometry.pos.y - this.#windowGeometry.size.h / 2
 		);
 
-		if (!this.#layoutState.isValid) return;
+		if (!this.#isLayoutValid()) return;
 
 		if (!this.#context.isWindowNoDrag()) this.#beginDrag();
 
@@ -103,17 +103,21 @@ export class Painter {
 	endWindow(): PositionObject {
 		if (!this.#context.isWindowNoDrag()) this.#endDrag();
 
+		this.#layoutState.isValid = !this.#layoutState.isFirstWidget;
+		this.#layoutState.isFirstWidget = true;
+
 		this.#windowGeometry.size.set(
 			this.#layoutState.isValid ? this.#layoutState.size.w + this.#style.window.margins.h * 2 : 0,
 			this.#layoutState.isValid ? this.#layoutState.size.h + this.#style.window.margins.v * 2 : 0
 		);
 
-		this.#layoutState.isValid = this.#layoutState.size.w != 0 && this.#layoutState.size.h != 0;
-		this.#layoutState.isFirstWidget = true;
-
 		this.#layoutState.size.set(0, 0);
 
 		return { x: this.#windowGeometry.pos.x, y: this.#windowGeometry.pos.y };
+	}
+
+	#isLayoutValid(): boolean {
+		return this.#layoutState.isValid && !this.#context.isWindowSkipNextDrawing();
 	}
 
 	#drawWindowBackground(): void {
@@ -274,7 +278,7 @@ export class Painter {
 	}
 
 	drawRect(w: number, h: number): void {
-		if (this.#layoutState.isValid)
+		if (this.#isLayoutValid())
 			DrawRect(
 				this.#pos.x + w / 2,
 				this.#pos.y + h / 2,
@@ -288,7 +292,7 @@ export class Painter {
 	}
 
 	drawSprite(dict: string, name: string, w: number, h: number): void {
-		if (this.#layoutState.isValid)
+		if (this.#isLayoutValid())
 			DrawSprite(
 				dict,
 				name,
@@ -348,7 +352,7 @@ export class Painter {
 	}
 
 	drawText(offset = this.#style.widget.text.offset): void {
-		if (!this.#layoutState.isValid) return;
+		if (!this.#isLayoutValid()) return;
 
 		const textEntry: string | undefined = this.#context.getTextEntry();
 		if (!textEntry) return;
@@ -364,7 +368,7 @@ export class Painter {
 	}
 
 	drawDebug(w: number, h = this.#style.widget.height): void {
-		if (!this.#layoutState.isValid || !this.#context.isDebugEnabled()) return;
+		if (!this.#isLayoutValid() || !this.#context.isDebugEnabled()) return;
 
 		this.setPos(this.#widgetGeometry.pos.x, this.#widgetGeometry.pos.y);
 		this.setColor(this.#style.color.debug);

@@ -16,7 +16,7 @@ class DrawState {
 	text?: TextDrawState;
 	widgetWidth?: number;
 
-	reset(): void {
+	endDraw(): void {
 		this.text = undefined;
 		this.widgetWidth = undefined;
 	}
@@ -32,15 +32,18 @@ class WindowState {
 	text?: TextDrawState;
 	widgetWidth?: number;
 	windowFlags: WindowFlags;
+	skipDrawingNumber: number;
 
 	constructor() {
 		this.windowFlags = WindowFlags.None;
+		this.skipDrawingNumber = 1;
 	}
 
-	reset(): void {
+	endWindow(): void {
 		this.text = undefined;
 		this.widgetWidth = undefined;
 		this.windowFlags = WindowFlags.None;
+		if (this.skipDrawingNumber != 0) --this.skipDrawingNumber;
 	}
 }
 
@@ -89,7 +92,7 @@ export class Context {
 
 		this.#input.endWindow();
 
-		this.#state.reset();
+		this.#state.endWindow();
 
 		return windowPos;
 	}
@@ -107,6 +110,11 @@ export class Context {
 		return this.#input.getIsLmbPressed() && this.isWidgetHovered();
 	}
 
+
+	isWindowSkipNextDrawing(): boolean {
+		return this.#state.skipDrawingNumber != 0;
+	}
+
 	beginDraw(w: number, h: number): void {
 		this.#painter.beginDraw(w, h);
 	}
@@ -114,7 +122,7 @@ export class Context {
 	endDraw(): void {
 		this.#painter.endDraw();
 
-		this.#nextState.reset();
+		this.#nextState.endDraw();
 	}
 
 	setDebugEnabled(enabled: boolean): void {
