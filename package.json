@@ -1,7 +1,21 @@
 {
 	"name": "vein",
+	"version": "1.0.0",
+	"description": "FiveM IMGUI framework",
+	"keywords": [
+		"fivem",
+		"gui",
+		"imgui",
+		"framework",
+		"ui",
+		"client"
+	],
+	"homepage": "https://github.com/warxander/vein",
+	"license": "APSL-2.0",
+	"author": "Warxander (https://github.com/warxander)",
+	"funding": "https://boosty.to/warxander",
 	"devDependencies": {
-		"@citizenfx/client": "^2.0.6427-1",
+		"@citizenfx/client": "^2.0.6440-1",
 		"ts-loader": "~8.2.0",
 		"typescript": "latest",
 		"webpack": "~4.41.2",

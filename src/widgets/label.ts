@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../index';
+import { getCurrentContext } from '../../index';
 
 export function declareExport(): void {
 	globalThis.exports('label', function (text: string | undefined): void {

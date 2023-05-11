@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../index';
+import { getCurrentContext } from '../../index';
 import { wait } from '../core/utils';
 
 type TextEditResult = {

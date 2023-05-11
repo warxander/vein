@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../index';
+import { getCurrentContext } from '../../index';
 
 export function declareExport(): void {
 	globalThis.exports('checkBox', function (isChecked: boolean, text: string | undefined): boolean {

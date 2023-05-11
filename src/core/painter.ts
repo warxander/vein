@@ -1,5 +1,5 @@
 import { Color, Position, PositionObject, TextEntryComponents } from '../common/types';
-import { getIsDebugEnabled } from '../index';
+import { getIsDebugEnabled } from '../../index';
 import { Context } from './context';
 import { Style } from './style';
 import { addTextComponents } from './utils';

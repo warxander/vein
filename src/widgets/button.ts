@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../index';
+import { getCurrentContext } from '../../index';
 
 export function declareExport(): void {
 	globalThis.exports('button', function (text: string | undefined): boolean {

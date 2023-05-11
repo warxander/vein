@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../index';
+import { getCurrentContext } from '../../index';
 import { numberEquals } from '../core/utils';
 
 export function declareExport(): void {

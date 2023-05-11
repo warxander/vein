@@ -1,19 +1,19 @@
-import { ContextId, PositionObject, TextEntryComponents } from './common/types';
-import { Context } from './core/context';
+import { ContextId, PositionObject, TextEntryComponents } from './src/common/types';
+import { Context } from './src/core/context';
 
-import * as Button from './widgets/button';
-import * as Checkbox from './widgets/checkbox';
-import * as Dummy from './widgets/dummy';
-import * as Heading from './widgets/heading';
-import * as Label from './widgets/label';
-import * as ProgressBar from './widgets/progressbar';
-import * as Separator from './widgets/separator';
-import * as Slider from './widgets/slider';
-import * as Spacing from './widgets/spacing';
-import * as Sprite from './widgets/sprite';
-import * as SpriteButton from './widgets/spritebutton';
-import * as TextArea from './widgets/textarea';
-import * as TextEdit from './widgets/textedit';
+import * as Button from './src/widgets/button';
+import * as Checkbox from './src/widgets/checkbox';
+import * as Dummy from './src/widgets/dummy';
+import * as Heading from './src/widgets/heading';
+import * as Label from './src/widgets/label';
+import * as ProgressBar from './src/widgets/progressbar';
+import * as Separator from './src/widgets/separator';
+import * as Slider from './src/widgets/slider';
+import * as Spacing from './src/widgets/spacing';
+import * as Sprite from './src/widgets/sprite';
+import * as SpriteButton from './src/widgets/spritebutton';
+import * as TextArea from './src/widgets/textarea';
+import * as TextEdit from './src/widgets/textedit';
 
 let isDebugEnabled: boolean = false;
 let currentContext: Context | undefined = undefined;

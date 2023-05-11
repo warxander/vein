@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../index';
+import { getCurrentContext } from '../../index';
 
 export function declareExport(): void {
 	globalThis.exports('spacing', function (count: number = 1): void {
