@@ -1,29 +1,29 @@
-import { Context } from '../core/context';
+import { getCurrentContext } from '../index';
 import { numberEquals } from '../core/utils';
 
-export function declareExport(context: Context) {
-	const painter = context.getPainter();
-	const style = painter.getStyle();
+export function declareExport(): void {
+	globalThis.exports('progressBar', function (min: number, value: number, max: number, w: number | undefined): void {
+		const context = getCurrentContext();
+		const painter = context.getPainter();
+		const style = painter.getStyle();
 
-	globalThis.exports(
-		'progressBar',
-		function (min: number, value: number, max: number, w = context.getWidgetWidth() as number) {
-			context.beginDraw(w, style.widget.height);
+		w = (w ?? context.getWidgetWidth()) as number;
 
-			const h = style.progressBar.height;
+		context.beginDraw(w, style.widget.height);
 
-			painter.setColor(style.color.widget);
-			painter.move(0, (style.widget.height - h) / 2);
-			painter.drawRect(w, h);
+		const h = style.progressBar.height;
 
-			if (!numberEquals(value, min)) {
-				const pw = numberEquals(value, max) ? w : ((value - min) / (max - min)) * w;
+		painter.setColor(style.color.widget);
+		painter.move(0, (style.widget.height - h) / 2);
+		painter.drawRect(w, h);
 
-				painter.setColor(style.color.progress);
-				painter.drawRect(pw, h);
-			}
+		if (!numberEquals(value, min)) {
+			const pw = numberEquals(value, max) ? w : ((value - min) / (max - min)) * w;
 
-			context.endDraw();
+			painter.setColor(style.color.progress);
+			painter.drawRect(pw, h);
 		}
-	);
+
+		context.endDraw();
+	});
 }

@@ -1,10 +1,12 @@
-import { Context } from '../core/context';
+import { getCurrentContext } from '../index';
 
-export function declareExport(context: Context) {
-	const painter = context.getPainter();
-	const style = painter.getStyle();
+export function declareExport(): void {
+	globalThis.exports('separator', function (w: number | undefined): void {
+		const context = getCurrentContext();
+		const painter = context.getPainter();
+		const style = painter.getStyle();
 
-	globalThis.exports('separator', function (w = context.getWidgetWidth() as number) {
+		w = (w ?? context.getWidgetWidth()) as number;
 		const h = style.widget.height;
 
 		context.beginDraw(w, h);

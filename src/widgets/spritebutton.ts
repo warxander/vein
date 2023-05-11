@@ -1,10 +1,11 @@
-import { Context } from '../core/context';
+import { getCurrentContext } from '../index';
 
-export function declareExport(context: Context) {
-	const painter = context.getPainter();
-	const style = painter.getStyle();
+export function declareExport(): void {
+	globalThis.exports('spriteButton', function (dict: string, name: string, text: string | undefined): boolean {
+		const context = getCurrentContext();
+		const painter = context.getPainter();
+		const style = painter.getStyle();
 
-	globalThis.exports('spriteButton', function (dict: string, name: string, text: string | undefined) {
 		painter.setText(text);
 		painter.setTextOpts();
 

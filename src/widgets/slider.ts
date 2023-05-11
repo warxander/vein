@@ -1,14 +1,21 @@
-import { Context } from '../core/context';
+import { getCurrentContext } from '../index';
 import { numberEquals } from '../core/utils';
 
-export function declareExport(context: Context) {
-	const input = context.getInput();
-	const painter = context.getPainter();
-	const style = painter.getStyle();
+type SliderResult = {
+	isValueChanged: boolean;
+	value: number;
+};
 
+export function declareExport(): void {
 	globalThis.exports(
 		'slider',
-		function (min: number, value: number, max: number, w = context.getWidgetWidth() as number) {
+		function (min: number, value: number, max: number, w: number | undefined): SliderResult {
+			const context = getCurrentContext();
+			const input = context.getInput();
+			const painter = context.getPainter();
+			const style = painter.getStyle();
+
+			w = (w ?? context.getWidgetWidth()) as number;
 			const h = style.widget.height;
 
 			context.beginDraw(w, h);

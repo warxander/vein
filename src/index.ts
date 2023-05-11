@@ -1,4 +1,4 @@
-import { Position, TextEntryComponents } from './common/types';
+import { ContextId, PositionObject, TextEntryComponents } from './common/types';
 import { Context } from './core/context';
 
 import * as Button from './widgets/button';
@@ -15,95 +15,104 @@ import * as SpriteButton from './widgets/spritebutton';
 import * as TextArea from './widgets/textarea';
 import * as TextEdit from './widgets/textedit';
 
-const context = new Context();
-const painter = context.getPainter();
+let isDebugEnabled: boolean = false;
+let currentContext: Context | undefined = undefined;
+const globalContext: Context = new Context();
 
-globalThis.exports('setDebugEnabled', function (enabled: boolean) {
-	context.setDebugEnabled(enabled);
+export function getCurrentContext(): Context {
+	return currentContext ?? globalContext;
+}
+
+export function getIsDebugEnabled(): boolean {
+	return isDebugEnabled;
+}
+
+globalThis.exports('setDebugEnabled', function (enabled: boolean): void {
+	isDebugEnabled = enabled;
 });
 
-globalThis.exports('isDebugEnabled', function () {
-	return context.isDebugEnabled();
+globalThis.exports('isDebugEnabled', function (): boolean {
+	return getIsDebugEnabled();
 });
 
-globalThis.exports('setNextWindowNoDrag', function (isNoDrag: boolean) {
-	context.setNextWindowNoDrag(isNoDrag);
+globalThis.exports('setNextWindowNoDrag', function (isNoDrag: boolean): void {
+	getCurrentContext().setWindowNoDrag(isNoDrag);
 });
 
-globalThis.exports('setNextWindowNoBackground', function(isNoBackground: boolean) {
-	context.setNextWindowNoBackground(isNoBackground);
-})
-
-globalThis.exports('beginWindow', function (x?: number, y?: number) {
-	context.beginWindow(x, y);
+globalThis.exports('setNextWindowNoBackground', function (isNoBackground: boolean): void {
+	getCurrentContext().setWindowNoBackground(isNoBackground);
 });
 
-globalThis.exports('endWindow', function () {
-	return context.endWindow();
+globalThis.exports('beginWindow', function (x?: number, y?: number): void {
+	getCurrentContext().beginWindow(x, y);
 });
 
-globalThis.exports('isWidgetHovered', function () {
-	return context.isWidgetHovered();
+globalThis.exports('endWindow', function (): PositionObject {
+	return getCurrentContext().endWindow();
 });
 
-globalThis.exports('isWidgetClicked', function () {
-	return context.isWidgetClicked();
+globalThis.exports('isWidgetHovered', function (): boolean {
+	return getCurrentContext().isWidgetHovered();
 });
 
-globalThis.exports('setWindowSkipNextDrawing', function() {
-	context.setWindowSkipNextDrawing();
+globalThis.exports('isWidgetClicked', function (): boolean {
+	return getCurrentContext().isWidgetClicked();
 });
 
-globalThis.exports('beginRow', function () {
-	painter.beginRow();
+globalThis.exports('setWindowSkipNextDrawing', function (): void {
+	getCurrentContext().setWindowSkipNextDrawing();
 });
 
-globalThis.exports('endRow', function () {
-	painter.endRow();
+globalThis.exports('beginRow', function (): void {
+	getCurrentContext().getPainter().beginRow();
 });
 
-globalThis.exports('setNextTextEntry', function (entry: string, ...components: TextEntryComponents) {
-	context.setNextTextEntry(entry, ...components);
+globalThis.exports('endRow', function (): void {
+	getCurrentContext().getPainter().endRow();
 });
 
-globalThis.exports('pushTextEntry', function (entry: string, ...components: TextEntryComponents) {
-	context.pushTextEntry(entry, ...components);
+globalThis.exports('setNextTextEntry', function (entry: string, ...components: TextEntryComponents): void {
+	getCurrentContext().setNextTextEntry(entry, ...components);
 });
 
-globalThis.exports('popTextEntry', function () {
-	context.popTextEntry();
+globalThis.exports('pushTextEntry', function (entry: string, ...components: TextEntryComponents): void {
+	getCurrentContext().pushTextEntry(entry, ...components);
 });
 
-globalThis.exports('setNextWidgetWidth', function (w: number) {
-	context.setNextWidgetWidth(w);
+globalThis.exports('popTextEntry', function (): void {
+	getCurrentContext().popTextEntry();
 });
 
-globalThis.exports('pushWidgetWidth', function (w: number) {
-	context.pushWidgetWidth(w);
+globalThis.exports('setNextWidgetWidth', function (w: number): void {
+	getCurrentContext().setNextWidgetWidth(w);
 });
 
-globalThis.exports('popWidgetWidth', function () {
-	context.popWidgetWidth();
+globalThis.exports('pushWidgetWidth', function (w: number): void {
+	getCurrentContext().pushWidgetWidth(w);
 });
 
-globalThis.exports('setDarkColorTheme', function () {
-	painter.getStyle().setDarkColorTheme();
+globalThis.exports('popWidgetWidth', function (): void {
+	getCurrentContext().popWidgetWidth();
 });
 
-globalThis.exports('setLightColorTheme', function () {
-	painter.getStyle().setLightColorTheme();
+globalThis.exports('setDarkColorTheme', function (): void {
+	getCurrentContext().getPainter().getStyle().setDarkColorTheme();
 });
 
-Button.declareExport(context);
-Checkbox.declareExport(context);
-Dummy.declareExport(context);
-Heading.declareExport(context);
-Label.declareExport(context);
-ProgressBar.declareExport(context);
-Separator.declareExport(context);
-Slider.declareExport(context);
-Spacing.declareExport(context);
-Sprite.declareExport(context);
-SpriteButton.declareExport(context);
-TextArea.declareExport(context);
-TextEdit.declareExport(context);
+globalThis.exports('setLightColorTheme', function (): void {
+	getCurrentContext().getPainter().getStyle().setLightColorTheme();
+});
+
+Button.declareExport();
+Checkbox.declareExport();
+Dummy.declareExport();
+Heading.declareExport();
+Label.declareExport();
+ProgressBar.declareExport();
+Separator.declareExport();
+Slider.declareExport();
+Spacing.declareExport();
+Sprite.declareExport();
+SpriteButton.declareExport();
+TextArea.declareExport();
+TextEdit.declareExport();

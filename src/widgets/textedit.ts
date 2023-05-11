@@ -1,13 +1,24 @@
-import { Context } from '../core/context';
+import { getCurrentContext } from '../index';
 import { wait } from '../core/utils';
 
-export function declareExport(context: Context) {
-	const painter = context.getPainter();
-	const style = painter.getStyle();
+type TextEditResult = {
+	isTextChanged: boolean;
+	text: string;
+};
 
+export function declareExport(): void {
 	globalThis.exports(
 		'textEdit',
-		async function (text = '', keyboardTitle: string, maxTextLength: number, isSecretMode: boolean) {
+		async function (
+			text: string = '',
+			keyboardTitle: string,
+			maxTextLength: number,
+			isSecretMode: boolean
+		): Promise<TextEditResult> {
+			const context = getCurrentContext();
+			const painter = context.getPainter();
+			const style = painter.getStyle();
+
 			const _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE';
 
 			const w = context.getWidgetWidth() ?? maxTextLength * style.textEdit.symbolWidth;

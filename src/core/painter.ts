@@ -1,4 +1,5 @@
 import { Color, Position, PositionObject, TextEntryComponents } from '../common/types';
+import { getIsDebugEnabled } from '../index';
 import { Context } from './context';
 import { Style } from './style';
 import { addTextComponents } from './utils';
@@ -368,7 +369,7 @@ export class Painter {
 	}
 
 	drawDebug(w: number, h = this.#style.widget.height): void {
-		if (!this.#isLayoutValid() || !this.#context.isDebugEnabled()) return;
+		if (!this.#isLayoutValid() || !getIsDebugEnabled()) return;
 
 		this.setPos(this.#widgetGeometry.pos.x, this.#widgetGeometry.pos.y);
 		this.setColor(this.#style.color.debug);

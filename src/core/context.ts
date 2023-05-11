@@ -50,7 +50,6 @@ class WindowState {
 export class Context {
 	#input: Input;
 	#painter: Painter;
-	#isDebugEnabled: boolean;
 	#state: WindowState;
 	#nextState: DrawState;
 
@@ -58,18 +57,16 @@ export class Context {
 		this.#input = new Input();
 		this.#painter = new Painter(this);
 
-		this.#isDebugEnabled = false;
-
 		this.#state = new WindowState();
 		this.#nextState = new DrawState();
 	}
 
-	setNextWindowNoDrag(isNoDrag: boolean): void {
+	setWindowNoDrag(isNoDrag: boolean): void {
 		if (isNoDrag) this.#state.windowFlags |= WindowFlags.NoDrag;
 		else this.#state.windowFlags &= ~WindowFlags.NoDrag;
 	}
 
-	setNextWindowNoBackground(isNoBackground: boolean): void {
+	setWindowNoBackground(isNoBackground: boolean): void {
 		if (isNoBackground) this.#state.windowFlags |= WindowFlags.NoBackground;
 		else this.#state.windowFlags &= ~WindowFlags.NoBackground;
 	}
@@ -126,14 +123,6 @@ export class Context {
 		this.#painter.endDraw();
 
 		this.#nextState.endDraw();
-	}
-
-	setDebugEnabled(enabled: boolean): void {
-		this.#isDebugEnabled = enabled;
-	}
-
-	isDebugEnabled(): boolean {
-		return this.#isDebugEnabled;
 	}
 
 	setNextTextEntry(entry: string, ...components: TextEntryComponents): void {
