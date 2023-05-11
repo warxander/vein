@@ -110,6 +110,9 @@ export class Context {
 		return this.#input.getIsLmbPressed() && this.isWidgetHovered();
 	}
 
+	setWindowSkipNextDrawing(): void {
+		this.#state.skipDrawingNumber = 2;
+	}
 
 	isWindowSkipNextDrawing(): boolean {
 		return this.#state.skipDrawingNumber != 0;

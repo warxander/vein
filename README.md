@@ -104,6 +104,10 @@ local isWidgetClicked = isWidgetClicked()
 ```
 ### Layout
 ```lua
+--! @brief setWindowSkipNextDrawing
+--! @comment Eliminates visual redrawing artifacts in case of widgets layout was drastically changed
+setWindowSkipNextDrawing()
+
 --! @brief beginRow
 beginRow()
 

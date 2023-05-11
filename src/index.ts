@@ -50,6 +50,10 @@ globalThis.exports('isWidgetClicked', function () {
 	return context.isWidgetClicked();
 });
 
+globalThis.exports('setWindowSkipNextDrawing', function() {
+	context.setWindowSkipNextDrawing();
+});
+
 globalThis.exports('beginRow', function () {
 	painter.beginRow();
 });
