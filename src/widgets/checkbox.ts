@@ -1,8 +1,8 @@
 import { getCurrentContext } from '../../index';
 import { Color } from '../common/types';
 
-export function declareExport(): void {
-	globalThis.exports('checkBox', function (isChecked: boolean, text: string | undefined): boolean {
+export function declareExport() {
+	globalThis.exports('checkBox', function (isChecked: boolean, text?: string): boolean {
 		const context = getCurrentContext();
 		const painter = context.getPainter();
 		const style = painter.getStyle();

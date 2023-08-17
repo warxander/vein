@@ -1,4 +1,4 @@
-import { PositionObject, TextEntryComponents } from './src/common/types';
+import { PositionInterface, TextEntryComponents } from './src/common/types';
 import { Context } from './src/core/context';
 
 import * as Button from './src/widgets/button';
@@ -48,7 +48,7 @@ globalThis.exports('beginWindow', function (x?: number, y?: number): void {
 	getCurrentContext().beginWindow(x, y);
 });
 
-globalThis.exports('endWindow', function (): PositionObject {
+globalThis.exports('endWindow', function (): PositionInterface {
 	return getCurrentContext().endWindow();
 });
 
@@ -96,11 +96,11 @@ globalThis.exports('popWidgetWidth', function (): void {
 	getCurrentContext().popWidgetWidth();
 });
 
-globalThis.exports('setStyle', function(style: string): void {
+globalThis.exports('setStyle', function (style: string): void {
 	getCurrentContext().getPainter().getStyle().set(style);
 });
 
-globalThis.exports('resetStyle', function(): void {
+globalThis.exports('resetStyle', function (): void {
 	getCurrentContext().getPainter().getStyle().reset();
 });
 

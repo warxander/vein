@@ -7,23 +7,20 @@ type StylePropertyValuesMap = Map<string, StylePropertyValue>;
 type StyleSelectorPropertyValuesMap = Map<string, StylePropertyValues>;
 
 class StylePropertyValues {
-	#properties: StylePropertyValuesMap;
-	readonly #defaultProperties: StylePropertyValuesMap | undefined;
-
-	constructor(properties: StylePropertyValuesMap, defaultProperties?: StylePropertyValuesMap) {
-		this.#properties = properties;
-		this.#defaultProperties = defaultProperties;
-	}
+	constructor(
+		private properties: StylePropertyValuesMap,
+		private readonly defaultProperties?: StylePropertyValuesMap
+	) {}
 
 	getProperties(): StylePropertyValuesMap {
-		return this.#properties;
+		return this.properties;
 	}
 
 	get<T extends StylePropertyValue>(property: string): T {
-		let value = this.#properties.get(property);
+		let value = this.properties.get(property);
 
-		if (value === undefined && this.#defaultProperties) {
-			value = this.#defaultProperties.get(property);
+		if (value === undefined && this.defaultProperties) {
+			value = this.defaultProperties.get(property);
 		}
 
 		if (value === undefined) throw new Error(`Failed to get() for style property: ${property}`);
@@ -31,12 +28,12 @@ class StylePropertyValues {
 		return value as T;
 	}
 
-	set(property: string, value: StylePropertyValue): void {
-		this.#properties.set(property, value);
+	set(property: string, value: StylePropertyValue) {
+		this.properties.set(property, value);
 	}
 }
 
-const defaultStyle: string = `button, slider, sprite-button, text-edit {
+const DEFAULT_STYLE = `button, slider, sprite-button, text-edit {
 	background-color: rgba(22, 25, 35, 1.0);
 	color: rgba(255, 255, 240, 1.0);
 }
@@ -80,7 +77,7 @@ window {
 	color: rgba(105, 255, 89, 0.125);
 }`;
 
-const knownSelectors: Set<String> = new Set<String>([
+const KNOWN_SELECTORS = new Set<String>([
 	'button',
 	'button:hover',
 
@@ -109,7 +106,7 @@ const knownSelectors: Set<String> = new Set<String>([
 	'window'
 ]);
 
-const knownProperties: Set<string> = new Set<string>(['background-color', 'border-color', 'color']);
+const KNOWN_PROPERTIES = new Set<string>(['background-color', 'border-color', 'color']);
 
 function parseValue(value: string): StylePropertyValue {
 	if (value.match(/^#([0-9a-f]{6})$/i))
@@ -128,11 +125,11 @@ function parseValue(value: string): StylePropertyValue {
 }
 
 export class Style {
-	static readonly #spriteColor: Color = [254, 254, 254, 255];
+	static readonly SPRITE_COLOR: Color = [254, 254, 254, 255];
 
-	static #defaultSelectorProperties: StyleSelectorPropertyValuesMap | undefined;
+	private static defaultSelectorProperties?: StyleSelectorPropertyValuesMap;
 
-	#selectorProperties: StyleSelectorPropertyValuesMap | undefined;
+	private selectorProperties?: StyleSelectorPropertyValuesMap;
 
 	readonly button;
 	readonly checkbox;
@@ -148,8 +145,8 @@ export class Style {
 	readonly window;
 
 	constructor() {
-		if (Style.#defaultSelectorProperties === undefined)
-			Style.#defaultSelectorProperties = this.#set(defaultStyle, false);
+		if (Style.defaultSelectorProperties === undefined)
+			Style.defaultSelectorProperties = this.doSet(DEFAULT_STYLE, false);
 
 		this.button = {
 			spacing: 0.005
@@ -232,15 +229,11 @@ export class Style {
 		};
 	}
 
-	getSpriteColor(): Color {
-		return Style.#spriteColor;
-	}
-
 	getProperties(selector: string): StylePropertyValues {
-		let selectorProperties = this.#selectorProperties?.get(selector);
+		let selectorProperties = this.selectorProperties?.get(selector);
 		if (selectorProperties) return selectorProperties;
 
-		selectorProperties = Style.#defaultSelectorProperties?.get(selector);
+		selectorProperties = Style.defaultSelectorProperties?.get(selector);
 		if (selectorProperties === undefined)
 			throw new Error(`Failed to getProperties() for style selector: ${selector}`);
 
@@ -251,19 +244,19 @@ export class Style {
 		return this.getProperties(selectorName).get<T>(propertyName);
 	}
 
-	set(style: string): void {
+	set(style: string) {
 		try {
-			this.#selectorProperties = this.#set(style, true);
+			this.selectorProperties = this.doSet(style, true);
 		} catch (e: any) {
 			console.log(`Failed to set style: ${e}`);
 		}
 	}
 
-	reset(): void {
-		this.#selectorProperties?.clear();
+	reset() {
+		this.selectorProperties?.clear();
 	}
 
-	#set(style: string, useDefaultProperties: boolean): StyleSelectorPropertyValuesMap {
+	private doSet(style: string, useDefaultProperties: boolean): StyleSelectorPropertyValuesMap {
 		let selectorProperties = new Map<string, StylePropertyValues>();
 
 		const stylesheetAst = parse(style);
@@ -277,7 +270,7 @@ export class Style {
 				if (declaration.type != CssTypes.declaration) continue;
 
 				const astDeclaration = declaration as CssDeclarationAST;
-				if (!knownProperties.has(astDeclaration.property)) continue;
+				if (!KNOWN_PROPERTIES.has(astDeclaration.property)) continue;
 
 				properties.set(astDeclaration.property, parseValue(astDeclaration.value));
 			}
@@ -285,11 +278,11 @@ export class Style {
 			if (properties.size === 0) continue;
 
 			for (const selector of (rule as CssRuleAST).selectors) {
-				if (!knownSelectors.has(selector)) continue;
+				if (!KNOWN_SELECTORS.has(selector)) continue;
 
 				let defaultProperties: StylePropertyValues | undefined = undefined;
 				if (useDefaultProperties) {
-					defaultProperties = Style.#defaultSelectorProperties?.get(selector);
+					defaultProperties = Style.defaultSelectorProperties?.get(selector);
 					if (defaultProperties === undefined)
 						throw new Error(`Failed to get default properties for style selector: ${selector}`);
 				}

@@ -1,22 +1,16 @@
-import { PositionObject, TextEntryComponents } from '../common/types';
+import { PositionInterface, TextEntryComponents } from '../common/types';
 import { Input } from './input';
 import { Painter } from './painter';
 
 class TextDrawState {
-	entry: string;
-	components: TextEntryComponents;
-
-	constructor(entry: string, components: TextEntryComponents) {
-		this.entry = entry;
-		this.components = components;
-	}
+	constructor(public entry: string, public components: TextEntryComponents) {}
 }
 
 class DrawState {
 	text?: TextDrawState;
 	widgetWidth?: number;
 
-	endDraw(): void {
+	endDraw() {
 		this.text = undefined;
 		this.widgetWidth = undefined;
 	}
@@ -31,15 +25,10 @@ enum WindowFlags {
 class WindowState {
 	text?: TextDrawState;
 	widgetWidth?: number;
-	windowFlags: WindowFlags;
-	skipDrawingNumber: number;
+	windowFlags: WindowFlags = WindowFlags.None;
+	skipDrawingNumber = 1;
 
-	constructor() {
-		this.windowFlags = WindowFlags.None;
-		this.skipDrawingNumber = 1;
-	}
-
-	endWindow(): void {
+	endWindow() {
 		this.text = undefined;
 		this.widgetWidth = undefined;
 		this.windowFlags = WindowFlags.None;
@@ -48,134 +37,126 @@ class WindowState {
 }
 
 export class Context {
-	#input: Input;
-	#painter: Painter;
-	#state: WindowState;
-	#nextState: DrawState;
+	private input = new Input();
+	private painter = new Painter(this);
+	private state = new WindowState();
+	private nextState = new DrawState();
 
-	constructor() {
-		this.#input = new Input();
-		this.#painter = new Painter(this);
-
-		this.#state = new WindowState();
-		this.#nextState = new DrawState();
+	setWindowNoDrag(isNoDrag: boolean) {
+		if (isNoDrag) this.state.windowFlags |= WindowFlags.NoDrag;
+		else this.state.windowFlags &= ~WindowFlags.NoDrag;
 	}
 
-	setWindowNoDrag(isNoDrag: boolean): void {
-		if (isNoDrag) this.#state.windowFlags |= WindowFlags.NoDrag;
-		else this.#state.windowFlags &= ~WindowFlags.NoDrag;
-	}
-
-	setWindowNoBackground(isNoBackground: boolean): void {
-		if (isNoBackground) this.#state.windowFlags |= WindowFlags.NoBackground;
-		else this.#state.windowFlags &= ~WindowFlags.NoBackground;
+	setWindowNoBackground(isNoBackground: boolean) {
+		if (isNoBackground) this.state.windowFlags |= WindowFlags.NoBackground;
+		else this.state.windowFlags &= ~WindowFlags.NoBackground;
 	}
 
 	isWindowNoDrag(): boolean {
-		return !!(this.#state.windowFlags & WindowFlags.NoDrag);
+		return !!(this.state.windowFlags & WindowFlags.NoDrag);
 	}
 
 	isWindowNoBackground(): boolean {
-		return !!(this.#state.windowFlags & WindowFlags.NoBackground);
+		return !!(this.state.windowFlags & WindowFlags.NoBackground);
 	}
 
-	beginWindow(x?: number, y?: number): void {
-		this.#input.beginWindow();
-		this.#painter.beginWindow(x ?? 0.5, y ?? 0.5);
+	beginWindow(x?: number, y?: number) {
+		this.input.beginWindow();
+		this.painter.beginWindow(x ?? 0.5, y ?? 0.5);
 	}
 
-	endWindow(): PositionObject {
-		const windowPos = this.#painter.endWindow();
+	endWindow(): PositionInterface {
+		const windowPos = this.painter.endWindow();
 
-		this.#input.endWindow();
+		this.input.endWindow();
 
-		this.#state.endWindow();
+		this.state.endWindow();
 
 		return windowPos;
 	}
 
 	isWidgetHovered(): boolean {
-		return this.#input.isRectHovered(
-			this.#painter.getWidgetX(),
-			this.#painter.getWidgetY(),
-			this.#painter.getWidgetWidth(),
-			this.#painter.getWidgetHeight()
+		return this.input.isRectHovered(
+			this.painter.getWidgetX(),
+			this.painter.getWidgetY(),
+			this.painter.getWidgetWidth(),
+			this.painter.getWidgetHeight()
 		);
 	}
 
 	isWidgetClicked(): boolean {
-		return this.#input.getIsLmbPressed() && this.isWidgetHovered();
+		return this.input.getIsLmbPressed() && this.isWidgetHovered();
 	}
 
-	setWindowSkipNextDrawing(): void {
-		this.#state.skipDrawingNumber = 2;
+	setWindowSkipNextDrawing() {
+		this.state.skipDrawingNumber = 2;
 	}
 
 	isWindowSkipNextDrawing(): boolean {
-		return this.#state.skipDrawingNumber != 0;
+		return this.state.skipDrawingNumber != 0;
 	}
 
-	beginDraw(w: number, h: number): void {
-		this.#painter.beginDraw(w, h);
+	beginDraw(w: number, h: number) {
+		this.painter.beginDraw(w, h);
 	}
 
-	endDraw(): void {
-		this.#painter.endDraw();
+	endDraw() {
+		this.painter.endDraw();
 
-		this.#nextState.endDraw();
+		this.nextState.endDraw();
 	}
 
-	setNextTextEntry(entry: string, ...components: TextEntryComponents): void {
-		this.#nextState.text = {
+	setNextTextEntry(entry: string, ...components: TextEntryComponents) {
+		this.nextState.text = {
 			entry: entry,
 			components: components
 		};
 	}
 
-	pushTextEntry(entry: string, ...components: TextEntryComponents): void {
-		this.#state.text = {
+	pushTextEntry(entry: string, ...components: TextEntryComponents) {
+		this.state.text = {
 			entry: entry,
 			components: components
 		};
 	}
 
-	popTextEntry(): void {
-		this.#state.text = undefined;
+	popTextEntry() {
+		this.state.text = undefined;
 	}
 
 	getTextEntry(): string | undefined {
-		if (this.#nextState.text) return this.#nextState.text.entry;
-		if (this.#state.text) return this.#state.text.entry;
+		if (this.nextState.text) return this.nextState.text.entry;
+		if (this.state.text) return this.state.text.entry;
 		return undefined;
 	}
 
 	getTextComponents(): TextEntryComponents | undefined {
-		if (this.#nextState.text) return this.#nextState.text.components;
-		if (this.#state.text) return this.#state.text.components;
+		if (this.nextState.text) return this.nextState.text.components;
+		if (this.state.text) return this.state.text.components;
 		return undefined;
 	}
 
-	setNextWidgetWidth(w: number): void {
-		this.#nextState.widgetWidth = w;
+	setNextWidgetWidth(w: number) {
+		this.nextState.widgetWidth = w;
 	}
 
-	pushWidgetWidth(w: number): void {
-		this.#state.widgetWidth = w;
+	pushWidgetWidth(w: number) {
+		this.state.widgetWidth = w;
 	}
 
-	popWidgetWidth(): void {
-		this.#state.widgetWidth = undefined;
+	popWidgetWidth() {
+		this.state.widgetWidth = undefined;
 	}
 
 	getWidgetWidth(): number | undefined {
-		return this.#nextState.widgetWidth ?? this.#state.widgetWidth;
+		return this.nextState.widgetWidth ?? this.state.widgetWidth;
 	}
 
 	getInput(): Input {
-		return this.#input;
+		return this.input;
 	}
 
 	getPainter(): Painter {
-		return this.#painter;
+		return this.painter;
 	}
 }

@@ -1,8 +1,8 @@
 import { TextEntryComponents } from '../common/types';
 
-const pixelEpsilon = 0.0005;
+const PIXEL_EPSILON = 0.0005;
 
-export function addTextComponents(components: TextEntryComponents): void {
+export function addTextComponents(components: TextEntryComponents) {
 	for (const component of components) {
 		switch (typeof component) {
 			case 'string':
@@ -24,5 +24,5 @@ export function wait(ms: number): Promise<unknown> {
 }
 
 export function numberEquals(l: number, r: number, epsilon?: number): boolean {
-	return Math.abs(l - r) < (epsilon ?? pixelEpsilon);
+	return Math.abs(l - r) < (epsilon ?? PIXEL_EPSILON);
 }

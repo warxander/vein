@@ -1,7 +1,7 @@
 import { getCurrentContext } from '../../index';
 
-export function declareExport(): void {
-	globalThis.exports('spacing', function (count: number = 1): void {
+export function declareExport() {
+	globalThis.exports('spacing', function (count = 1) {
 		const context = getCurrentContext();
 		const painter = context.getPainter();
 		const style = painter.getStyle();

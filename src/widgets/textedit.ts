@@ -2,16 +2,16 @@ import { getCurrentContext } from '../../index';
 import { wait } from '../core/utils';
 import { Color } from '../common/types';
 
-type TextEditResult = {
+interface TextEditResult {
 	isTextChanged: boolean;
 	text: string;
-};
+}
 
-export function declareExport(): void {
+export function declareExport() {
 	globalThis.exports(
 		'textEdit',
 		async function (
-			text: string = '',
+			text = '',
 			keyboardTitle: string,
 			maxTextLength: number,
 			isSecretMode: boolean
