@@ -1,5 +1,6 @@
 import { getCurrentContext } from '../../index';
 import { numberEquals } from '../core/utils';
+import { Color } from '../common/types';
 
 type SliderResult = {
 	isValueChanged: boolean;
@@ -39,7 +40,9 @@ export function declareExport(): void {
 
 			const sh = (h - sliderStyle.height) / 2;
 
-			painter.setColor(style.color.widget);
+			const properties = style.getProperties(context.isWidgetHovered() ? 'slider:hover' : 'slider');
+
+			painter.setColor(properties.get<Color>('background-color'));
 			painter.move(0, sh);
 			painter.drawRect(w, sliderStyle.height);
 
@@ -47,7 +50,7 @@ export function declareExport(): void {
 			const tx = sx - sliderStyle.tickMark.width / 2;
 			const ty = -sliderStyle.tickMark.height / 4;
 
-			painter.setColor(isHovered ? style.color.hover : style.color.primary);
+			painter.setColor(properties.get<Color>('color'));
 			painter.move(tx, ty);
 			painter.drawRect(sliderStyle.tickMark.width, sliderStyle.tickMark.height);
 

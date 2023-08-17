@@ -1,5 +1,4 @@
-export type Color = readonly [number, number, number, number];
-export type ContextId = number;
+export type Color = [number, number, number, number];
 export type PositionObject = { x: number; y: number };
 export type TextEntryComponents = Array<string | number>;
 

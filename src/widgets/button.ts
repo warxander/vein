@@ -1,4 +1,5 @@
 import { getCurrentContext } from '../../index';
+import { Color } from '../common/types';
 
 export function declareExport(): void {
 	globalThis.exports('button', function (text: string | undefined): boolean {
@@ -14,10 +15,12 @@ export function declareExport(): void {
 
 		context.beginDraw(w, h);
 
-		painter.setColor(context.isWidgetHovered() ? style.color.hover : style.color.widget);
+		const properties = style.getProperties(context.isWidgetHovered() ? 'button:hover' : 'button');
+
+		painter.setColor(properties.get<Color>('background-color'));
 		painter.drawRect(w, h);
 
-		painter.setColor(style.color.primary);
+		painter.setColor(properties.get<Color>('color'));
 		painter.move(style.button.spacing, 0);
 		painter.drawText();
 

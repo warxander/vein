@@ -14,10 +14,13 @@
 	"license": "APSL-2.0",
 	"author": "Warxander (https://github.com/warxander)",
 	"funding": "https://boosty.to/warxander",
+	"dependencies": {
+		"@adobe/css-tools": "4.2.0"
+	},
 	"devDependencies": {
 		"@citizenfx/client": "^2.0.6440-1",
 		"ts-loader": "~8.2.0",
-		"typescript": "latest",
+		"typescript": "~5.1.6",
 		"webpack": "~4.41.2",
 		"webpack-cli": "~3.3.11"
 	}

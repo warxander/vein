@@ -1,4 +1,5 @@
 import { getCurrentContext } from '../../index';
+import { Color } from '../common/types';
 
 export function declareExport(): void {
 	globalThis.exports('heading', function (text: string | undefined): void {
@@ -16,7 +17,7 @@ export function declareExport(): void {
 
 		context.beginDraw(w, h);
 
-		painter.setColor(style.color.primary);
+		painter.setColor(style.getProperty<Color>('heading', 'color'));
 		painter.drawText(headingStyle.text.offset);
 
 		context.endDraw();

@@ -1,4 +1,5 @@
 import { getCurrentContext } from '../../index';
+import { Color } from '../common/types';
 
 export function declareExport(): void {
 	globalThis.exports('spriteButton', function (dict: string, name: string, text: string | undefined): boolean {
@@ -19,13 +20,15 @@ export function declareExport(): void {
 
 		context.beginDraw(w, h);
 
-		painter.setColor(context.isWidgetHovered() ? style.color.hover : style.color.widget);
+		const properties = style.getProperties(context.isWidgetHovered() ? 'sprite-button:hover' : 'sprite-button');
+
+		painter.setColor(properties.get<Color>('background-color'));
 		painter.drawRect(w, h);
 
 		const sh = sw * GetAspectRatio(false);
 		const so = (h - sh) / 2;
 
-		painter.setColor(style.color.primary);
+		painter.setColor(properties.get<Color>('color'));
 
 		painter.move(style.button.spacing, so);
 		painter.drawSprite(dict, name, sw, sh);

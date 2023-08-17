@@ -1,5 +1,6 @@
 import { getCurrentContext } from '../../index';
 import { wait } from '../core/utils';
+import { Color } from '../common/types';
 
 type TextEditResult = {
 	isTextChanged: boolean;
@@ -38,27 +39,31 @@ export function declareExport(): void {
 					DisableAllControlActions(0);
 
 					const status = UpdateOnscreenKeyboard();
-					if (status == 1) {
+					if (status === 1) {
 						newText = GetOnscreenKeyboardResult();
 						break;
-					} else if (status == 2) break;
+					} else if (status === 2) break;
 				}
 			}
 
-			painter.setColor(style.color.widget);
+			const properties = style.getProperties(context.isWidgetHovered() ? 'text-edit:hover' : 'text-edit');
+
+			painter.setColor(properties.get<Color>('background-color'));
 			painter.drawRect(w, h);
 
 			const lineOffset = h - style.textEdit.lineHeight;
 			painter.move(0, lineOffset);
 
-			painter.setColor(context.isWidgetHovered() ? style.color.hover : style.color.primary);
+			const color = properties.get<Color>('color');
+
+			painter.setColor(color);
 			painter.drawRect(w, style.textEdit.lineHeight);
 
 			painter.move(0, -lineOffset);
 
 			painter.setText(isSecretMode ? text.replace(/./g, '*') : text);
 			painter.setTextOpts();
-			painter.setColor(style.color.primary);
+			painter.setColor(style.getProperty<Color>('text-edit', 'color'));
 			painter.drawText();
 
 			context.endDraw();

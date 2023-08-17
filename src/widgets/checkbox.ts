@@ -1,4 +1,5 @@
 import { getCurrentContext } from '../../index';
+import { Color } from '../common/types';
 
 export function declareExport(): void {
 	globalThis.exports('checkBox', function (isChecked: boolean, text: string | undefined): boolean {
@@ -22,21 +23,25 @@ export function declareExport(): void {
 
 		const vo = (h - checkboxStyle.height) / 2;
 
-		painter.setColor(context.isWidgetHovered() ? style.color.hover : style.color.primary);
+		const properties = style.getProperties(context.isWidgetHovered() ? 'check-box:hover' : 'check-box');
+		const color = properties.get<Color>('color');
+		const backgroundColor = properties.get<Color>('background-color');
+
+		painter.setColor(color);
 		painter.move(0, vo);
 		painter.drawRect(cw, checkboxStyle.height);
 
 		const outlineWidth = checkboxStyle.outlineHeight / aspectRatio;
 		cw = cw - outlineWidth * 2;
 
-		painter.setColor(style.color.window);
+		painter.setColor(backgroundColor);
 		painter.move(outlineWidth, checkboxStyle.outlineHeight);
 		painter.drawRect(cw, cw * aspectRatio);
 
 		const inlineWidth = checkboxStyle.inlineHeight / aspectRatio;
 		cw = cw - inlineWidth * 2;
 
-		painter.setColor(isChecked ? style.color.primary : style.color.window);
+		painter.setColor(isChecked ? color : backgroundColor);
 		painter.move(inlineWidth, checkboxStyle.inlineHeight);
 		painter.drawRect(cw, cw * aspectRatio);
 		painter.move(-inlineWidth, -checkboxStyle.inlineHeight);
@@ -44,7 +49,7 @@ export function declareExport(): void {
 		painter.move(-outlineWidth, -checkboxStyle.outlineHeight);
 		painter.move(0, -vo);
 
-		painter.setColor(style.color.primary);
+		painter.setColor(style.getProperty<Color>('check-box', 'color'));
 		painter.move(checkboxStyle.height / aspectRatio + checkboxStyle.spacing * 2, 0);
 		painter.drawText();
 

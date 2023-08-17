@@ -1,4 +1,5 @@
 import { getCurrentContext } from '../../index';
+import { Color } from '../common/types';
 
 export function declareExport(): void {
 	globalThis.exports('separator', function (w: number | undefined): void {
@@ -11,7 +12,7 @@ export function declareExport(): void {
 
 		context.beginDraw(w, h);
 
-		painter.setColor(style.color.secondary);
+		painter.setColor(style.getProperty<Color>('separator', 'color'));
 		painter.move(0, (style.widget.height - style.separator.height) / 2);
 		painter.drawRect(w, style.separator.height);
 

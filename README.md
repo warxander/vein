@@ -57,7 +57,6 @@ These features are not supported due to RAGE API limitations:
 
 These features are not supported by design (can be a subject to change though):
 * Custom widget sizes (Vein is out-of-box solution)
-* Custom widget colors (Vein tries to be close to FiveM color style and provides dark/light color themes)
 * Nested rows
 
 ## API
@@ -119,13 +118,15 @@ endRow()
 --! @param count: number
 spacing([count])
 ```
-### Color Themes
+### Style
 ```lua
---! @brief setDarkColorTheme
-setDarkColorTheme()
+--! @brief setStyle
+--! @comment CSS-like format
+--! @param style: string
+setStyle(style)
 
---! @brief setLightColorTheme
-setLightColorTheme()
+--! @brief resetStyle
+resetStyle()
 ```
 ### Widgets
 ```lua

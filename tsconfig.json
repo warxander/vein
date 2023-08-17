@@ -6,7 +6,8 @@
 		"target": "ES2017",
 		"types": [
 			"@citizenfx/client"
-		]
+		],
+		"moduleResolution": "node"
 	},
 	"include": [
 		"./src/**/*",

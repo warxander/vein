@@ -125,12 +125,14 @@ export class Painter {
 		const outlineWidth = this.#style.window.outlineWidth;
 		const outlineHeight = outlineWidth * GetAspectRatio(false);
 
+		const properties = this.#style.getProperties('window');
+
 		this.move(-outlineWidth, -outlineHeight);
-		this.setColor(this.#style.color.widget);
+		this.setColor(properties.get<Color>('border-color'));
 		this.drawRect(this.#windowGeometry.size.w + outlineWidth * 2, this.#windowGeometry.size.h + outlineHeight * 2);
 		this.move(outlineWidth, outlineHeight);
 
-		this.setColor(this.#style.color.window);
+		this.setColor(properties.get<Color>('background-color'));
 		this.drawRect(this.#windowGeometry.size.w, this.#windowGeometry.size.h);
 	}
 
@@ -372,7 +374,7 @@ export class Painter {
 		if (!this.#isLayoutValid() || !getIsDebugEnabled()) return;
 
 		this.setPos(this.#widgetGeometry.pos.x, this.#widgetGeometry.pos.y);
-		this.setColor(this.#style.color.debug);
+		this.setColor(this.#style.getProperty<Color>('window', 'color'));
 		this.drawRect(w, h);
 	}
 }

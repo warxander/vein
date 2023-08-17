@@ -1,4 +1,4 @@
-import { ContextId, PositionObject, TextEntryComponents } from './src/common/types';
+import { PositionObject, TextEntryComponents } from './src/common/types';
 import { Context } from './src/core/context';
 
 import * as Button from './src/widgets/button';
@@ -16,6 +16,7 @@ import * as TextArea from './src/widgets/textarea';
 import * as TextEdit from './src/widgets/textedit';
 
 let isDebugEnabled: boolean = false;
+
 let currentContext: Context | undefined = undefined;
 const globalContext: Context = new Context();
 
@@ -95,12 +96,12 @@ globalThis.exports('popWidgetWidth', function (): void {
 	getCurrentContext().popWidgetWidth();
 });
 
-globalThis.exports('setDarkColorTheme', function (): void {
-	getCurrentContext().getPainter().getStyle().setDarkColorTheme();
+globalThis.exports('setStyle', function(style: string): void {
+	getCurrentContext().getPainter().getStyle().set(style);
 });
 
-globalThis.exports('setLightColorTheme', function (): void {
-	getCurrentContext().getPainter().getStyle().setLightColorTheme();
+globalThis.exports('resetStyle', function(): void {
+	getCurrentContext().getPainter().getStyle().reset();
 });
 
 Button.declareExport();
