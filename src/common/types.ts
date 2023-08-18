@@ -1,4 +1,6 @@
 export type Color = [number, number, number, number];
+export type Image = [string, string];
+
 export type TextEntryComponents = Array<string | number>;
 
 export interface PositionInterface {

@@ -1,5 +1,6 @@
 import { getCurrentContext } from '../../index';
-import { Color } from '../common/types';
+import { Color, Image } from '../common/types';
+import { Style } from '../core/style';
 
 export function declareExport() {
 	globalThis.exports('button', function (text?: string): boolean {
@@ -17,8 +18,15 @@ export function declareExport() {
 
 		const properties = style.getProperties(context.isWidgetHovered() ? 'button:hover' : 'button');
 
-		painter.setColor(properties.get<Color>('background-color'));
-		painter.drawRect(w, h);
+		const backgroundImage = properties.tryGet<Image>('background-image');
+		if (backgroundImage !== undefined) {
+			const backgroundColor = properties.tryGet<Color>('background-color');
+			painter.setColor(backgroundColor ?? Style.SPRITE_COLOR);
+			painter.drawSprite(backgroundImage[0], backgroundImage[1], w, h);
+		} else {
+			painter.setColor(properties.get<Color>('background-color'));
+			painter.drawRect(w, h);
+		}
 
 		painter.setColor(properties.get<Color>('color'));
 		painter.move(style.button.spacing, 0);

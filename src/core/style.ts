@@ -1,10 +1,15 @@
-import { Color } from '../common/types';
+import { Color, Image } from '../common/types';
 
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
-type StylePropertyValue = Color | number | string;
+type StylePropertyValue = Color | Image;
 type StylePropertyValuesMap = Map<string, StylePropertyValue>;
 type StyleSelectorPropertyValuesMap = Map<string, StylePropertyValues>;
+
+enum StylePropertyValueType {
+	Color,
+	Image
+}
 
 class StylePropertyValues {
 	constructor(
@@ -26,6 +31,16 @@ class StylePropertyValues {
 		if (value === undefined) throw new Error(`Failed to get() for style property: ${property}`);
 
 		return value as T;
+	}
+
+	tryGet<T extends StylePropertyValue>(property: string): T | undefined {
+		let value = this.properties.get(property);
+
+		if (value === undefined && this.defaultProperties) {
+			value = this.defaultProperties.get(property);
+		}
+
+		return value !== undefined ? (value as T) : undefined;
 	}
 
 	set(property: string, value: StylePropertyValue) {
@@ -106,14 +121,19 @@ const KNOWN_SELECTORS = new Set<String>([
 	'window'
 ]);
 
-const KNOWN_PROPERTIES = new Set<string>(['background-color', 'border-color', 'color']);
+const KNOWN_PROPERTIES = new Map<string, StylePropertyValueType>([
+	['background-color', StylePropertyValueType.Color],
+	['background-image', StylePropertyValueType.Image],
+	['border-color', StylePropertyValueType.Color],
+	['color', StylePropertyValueType.Color]
+]);
 
-function parseValue(value: string): StylePropertyValue {
+function parseValueAsColor(value: string): Color {
 	if (value.match(/^#([0-9a-f]{6})$/i))
 		return [
-			parseInt(value.substring(1, 2), 16),
-			parseInt(value.substring(3, 2), 16),
-			parseInt(value.substring(5, 2), 16),
+			parseInt(value.substring(1, 3), 16),
+			parseInt(value.substring(3, 5), 16),
+			parseInt(value.substring(5, 7), 16),
 			255
 		];
 
@@ -121,7 +141,25 @@ function parseValue(value: string): StylePropertyValue {
 	if (match)
 		return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), Math.round(parseFloat(match[4]) * 255)];
 
-	throw new Error(`Failed to parseValue() for style value: ${value}`);
+	throw new Error(`Failed to parseValueAsColor() for style value: ${value}`);
+}
+
+function parseValueAsImage(value: string): Image {
+	const match = value.match(/^url\('(\S+)',\s*'(\S+)'\)$/);
+	if (match) return [match[1], match[2]];
+
+	throw new Error(`Failed to parseValueAsImage() for style value: ${value}`);
+}
+
+function parseValue(value: string, propertyType: StylePropertyValueType): StylePropertyValue {
+	switch (propertyType) {
+		case StylePropertyValueType.Color:
+			return parseValueAsColor(value);
+		case StylePropertyValueType.Image:
+			return parseValueAsImage(value);
+		default:
+			throw new Error(`Failed to parseValue() of unsupported style type: ${propertyType}`);
+	}
 }
 
 export class Style {
@@ -244,6 +282,10 @@ export class Style {
 		return this.getProperties(selectorName).get<T>(propertyName);
 	}
 
+	tryGetProperty<T extends StylePropertyValue>(selectorName: string, propertyName: string): T | undefined {
+		return this.getProperties(selectorName).tryGet<T>(propertyName);
+	}
+
 	set(style: string) {
 		try {
 			this.selectorProperties = this.doSet(style, true);
@@ -270,9 +312,11 @@ export class Style {
 				if (declaration.type != CssTypes.declaration) continue;
 
 				const astDeclaration = declaration as CssDeclarationAST;
-				if (!KNOWN_PROPERTIES.has(astDeclaration.property)) continue;
 
-				properties.set(astDeclaration.property, parseValue(astDeclaration.value));
+				const propertyType = KNOWN_PROPERTIES.get(astDeclaration.property);
+				if (propertyType === undefined) continue;
+
+				properties.set(astDeclaration.property, parseValue(astDeclaration.value, propertyType));
 			}
 
 			if (properties.size === 0) continue;
