@@ -21,7 +21,7 @@ class LayoutState {
 }
 
 class RowState {
-	isActive = false;
+	isInRowMode = false;
 	isFirstItem = false;
 	size = new Size();
 }
@@ -138,14 +138,14 @@ export class Painter {
 	}
 
 	beginRow() {
-		if (!this.rowState.isActive) {
-			this.rowState.isActive = true;
+		if (!this.rowState.isInRowMode) {
+			this.rowState.isInRowMode = true;
 			this.rowState.isFirstItem = true;
 		}
 	}
 
 	endRow() {
-		if (!this.rowState.isActive) return;
+		if (!this.rowState.isInRowMode) return;
 
 		this.layoutState.size.set(
 			Math.max(this.layoutState.size.w, this.rowState.size.w),
@@ -157,27 +157,27 @@ export class Painter {
 			this.pos.y + this.rowState.size.h
 		);
 
-		this.rowState.isActive = false;
+		this.rowState.isInRowMode = false;
 		this.rowState.isFirstItem = true;
 
 		this.rowState.size.set(0, 0);
 	}
 
 	isRowMode(): boolean {
-		return this.rowState.isActive;
+		return this.rowState.isInRowMode;
 	}
 
 	beginDraw(w: number, h: number) {
 		if (this.layoutState.isFirstItem) this.move(this.style.window.margins.h, this.style.window.margins.v);
 		else {
 			let ho = 0;
-			if (this.rowState.isActive && !this.rowState.isFirstItem) {
+			if (this.rowState.isInRowMode && !this.rowState.isFirstItem) {
 				ho = this.style.window.spacing.h;
 				this.rowState.size.w += ho;
 			}
 
 			let vo = 0;
-			if (!this.rowState.isActive || this.rowState.isFirstItem) vo = this.style.window.spacing.v;
+			if (!this.rowState.isInRowMode || this.rowState.isFirstItem) vo = this.style.window.spacing.v;
 
 			this.layoutState.size.w += ho;
 			this.layoutState.size.h += vo;
@@ -195,7 +195,7 @@ export class Painter {
 
 		this.drawDebug(w, h);
 
-		if (this.rowState.isActive) {
+		if (this.rowState.isInRowMode) {
 			this.rowState.size.set(this.rowState.size.w + w, Math.max(this.rowState.size.h, h));
 			this.setPos(this.itemGeometry.pos.x + w, this.itemGeometry.pos.y);
 			this.rowState.isFirstItem = false;

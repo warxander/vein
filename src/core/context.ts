@@ -2,15 +2,15 @@ import { PositionInterface, TextEntryComponents } from '../common/types';
 import { Input } from './input';
 import { Painter } from './painter';
 
-class TextDrawState {
+class Text {
 	constructor(public entry: string, public components: TextEntryComponents) {}
 }
 
-class DrawState {
-	text?: TextDrawState;
+class NextItemState {
+	text?: Text;
 	itemWidth?: number;
 
-	endDraw() {
+	reset() {
 		this.text = undefined;
 		this.itemWidth = undefined;
 	}
@@ -22,42 +22,39 @@ enum WindowFlags {
 	NoBackground = 1 << 2
 }
 
-class WindowState {
-	text?: TextDrawState;
-	itemWidth?: number;
+class WindowFrameState {
 	windowFlags: WindowFlags = WindowFlags.None;
-	skipDrawingNumber = 1;
 
-	endWindow() {
-		this.text = undefined;
-		this.itemWidth = undefined;
+	reset() {
 		this.windowFlags = WindowFlags.None;
-		if (this.skipDrawingNumber != 0) --this.skipDrawingNumber;
 	}
 }
 
 export class Context {
 	private input = new Input();
 	private painter = new Painter(this);
-	private state = new WindowState();
-	private nextState = new DrawState();
+	private windowFrameState = new WindowFrameState();
+	private nextItemState = new NextItemState();
+	private itemWidthStack: number[] = [];
+	private textStack: Text[] = [];
+	private skipDrawingNumber = 1;
 
 	setWindowNoDrag(isNoDrag: boolean) {
-		if (isNoDrag) this.state.windowFlags |= WindowFlags.NoDrag;
-		else this.state.windowFlags &= ~WindowFlags.NoDrag;
+		if (isNoDrag) this.windowFrameState.windowFlags |= WindowFlags.NoDrag;
+		else this.windowFrameState.windowFlags &= ~WindowFlags.NoDrag;
 	}
 
 	setWindowNoBackground(isNoBackground: boolean) {
-		if (isNoBackground) this.state.windowFlags |= WindowFlags.NoBackground;
-		else this.state.windowFlags &= ~WindowFlags.NoBackground;
+		if (isNoBackground) this.windowFrameState.windowFlags |= WindowFlags.NoBackground;
+		else this.windowFrameState.windowFlags &= ~WindowFlags.NoBackground;
 	}
 
 	isWindowNoDrag(): boolean {
-		return !!(this.state.windowFlags & WindowFlags.NoDrag);
+		return !!(this.windowFrameState.windowFlags & WindowFlags.NoDrag);
 	}
 
 	isWindowNoBackground(): boolean {
-		return !!(this.state.windowFlags & WindowFlags.NoBackground);
+		return !!(this.windowFrameState.windowFlags & WindowFlags.NoBackground);
 	}
 
 	beginWindow(x?: number, y?: number) {
@@ -70,7 +67,8 @@ export class Context {
 
 		this.input.endWindow();
 
-		this.state.endWindow();
+		this.windowFrameState.reset();
+		if (this.skipDrawingNumber != 0) --this.skipDrawingNumber;
 
 		return windowPos;
 	}
@@ -89,11 +87,11 @@ export class Context {
 	}
 
 	setWindowSkipNextDrawing() {
-		this.state.skipDrawingNumber = 2;
+		this.skipDrawingNumber = 2;
 	}
 
 	isWindowSkipNextDrawing(): boolean {
-		return this.state.skipDrawingNumber != 0;
+		return this.skipDrawingNumber != 0;
 	}
 
 	beginDraw(w: number, h: number) {
@@ -103,53 +101,51 @@ export class Context {
 	endDraw() {
 		this.painter.endDraw();
 
-		this.nextState.endDraw();
+		this.nextItemState.reset();
 	}
 
 	setNextTextEntry(entry: string, ...components: TextEntryComponents) {
-		this.nextState.text = {
+		this.nextItemState.text = {
 			entry: entry,
 			components: components
 		};
 	}
 
 	pushTextEntry(entry: string, ...components: TextEntryComponents) {
-		this.state.text = {
+		this.textStack.push({
 			entry: entry,
 			components: components
-		};
+		});
 	}
 
 	popTextEntry() {
-		this.state.text = undefined;
+		this.textStack.pop();
 	}
 
 	getTextEntry(): string | undefined {
-		if (this.nextState.text) return this.nextState.text.entry;
-		if (this.state.text) return this.state.text.entry;
-		return undefined;
+		if (this.nextItemState.text) return this.nextItemState.text.entry;
+		return this.textStack[this.textStack.length - 1]?.entry;
 	}
 
 	getTextComponents(): TextEntryComponents | undefined {
-		if (this.nextState.text) return this.nextState.text.components;
-		if (this.state.text) return this.state.text.components;
-		return undefined;
+		if (this.nextItemState.text) return this.nextItemState.text.components;
+		return this.textStack[this.textStack.length - 1]?.components;
 	}
 
 	setNextItemWidth(w: number) {
-		this.nextState.itemWidth = w;
+		this.nextItemState.itemWidth = w;
 	}
 
 	pushItemWidth(w: number) {
-		this.state.itemWidth = w;
+		this.itemWidthStack.push(w);
 	}
 
 	popItemWidth() {
-		this.state.itemWidth = undefined;
+		this.itemWidthStack.pop();
 	}
 
 	getItemWidth(): number | undefined {
-		return this.nextState.itemWidth ?? this.state.itemWidth;
+		return this.nextItemState.itemWidth ?? this.itemWidthStack[this.itemWidthStack.length - 1];
 	}
 
 	getInput(): Input {
