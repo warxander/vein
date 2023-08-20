@@ -28,7 +28,7 @@ export function getIsDebugEnabled(): boolean {
 	return isDebugEnabled;
 }
 
-globalThis.exports('setDebugEnabled', function (enabled: boolean): void {
+globalThis.exports('setDebugEnabled', function (enabled: boolean) {
 	isDebugEnabled = enabled;
 });
 
@@ -36,15 +36,15 @@ globalThis.exports('isDebugEnabled', function (): boolean {
 	return getIsDebugEnabled();
 });
 
-globalThis.exports('setNextWindowNoDrag', function (isNoDrag: boolean): void {
+globalThis.exports('setNextWindowNoDrag', function (isNoDrag: boolean) {
 	getCurrentContext().setWindowNoDrag(isNoDrag);
 });
 
-globalThis.exports('setNextWindowNoBackground', function (isNoBackground: boolean): void {
+globalThis.exports('setNextWindowNoBackground', function (isNoBackground: boolean) {
 	getCurrentContext().setWindowNoBackground(isNoBackground);
 });
 
-globalThis.exports('beginWindow', function (x?: number, y?: number): void {
+globalThis.exports('beginWindow', function (x?: number, y?: number) {
 	getCurrentContext().beginWindow(x, y);
 });
 
@@ -60,47 +60,47 @@ globalThis.exports('isItemClicked', function (): boolean {
 	return getCurrentContext().isItemClicked();
 });
 
-globalThis.exports('setWindowSkipNextDrawing', function (): void {
+globalThis.exports('setWindowSkipNextDrawing', function () {
 	getCurrentContext().setWindowSkipNextDrawing();
 });
 
-globalThis.exports('beginRow', function (): void {
+globalThis.exports('beginRow', function () {
 	getCurrentContext().getPainter().beginRow();
 });
 
-globalThis.exports('endRow', function (): void {
+globalThis.exports('endRow', function () {
 	getCurrentContext().getPainter().endRow();
 });
 
-globalThis.exports('setNextTextEntry', function (entry: string, ...components: TextEntryComponents): void {
+globalThis.exports('setNextTextEntry', function (entry: string, ...components: TextEntryComponents) {
 	getCurrentContext().setNextTextEntry(entry, ...components);
 });
 
-globalThis.exports('pushTextEntry', function (entry: string, ...components: TextEntryComponents): void {
+globalThis.exports('pushTextEntry', function (entry: string, ...components: TextEntryComponents) {
 	getCurrentContext().pushTextEntry(entry, ...components);
 });
 
-globalThis.exports('popTextEntry', function (): void {
+globalThis.exports('popTextEntry', function () {
 	getCurrentContext().popTextEntry();
 });
 
-globalThis.exports('setNextItemWidth', function (w: number): void {
+globalThis.exports('setNextItemWidth', function (w: number) {
 	getCurrentContext().setNextItemWidth(w);
 });
 
-globalThis.exports('pushItemWidth', function (w: number): void {
+globalThis.exports('pushItemWidth', function (w: number) {
 	getCurrentContext().pushItemWidth(w);
 });
 
-globalThis.exports('popItemWidth', function (): void {
+globalThis.exports('popItemWidth', function () {
 	getCurrentContext().popItemWidth();
 });
 
-globalThis.exports('setStyleSheet', function (styleSheet: string): void {
+globalThis.exports('setStyleSheet', function (styleSheet: string) {
 	getCurrentContext().getPainter().getStyle().setSheet(styleSheet);
 });
 
-globalThis.exports('useDefaultStyle', function (): void {
+globalThis.exports('useDefaultStyle', function () {
 	getCurrentContext().getPainter().getStyle().useDefault();
 });
 
