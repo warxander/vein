@@ -209,7 +209,7 @@ export class Style {
 
 	constructor() {
 		if (Style.defaultSelectorProperties === undefined)
-			Style.defaultSelectorProperties = this.doSet(DEFAULT_STYLE, false);
+			Style.defaultSelectorProperties = this.parseSheet(DEFAULT_STYLE, false);
 
 		this.button = {
 			spacing: 0.005
@@ -296,11 +296,11 @@ export class Style {
 		return this.getProperties(selectorName).tryGet<T>(propertyName);
 	}
 
-	set(style: string) {
+	setSheet(styleSheet: string) {
 		try {
-			this.userSelectorProperties = this.doSet(style, true);
+			this.userSelectorProperties = this.parseSheet(styleSheet, true);
 		} catch (e: any) {
-			console.log(`Failed to set style: ${e}`);
+			console.log(`Failed to set style sheet: ${e}`);
 		}
 	}
 
@@ -308,12 +308,12 @@ export class Style {
 		this.userSelectorProperties = undefined;
 	}
 
-	private doSet(style: string, useDefaultProperties: boolean): StyleSelectorPropertyValuesMap {
+	private parseSheet(styleSheet: string, useDefaultProperties: boolean): StyleSelectorPropertyValuesMap {
 		let selectorProperties = new Map<string, StylePropertyValues>();
 
-		const stylesheetAst = parse(style);
+		const styleSheetAst = parse(styleSheet);
 
-		for (const rule of stylesheetAst.stylesheet.rules) {
+		for (const rule of styleSheetAst.stylesheet.rules) {
 			if (rule.type != CssTypes.rule) continue;
 
 			let properties = new Map<string, StylePropertyValue>();

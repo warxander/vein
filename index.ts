@@ -96,8 +96,8 @@ globalThis.exports('popWidgetWidth', function (): void {
 	getCurrentContext().popWidgetWidth();
 });
 
-globalThis.exports('setStyle', function (style: string): void {
-	getCurrentContext().getPainter().getStyle().set(style);
+globalThis.exports('setStyleSheet', function (styleSheet: string): void {
+	getCurrentContext().getPainter().getStyle().setSheet(styleSheet);
 });
 
 globalThis.exports('useDefaultStyle', function (): void {

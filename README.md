@@ -120,10 +120,10 @@ spacing([count])
 ```
 ### Style
 ```lua
---! @brief setStyle
+--! @brief setStyleSheet
 --! @comment CSS-like format
---! @param style: string
-setStyle(style)
+--! @param styleSheet: string
+setStyleSheet(styleSheet)
 
 --! @brief useDefaultStyle
 useDefaultStyle()
