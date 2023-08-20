@@ -46,8 +46,9 @@ export function declareExport() {
 				}
 			}
 
-			const textEditProperties = style.getProperties('text-edit');
-			const properties = context.isItemHovered() ? style.getProperties('text-edit:hover') : textEditProperties;
+			const id = context.getItemId() ?? 'text-edit';
+			const textEditProperties = style.getProperties(id);
+			const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : textEditProperties;
 
 			painter.setColor(properties.get<Color>('background-color'));
 			painter.drawRect(w, h);
@@ -63,7 +64,7 @@ export function declareExport() {
 			painter.move(0, -lineOffset);
 
 			painter.setText(isSecretMode ? text.replace(/./g, '*') : text);
-			painter.setColor(style.getProperty<Color>('text-edit', 'color'));
+			painter.setColor(style.getProperty<Color>(id, 'color'));
 
 			const font = textEditProperties.get<number>('font-family');
 			const scale = textEditProperties.get<number>('font-size');

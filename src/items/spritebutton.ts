@@ -9,7 +9,8 @@ export function declareExport() {
 
 		painter.setText(text);
 
-		const spriteButtonProperties = style.getProperties('sprite-button');
+		const id = context.getItemId() ?? 'sprite-button';
+		const spriteButtonProperties = style.getProperties(id);
 		const font = spriteButtonProperties.get<number>('font-family');
 		const scale = spriteButtonProperties.get<number>('font-size');
 
@@ -25,9 +26,7 @@ export function declareExport() {
 
 		context.beginDraw(w, h);
 
-		const properties = context.isItemHovered()
-			? style.getProperties('sprite-button:hover')
-			: spriteButtonProperties;
+		const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : spriteButtonProperties;
 
 		painter.drawItemBackground(properties, w, h);
 

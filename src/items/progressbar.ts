@@ -14,7 +14,7 @@ export function declareExport() {
 
 		const h = style.progressBar.height;
 
-		const properties = style.getProperties('progress-bar');
+		const properties = style.getProperties(context.getItemId() ?? 'progress-bar');
 
 		painter.setColor(properties.get<Color>('background-color'));
 		painter.move(0, (style.item.height - h) / 2);

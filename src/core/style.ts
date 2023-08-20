@@ -105,7 +105,7 @@ window {
 	color: rgba(105, 255, 89, 0.125);
 }`;
 
-const KNOWN_SELECTORS = new Set<String>([
+const DEFAULT_SELECTORS = new Set<String>([
 	'button',
 	'button:hover',
 
@@ -332,10 +332,8 @@ export class Style {
 			if (properties.size === 0) continue;
 
 			for (const selector of (rule as CssRuleAST).selectors) {
-				if (!KNOWN_SELECTORS.has(selector)) continue;
-
 				let defaultProperties: StylePropertyValues | undefined = undefined;
-				if (useDefaultProperties) {
+				if (useDefaultProperties && DEFAULT_SELECTORS.has(selector)) {
 					defaultProperties = Style.defaultSelectorProperties?.get(selector);
 					if (defaultProperties === undefined)
 						throw new Error(`Failed to get default properties for style selector: ${selector}`);

@@ -9,7 +9,8 @@ export function declareExport() {
 
 		painter.setText(text);
 
-		const checkBoxProperties = style.getProperties('check-box');
+		const id = context.getItemId() ?? 'check-box';
+		const checkBoxProperties = style.getProperties(id);
 		const font = checkBoxProperties.get<number>('font-family');
 		const scale = checkBoxProperties.get<number>('font-size');
 
@@ -28,7 +29,7 @@ export function declareExport() {
 
 		const vo = (h - checkboxStyle.height) / 2;
 
-		const properties = context.isItemHovered() ? style.getProperties('check-box:hover') : checkBoxProperties;
+		const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : checkBoxProperties;
 		const color = properties.get<Color>('color');
 		const backgroundColor = properties.get<Color>('background-color');
 

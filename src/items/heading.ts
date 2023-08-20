@@ -11,7 +11,7 @@ export function declareExport() {
 
 		painter.setText(text);
 
-		const properties = style.getProperties('heading');
+		const properties = style.getProperties(context.getItemId() ?? 'heading');
 		const font = properties.get<number>('font-family');
 		const scale = properties.get<number>('font-size');
 

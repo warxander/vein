@@ -7,12 +7,14 @@ class Text {
 }
 
 class NextItemState {
+	id?: string;
 	text?: Text;
-	itemWidth?: number;
+	width?: number;
 
 	reset() {
+		this.id = undefined;
 		this.text = undefined;
-		this.itemWidth = undefined;
+		this.width = undefined;
 	}
 }
 
@@ -37,6 +39,7 @@ export class Context {
 	private nextItemState = new NextItemState();
 	private itemWidthStack: number[] = [];
 	private textStack: Text[] = [];
+	private itemIdStack: string[] = [];
 	private skipDrawingNumber = 1;
 
 	setWindowNoDrag(isNoDrag: boolean) {
@@ -133,7 +136,7 @@ export class Context {
 	}
 
 	setNextItemWidth(w: number) {
-		this.nextItemState.itemWidth = w;
+		this.nextItemState.width = w;
 	}
 
 	pushItemWidth(w: number) {
@@ -145,7 +148,23 @@ export class Context {
 	}
 
 	getItemWidth(): number | undefined {
-		return this.nextItemState.itemWidth ?? this.itemWidthStack[this.itemWidthStack.length - 1];
+		return this.nextItemState.width ?? this.itemWidthStack[this.itemWidthStack.length - 1];
+	}
+
+	setNextItemId(id: string) {
+		this.nextItemState.id = id;
+	}
+
+	pushItemId(id: string) {
+		this.itemIdStack.push(id);
+	}
+
+	popItemId() {
+		this.itemIdStack.pop();
+	}
+
+	getItemId(): string | undefined {
+		return this.nextItemState.id ?? this.itemIdStack[this.itemIdStack.length - 1];
 	}
 
 	getInput(): Input {

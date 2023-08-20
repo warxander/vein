@@ -104,6 +104,18 @@ globalThis.exports('useDefaultStyle', function () {
 	getCurrentContext().getPainter().getStyle().useDefault();
 });
 
+globalThis.exports('setNextItemId', function (id: string) {
+	getCurrentContext().setNextItemId(id);
+});
+
+globalThis.exports('pushItemId', function (id: string) {
+	getCurrentContext().pushItemId(id);
+});
+
+globalThis.exports('popItemId', function () {
+	getCurrentContext().popItemId();
+});
+
 Button.declareExport();
 Checkbox.declareExport();
 Dummy.declareExport();

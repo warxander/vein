@@ -102,19 +102,19 @@ beginWindow([x, y])
 local windowPos = endWindow()
 
 --! @brief isItemHovered
---! @comment Returns true is last drawn item was hovered
+--! @comment Returns true if the last drawn item was hovered
 --! @return isHovered: boolean
 local isHovered = isItemHovered()
 
 --! @brief isItemClicked
---! @comment Returns true is last drawn item was clicked
+--! @comment Returns true if the last drawn item was clicked
 --! @return isClicked: boolean
 local isClicked = isItemClicked()
 ```
 ### Layout
 ```lua
 --! @brief setWindowSkipNextDrawing
---! @comment Eliminates visual redrawing artifacts in case of items layout was drastically changed
+--! @comment Eliminates visual redrawing artifacts if the item layout was drastically changed
 setWindowSkipNextDrawing()
 
 --! @brief beginRow
@@ -124,7 +124,7 @@ beginRow()
 endRow()
 
 --! @brief spacing
---! @comment Horizontal if in row mode, otherwise vertical
+--! @comment Horizontal if in row mode, vertical otherwise
 --! @param count: number
 spacing([count])
 ```
@@ -137,6 +137,16 @@ setStyleSheet(styleSheet)
 
 --! @brief useDefaultStyle
 useDefaultStyle()
+
+--! @brief setNextItemId
+--! @comment Used as a selector name
+--! @param id: string
+setNextItemId(id)
+
+--! @brief pushItemId
+--! @comment Used as a selector name
+--! @param id: string
+pushItemId(id)
 ```
 #### Selectors
 `button`, `button:hover`, `check-box`, `check-box:hover`, `heading`, `label`, `progress-bar`,
@@ -152,12 +162,10 @@ useDefaultStyle()
 ### Items
 ```lua
 --! @brief setNextTextEntry
---! @comment Applies specified text entry for next drawn item
 --! @param entry: string
 setNextTextEntry(entry [, ...])
 
 --! @brief pushTextEntry
---! @comment Applies specified text entry until popTextEntry() will be called
 --! @param entry: string
 pushTextEntry(entry [, ...])
 
@@ -165,12 +173,10 @@ pushTextEntry(entry [, ...])
 popTextEntry()
 
 --! @brief setNextItemWidth
---! @comment Applies specified width for next drawn item
 --! @param w: number
 setNextItemWidth(w)
 
 --! @brief pushItemWidth
---! @comment Applies specified width until popItemWidth() will be called
 --! @param w: number
 pushItemWidth(w)
 

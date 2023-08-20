@@ -35,7 +35,8 @@ export function declareExport() {
 
 		const sh = (h - sliderStyle.height) / 2;
 
-		const properties = style.getProperties(context.isItemHovered() ? 'slider:hover' : 'slider');
+		const id = context.getItemId() ?? 'slider';
+		const properties = style.getProperties(context.isItemHovered() ? `${id}:hover` : id);
 
 		painter.setColor(properties.get<Color>('background-color'));
 		painter.move(0, sh);

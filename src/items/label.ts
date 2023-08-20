@@ -9,7 +9,7 @@ export function declareExport() {
 
 		painter.setText(text);
 
-		const properties = style.getProperties('label');
+		const properties = style.getProperties(context.getItemId() ?? 'label');
 		const font = properties.get<number>('font-family');
 		const scale = properties.get<number>('font-size');
 

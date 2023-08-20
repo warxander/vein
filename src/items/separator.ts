@@ -12,7 +12,7 @@ export function declareExport() {
 
 		context.beginDraw(w, h);
 
-		painter.setColor(style.getProperty<Color>('separator', 'color'));
+		painter.setColor(style.getProperty<Color>(context.getItemId() ?? 'separator', 'color'));
 		painter.move(0, (style.item.height - style.separator.height) / 2);
 		painter.drawRect(w, style.separator.height);
 
