@@ -100,8 +100,8 @@ globalThis.exports('setStyle', function (style: string): void {
 	getCurrentContext().getPainter().getStyle().set(style);
 });
 
-globalThis.exports('resetStyle', function (): void {
-	getCurrentContext().getPainter().getStyle().reset();
+globalThis.exports('useDefaultStyle', function (): void {
+	getCurrentContext().getPainter().getStyle().useDefault();
 });
 
 Button.declareExport();

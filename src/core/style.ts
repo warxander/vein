@@ -193,7 +193,7 @@ export class Style {
 
 	private static defaultSelectorProperties?: StyleSelectorPropertyValuesMap;
 
-	private selectorProperties?: StyleSelectorPropertyValuesMap;
+	private userSelectorProperties?: StyleSelectorPropertyValuesMap;
 
 	readonly button;
 	readonly checkbox;
@@ -278,7 +278,7 @@ export class Style {
 	}
 
 	getProperties(selector: string): StylePropertyValues {
-		let selectorProperties = this.selectorProperties?.get(selector);
+		let selectorProperties = this.userSelectorProperties?.get(selector);
 		if (selectorProperties) return selectorProperties;
 
 		selectorProperties = Style.defaultSelectorProperties?.get(selector);
@@ -298,14 +298,14 @@ export class Style {
 
 	set(style: string) {
 		try {
-			this.selectorProperties = this.doSet(style, true);
+			this.userSelectorProperties = this.doSet(style, true);
 		} catch (e: any) {
 			console.log(`Failed to set style: ${e}`);
 		}
 	}
 
-	reset() {
-		this.selectorProperties = undefined;
+	useDefault() {
+		this.userSelectorProperties = undefined;
 	}
 
 	private doSet(style: string, useDefaultProperties: boolean): StyleSelectorPropertyValuesMap {

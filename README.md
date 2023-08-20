@@ -125,8 +125,8 @@ spacing([count])
 --! @param style: string
 setStyle(style)
 
---! @brief resetStyle
-resetStyle()
+--! @brief useDefaultStyle
+useDefaultStyle()
 ```
 ### Widgets
 ```lua
