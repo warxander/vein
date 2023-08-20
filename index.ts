@@ -44,6 +44,10 @@ globalThis.exports('setNextWindowNoBackground', function (isNoBackground: boolea
 	getCurrentContext().setWindowNoBackground(isNoBackground);
 });
 
+globalThis.exports('setNextWindowId', function (id: string) {
+	getCurrentContext().setWindowId(id);
+});
+
 globalThis.exports('beginWindow', function (x?: number, y?: number) {
 	getCurrentContext().beginWindow(x, y);
 });

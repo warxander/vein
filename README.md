@@ -147,6 +147,11 @@ setNextItemId(id)
 --! @comment Used as a selector name
 --! @param id: string
 pushItemId(id)
+
+--! @brief setNextWindowId
+--! @comment Used as a selector name
+--! @param id: string
+setNextWindowId(id)
 ```
 #### Selectors
 `button`, `button:hover`, `check-box`, `check-box:hover`, `heading`, `label`, `progress-bar`,

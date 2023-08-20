@@ -25,9 +25,11 @@ enum WindowFlags {
 }
 
 class WindowFrameState {
+	id?: string;
 	windowFlags: WindowFlags = WindowFlags.None;
 
 	reset() {
+		this.id = undefined;
 		this.windowFlags = WindowFlags.None;
 	}
 }
@@ -52,12 +54,20 @@ export class Context {
 		else this.windowFrameState.windowFlags &= ~WindowFlags.NoBackground;
 	}
 
+	setWindowId(id: string) {
+		this.windowFrameState.id = id;
+	}
+
 	isWindowNoDrag(): boolean {
 		return !!(this.windowFrameState.windowFlags & WindowFlags.NoDrag);
 	}
 
 	isWindowNoBackground(): boolean {
 		return !!(this.windowFrameState.windowFlags & WindowFlags.NoBackground);
+	}
+
+	getWindowId(): string | undefined {
+		return this.windowFrameState.id;
 	}
 
 	beginWindow(x?: number, y?: number) {

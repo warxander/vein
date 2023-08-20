@@ -87,7 +87,7 @@ export class Painter {
 		const outlineWidth = this.style.window.outlineWidth;
 		const outlineHeight = outlineWidth * GetAspectRatio(false);
 
-		const properties = this.style.getProperties('window');
+		const properties = this.style.getProperties(this.context.getWindowId() ?? 'window');
 
 		this.move(-outlineWidth, -outlineHeight);
 		this.setColor(properties.get<Color>('border-color'));
