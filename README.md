@@ -4,7 +4,6 @@ Vein is a FiveM [IMGUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) framew
 It's written on TypeScript and uses [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) to be available for other resources.
 
 ![alt text](https://raw.githubusercontent.com/warxander/vein-demo/master/demo.png)
-
 # Table of Contents
 1. [Getting Started](#getting-started)
 	1. [Usage](#usage)
@@ -13,8 +12,9 @@ It's written on TypeScript and uses [exports](https://docs.fivem.net/docs/script
 	1. [General](#general)
 	2. [Layout](#layout)
 	3. [Style](#style)
+		1. [Selectors](#selectors)
+		2. [Properties](#properties)
 	4. [Items](#items)
-
 ## Getting Started
 * Download it and put into `resources/` directory
 * Add `ensure vein` to `server.cfg`
@@ -138,6 +138,17 @@ setStyleSheet(styleSheet)
 --! @brief useDefaultStyle
 useDefaultStyle()
 ```
+#### Selectors
+`button`, `button:hover`, `check-box`, `check-box:hover`, `heading`, `label`, `progress-bar`,
+`separator`, `slider`, `slider:hover`, `sprite-button`, `sprite-button:hover`, `text-area`, `text-edit`,
+`text-edit:hover`, `window`
+#### Properties
+* `background-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
+* `background-image` (`url('textureDict', 'textureName')`, use `CreateRuntimeTextureFromImage` FiveM API for custom images)
+* `border-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
+* `color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
+* `font-family` (`0`, use `RegisterFontId` FiveM API for custom fonts)
+* `font-size` (`0.15em`, equals `SetTextScale(1., 0.15)`)
 ### Items
 ```lua
 --! @brief setNextTextEntry
