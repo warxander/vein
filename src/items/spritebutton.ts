@@ -1,6 +1,5 @@
 import { getCurrentContext } from '../../index';
-import { Color, Image } from '../common/types';
-import { Style } from '../core/style';
+import { Color } from '../common/types';
 
 export function declareExport() {
 	globalThis.exports('spriteButton', function (dict: string, name: string, text?: string): boolean {
