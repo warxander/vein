@@ -204,7 +204,7 @@ export class Style {
 	readonly slider;
 	readonly spriteButton;
 	readonly textEdit;
-	readonly widget;
+	readonly item;
 	readonly window;
 
 	constructor() {
@@ -259,7 +259,7 @@ export class Style {
 			symbolWidth: 0.01
 		};
 
-		this.widget = {
+		this.item = {
 			height: 0.035,
 			textOffset: -0.0035
 		};

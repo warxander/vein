@@ -14,8 +14,8 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		w = (w ?? context.getWidgetWidth()) as number;
-		const h = style.widget.height;
+		w = (w ?? context.getItemWidth()) as number;
+		const h = style.item.height;
 
 		context.beginDraw(w, h);
 
@@ -35,7 +35,7 @@ export function declareExport() {
 
 		const sh = (h - sliderStyle.height) / 2;
 
-		const properties = style.getProperties(context.isWidgetHovered() ? 'slider:hover' : 'slider');
+		const properties = style.getProperties(context.isItemHovered() ? 'slider:hover' : 'slider');
 
 		painter.setColor(properties.get<Color>('background-color'));
 		painter.move(0, sh);

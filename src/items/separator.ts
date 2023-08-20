@@ -7,13 +7,13 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		w = (w ?? context.getWidgetWidth()) as number;
-		const h = style.widget.height;
+		w = (w ?? context.getItemWidth()) as number;
+		const h = style.item.height;
 
 		context.beginDraw(w, h);
 
 		painter.setColor(style.getProperty<Color>('separator', 'color'));
-		painter.move(0, (style.widget.height - style.separator.height) / 2);
+		painter.move(0, (style.item.height - style.separator.height) / 2);
 		painter.drawRect(w, style.separator.height);
 
 		context.endDraw();

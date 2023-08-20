@@ -8,11 +8,11 @@ class TextDrawState {
 
 class DrawState {
 	text?: TextDrawState;
-	widgetWidth?: number;
+	itemWidth?: number;
 
 	endDraw() {
 		this.text = undefined;
-		this.widgetWidth = undefined;
+		this.itemWidth = undefined;
 	}
 }
 
@@ -24,13 +24,13 @@ enum WindowFlags {
 
 class WindowState {
 	text?: TextDrawState;
-	widgetWidth?: number;
+	itemWidth?: number;
 	windowFlags: WindowFlags = WindowFlags.None;
 	skipDrawingNumber = 1;
 
 	endWindow() {
 		this.text = undefined;
-		this.widgetWidth = undefined;
+		this.itemWidth = undefined;
 		this.windowFlags = WindowFlags.None;
 		if (this.skipDrawingNumber != 0) --this.skipDrawingNumber;
 	}
@@ -75,17 +75,17 @@ export class Context {
 		return windowPos;
 	}
 
-	isWidgetHovered(): boolean {
+	isItemHovered(): boolean {
 		return this.input.isRectHovered(
-			this.painter.getWidgetX(),
-			this.painter.getWidgetY(),
-			this.painter.getWidgetWidth(),
-			this.painter.getWidgetHeight()
+			this.painter.getItemX(),
+			this.painter.getItemY(),
+			this.painter.getItemWidth(),
+			this.painter.getItemHeight()
 		);
 	}
 
-	isWidgetClicked(): boolean {
-		return this.input.getIsLmbPressed() && this.isWidgetHovered();
+	isItemClicked(): boolean {
+		return this.input.getIsLmbPressed() && this.isItemHovered();
 	}
 
 	setWindowSkipNextDrawing() {
@@ -136,20 +136,20 @@ export class Context {
 		return undefined;
 	}
 
-	setNextWidgetWidth(w: number) {
-		this.nextState.widgetWidth = w;
+	setNextItemWidth(w: number) {
+		this.nextState.itemWidth = w;
 	}
 
-	pushWidgetWidth(w: number) {
-		this.state.widgetWidth = w;
+	pushItemWidth(w: number) {
+		this.state.itemWidth = w;
 	}
 
-	popWidgetWidth() {
-		this.state.widgetWidth = undefined;
+	popItemWidth() {
+		this.state.itemWidth = undefined;
 	}
 
-	getWidgetWidth(): number | undefined {
-		return this.nextState.widgetWidth ?? this.state.widgetWidth;
+	getItemWidth(): number | undefined {
+		return this.nextState.itemWidth ?? this.state.itemWidth;
 	}
 
 	getInput(): Input {

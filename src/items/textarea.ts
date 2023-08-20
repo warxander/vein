@@ -7,7 +7,7 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		w = (w ?? context.getWidgetWidth()) as number;
+		w = (w ?? context.getItemWidth()) as number;
 
 		painter.setText(text);
 
@@ -20,12 +20,12 @@ export function declareExport() {
 		painter.setTextMaxWidth(w);
 
 		const lc = painter.calculateTextLineCount();
-		const h = lc === 1 ? style.widget.height : painter.calculateTextLineHeight(font, scale) * (lc + 1);
+		const h = lc === 1 ? style.item.height : painter.calculateTextLineHeight(font, scale) * (lc + 1);
 
 		context.beginDraw(w, h);
 
 		painter.setColor(properties.get<Color>('color'));
-		if (lc == 1) painter.move(0, style.widget.textOffset);
+		if (lc == 1) painter.move(0, style.item.textOffset);
 		painter.drawText();
 
 		context.endDraw();

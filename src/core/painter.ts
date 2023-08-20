@@ -16,13 +16,13 @@ class Size {
 
 class LayoutState {
 	isValid = false;
-	isFirstWidget = false;
+	isFirstItem = false;
 	size = new Size();
 }
 
 class RowState {
 	isActive = false;
-	isFirstWidget = false;
+	isFirstItem = false;
 	size = new Size();
 }
 
@@ -43,7 +43,7 @@ export class Painter {
 	private layoutState = new LayoutState();
 	private dragState = new DragState();
 	private rowState = new RowState();
-	private widgetGeometry = new Geometry();
+	private itemGeometry = new Geometry();
 	private windowGeometry = new Geometry();
 
 	constructor(private context: Context) {}
@@ -66,8 +66,8 @@ export class Painter {
 	endWindow(): PositionInterface {
 		if (!this.context.isWindowNoDrag()) this.endDrag();
 
-		this.layoutState.isValid = !this.layoutState.isFirstWidget;
-		this.layoutState.isFirstWidget = true;
+		this.layoutState.isValid = !this.layoutState.isFirstItem;
+		this.layoutState.isFirstItem = true;
 
 		this.windowGeometry.size.set(
 			this.layoutState.isValid ? this.layoutState.size.w + this.style.window.margins.h * 2 : 0,
@@ -94,7 +94,7 @@ export class Painter {
 		this.drawRect(this.windowGeometry.size.w + outlineWidth * 2, this.windowGeometry.size.h + outlineHeight * 2);
 		this.move(outlineWidth, outlineHeight);
 
-		this.drawWidgetBackground(properties, this.windowGeometry.size.w, this.windowGeometry.size.h);
+		this.drawItemBackground(properties, this.windowGeometry.size.w, this.windowGeometry.size.h);
 	}
 
 	private beginDrag() {
@@ -140,7 +140,7 @@ export class Painter {
 	beginRow() {
 		if (!this.rowState.isActive) {
 			this.rowState.isActive = true;
-			this.rowState.isFirstWidget = true;
+			this.rowState.isFirstItem = true;
 		}
 	}
 
@@ -158,7 +158,7 @@ export class Painter {
 		);
 
 		this.rowState.isActive = false;
-		this.rowState.isFirstWidget = true;
+		this.rowState.isFirstItem = true;
 
 		this.rowState.size.set(0, 0);
 	}
@@ -168,16 +168,16 @@ export class Painter {
 	}
 
 	beginDraw(w: number, h: number) {
-		if (this.layoutState.isFirstWidget) this.move(this.style.window.margins.h, this.style.window.margins.v);
+		if (this.layoutState.isFirstItem) this.move(this.style.window.margins.h, this.style.window.margins.v);
 		else {
 			let ho = 0;
-			if (this.rowState.isActive && !this.rowState.isFirstWidget) {
+			if (this.rowState.isActive && !this.rowState.isFirstItem) {
 				ho = this.style.window.spacing.h;
 				this.rowState.size.w += ho;
 			}
 
 			let vo = 0;
-			if (!this.rowState.isActive || this.rowState.isFirstWidget) vo = this.style.window.spacing.v;
+			if (!this.rowState.isActive || this.rowState.isFirstItem) vo = this.style.window.spacing.v;
 
 			this.layoutState.size.w += ho;
 			this.layoutState.size.h += vo;
@@ -185,42 +185,42 @@ export class Painter {
 			this.move(ho, vo);
 		}
 
-		this.widgetGeometry.pos.set(this.pos.x, this.pos.y);
-		this.widgetGeometry.size.set(w, h);
+		this.itemGeometry.pos.set(this.pos.x, this.pos.y);
+		this.itemGeometry.size.set(w, h);
 	}
 
 	endDraw() {
-		const w = this.widgetGeometry.size.w;
-		const h = this.widgetGeometry.size.h;
+		const w = this.itemGeometry.size.w;
+		const h = this.itemGeometry.size.h;
 
 		this.drawDebug(w, h);
 
 		if (this.rowState.isActive) {
 			this.rowState.size.set(this.rowState.size.w + w, Math.max(this.rowState.size.h, h));
-			this.setPos(this.widgetGeometry.pos.x + w, this.widgetGeometry.pos.y);
-			this.rowState.isFirstWidget = false;
+			this.setPos(this.itemGeometry.pos.x + w, this.itemGeometry.pos.y);
+			this.rowState.isFirstItem = false;
 		} else {
 			this.layoutState.size.set(Math.max(w, this.layoutState.size.w), this.layoutState.size.h + h);
-			this.setPos(this.widgetGeometry.pos.x, this.widgetGeometry.pos.y + h);
+			this.setPos(this.itemGeometry.pos.x, this.itemGeometry.pos.y + h);
 		}
 
-		this.layoutState.isFirstWidget = false;
+		this.layoutState.isFirstItem = false;
 	}
 
-	getWidgetX(): number {
-		return this.widgetGeometry.pos.x;
+	getItemX(): number {
+		return this.itemGeometry.pos.x;
 	}
 
-	getWidgetY(): number {
-		return this.widgetGeometry.pos.y;
+	getItemY(): number {
+		return this.itemGeometry.pos.y;
 	}
 
-	getWidgetWidth(): number {
-		return this.widgetGeometry.size.w;
+	getItemWidth(): number {
+		return this.itemGeometry.size.w;
 	}
 
-	getWidgetHeight(): number {
-		return this.widgetGeometry.size.h;
+	getItemHeight(): number {
+		return this.itemGeometry.size.h;
 	}
 
 	setPos(x: number, y: number) {
@@ -241,7 +241,7 @@ export class Painter {
 		this.color = color;
 	}
 
-	drawWidgetBackground(properties: StylePropertyValues, w: number, h: number) {
+	drawItemBackground(properties: StylePropertyValues, w: number, h: number) {
 		const backgroundImage = properties.tryGet<Image>('background-image');
 		if (backgroundImage !== undefined) {
 			const backgroundColor = properties.tryGet<Color>('background-color');
@@ -343,10 +343,10 @@ export class Painter {
 		EndTextCommandDisplayText(this.pos.x, this.pos.y);
 	}
 
-	drawDebug(w: number, h = this.style.widget.height) {
+	drawDebug(w: number, h = this.style.item.height) {
 		if (!this.isLayoutValid() || !getIsDebugEnabled()) return;
 
-		this.setPos(this.widgetGeometry.pos.x, this.widgetGeometry.pos.y);
+		this.setPos(this.itemGeometry.pos.x, this.itemGeometry.pos.y);
 		this.setColor(this.style.getProperty<Color>('window', 'color'));
 		this.drawRect(w, h);
 	}

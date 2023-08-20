@@ -8,16 +8,16 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		w = (w ?? context.getWidgetWidth()) as number;
+		w = (w ?? context.getItemWidth()) as number;
 
-		context.beginDraw(w, style.widget.height);
+		context.beginDraw(w, style.item.height);
 
 		const h = style.progressBar.height;
 
 		const properties = style.getProperties('progress-bar');
 
 		painter.setColor(properties.get<Color>('background-color'));
-		painter.move(0, (style.widget.height - h) / 2);
+		painter.move(0, (style.item.height - h) / 2);
 		painter.drawRect(w, h);
 
 		if (!numberEquals(value, min)) {

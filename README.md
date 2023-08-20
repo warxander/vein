@@ -27,16 +27,16 @@ while isWindowOpened do
 
 	vein:beginWindow(windowPos.x, windowPos.y) -- Mandatory
 
-	-- Draw widgets in column
+	-- Draw items in column
 
 	vein:beginRow()
-		-- Draw widgets in row
+		-- Draw items in row
 	vein:endRow()
 
 	vein:label('Hello Vein')
-	if vein:isWidgetHovered() then
+	if vein:isItemHovered() then
 		--
-		if vein:isWidgetClicked() then
+		if vein:isItemClicked() then
 			--
 		end
 	end
@@ -56,7 +56,7 @@ These features are not supported due to RAGE API limitations:
 * Circle drawing
 
 These features are not supported by design (can be a subject to change though):
-* Custom widget sizes (Vein is out-of-box solution)
+* Custom item sizes (Vein is out-of-box solution)
 * Nested rows
 
 ## API
@@ -91,20 +91,20 @@ beginWindow([x, y])
 --! @return windowPos.y: number
 local windowPos = endWindow()
 
---! @brief isWidgetHovered
---! @comment Returns true is last drawn widget was hovered
---! @return isWidgetHovered: boolean
-local isWidgetHovered = isWidgetHovered()
+--! @brief isItemHovered
+--! @comment Returns true is last drawn item was hovered
+--! @return isHovered: boolean
+local isHovered = isItemHovered()
 
---! @brief isWidgetClicked
---! @comment Returns true is last drawn widget was clicked
---! @return isWidgetClicked: boolean
-local isWidgetClicked = isWidgetClicked()
+--! @brief isItemClicked
+--! @comment Returns true is last drawn item was clicked
+--! @return isClicked: boolean
+local isClicked = isItemClicked()
 ```
 ### Layout
 ```lua
 --! @brief setWindowSkipNextDrawing
---! @comment Eliminates visual redrawing artifacts in case of widgets layout was drastically changed
+--! @comment Eliminates visual redrawing artifacts in case of items layout was drastically changed
 setWindowSkipNextDrawing()
 
 --! @brief beginRow
@@ -128,10 +128,10 @@ setStyleSheet(styleSheet)
 --! @brief useDefaultStyle
 useDefaultStyle()
 ```
-### Widgets
+### Items
 ```lua
 --! @brief setNextTextEntry
---! @comment Applies specified text entry for next drawn widget
+--! @comment Applies specified text entry for next drawn item
 --! @param entry: string
 setNextTextEntry(entry [, ...])
 
@@ -143,18 +143,18 @@ pushTextEntry(entry [, ...])
 --! @brief popTextEntry
 popTextEntry()
 
---! @brief setNextWidgetWidth
---! @comment Applies specified width for next drawn widget
+--! @brief setNextItemWidth
+--! @comment Applies specified width for next drawn item
 --! @param w: number
-setNextWidgetWidth(w)
+setNextItemWidth(w)
 
---! @brief pushWidgetWidth
---! @comment Applies specified width until popWidgetWidth() will be called
+--! @brief pushItemWidth
+--! @comment Applies specified width until popItemWidth() will be called
 --! @param w: number
-pushWidgetWidth(w)
+pushItemWidth(w)
 
---! @brief popWidgetWidth
-popWidgetWidth()
+--! @brief popItemWidth
+popItemWidth()
 
 --! @brief button
 --! @param text: string

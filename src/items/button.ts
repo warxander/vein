@@ -16,24 +16,24 @@ export function declareExport() {
 
 		painter.setTextOptions(font, scale);
 
-		const w = context.getWidgetWidth() ?? painter.calculateTextWidth() + style.button.spacing * 2;
-		const h = style.widget.height;
+		const w = context.getItemWidth() ?? painter.calculateTextWidth() + style.button.spacing * 2;
+		const h = style.item.height;
 
 		context.beginDraw(w, h);
 
-		const properties = context.isWidgetHovered() ? style.getProperties('button:hover') : buttonProperties;
+		const properties = context.isItemHovered() ? style.getProperties('button:hover') : buttonProperties;
 
-		painter.drawWidgetBackground(properties, w, h);
+		painter.drawItemBackground(properties, w, h);
 
 		painter.setColor(properties.get<Color>('color'));
 		painter.move(
 			style.button.spacing,
-			(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.widget.textOffset
+			(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset
 		);
 		painter.drawText();
 
 		context.endDraw();
 
-		return context.isWidgetClicked();
+		return context.isItemClicked();
 	});
 }

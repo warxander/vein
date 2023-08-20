@@ -22,14 +22,14 @@ export function declareExport() {
 
 			const _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE';
 
-			const w = context.getWidgetWidth() ?? maxTextLength * style.textEdit.symbolWidth;
-			const h = style.widget.height;
+			const w = context.getItemWidth() ?? maxTextLength * style.textEdit.symbolWidth;
+			const h = style.item.height;
 
 			context.beginDraw(w, h);
 
 			let newText = text;
 
-			if (context.isWidgetClicked()) {
+			if (context.isItemClicked()) {
 				AddTextEntry(_keyboardTitleEntry, keyboardTitle);
 				DisplayOnscreenKeyboard(1, _keyboardTitleEntry, '', text, '', '', '', maxTextLength);
 
@@ -47,7 +47,7 @@ export function declareExport() {
 			}
 
 			const textEditProperties = style.getProperties('text-edit');
-			const properties = context.isWidgetHovered() ? style.getProperties('text-edit:hover') : textEditProperties;
+			const properties = context.isItemHovered() ? style.getProperties('text-edit:hover') : textEditProperties;
 
 			painter.setColor(properties.get<Color>('background-color'));
 			painter.drawRect(w, h);
@@ -68,7 +68,7 @@ export function declareExport() {
 			const font = textEditProperties.get<number>('font-family');
 			const scale = textEditProperties.get<number>('font-size');
 			painter.setTextOptions(font, scale);
-			painter.move(0, (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.widget.textOffset);
+			painter.move(0, (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset);
 			painter.drawText();
 
 			context.endDraw();

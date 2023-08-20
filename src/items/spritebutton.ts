@@ -20,17 +20,17 @@ export function declareExport() {
 		const sw = spriteButtonStyle.spriteWidth;
 
 		const w =
-			context.getWidgetWidth() ||
+			context.getItemWidth() ||
 			painter.calculateTextWidth() + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
-		const h = style.widget.height;
+		const h = style.item.height;
 
 		context.beginDraw(w, h);
 
-		const properties = context.isWidgetHovered()
+		const properties = context.isItemHovered()
 			? style.getProperties('sprite-button:hover')
 			: spriteButtonProperties;
 
-		painter.drawWidgetBackground(properties, w, h);
+		painter.drawItemBackground(properties, w, h);
 
 		const sh = sw * GetAspectRatio(false);
 		const so = (h - sh) / 2;
@@ -42,12 +42,12 @@ export function declareExport() {
 
 		painter.move(
 			sw + spriteButtonStyle.spacing,
-			-so + (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.widget.textOffset
+			-so + (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset
 		);
 		painter.drawText();
 
 		context.endDraw();
 
-		return context.isWidgetClicked();
+		return context.isItemClicked();
 	});
 }

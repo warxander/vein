@@ -1,19 +1,19 @@
 import { PositionInterface, TextEntryComponents } from './src/common/types';
 import { Context } from './src/core/context';
 
-import * as Button from './src/widgets/button';
-import * as Checkbox from './src/widgets/checkbox';
-import * as Dummy from './src/widgets/dummy';
-import * as Heading from './src/widgets/heading';
-import * as Label from './src/widgets/label';
-import * as ProgressBar from './src/widgets/progressbar';
-import * as Separator from './src/widgets/separator';
-import * as Slider from './src/widgets/slider';
-import * as Spacing from './src/widgets/spacing';
-import * as Sprite from './src/widgets/sprite';
-import * as SpriteButton from './src/widgets/spritebutton';
-import * as TextArea from './src/widgets/textarea';
-import * as TextEdit from './src/widgets/textedit';
+import * as Button from './src/items/button';
+import * as Checkbox from './src/items/checkbox';
+import * as Dummy from './src/items/dummy';
+import * as Heading from './src/items/heading';
+import * as Label from './src/items/label';
+import * as ProgressBar from './src/items/progressbar';
+import * as Separator from './src/items/separator';
+import * as Slider from './src/items/slider';
+import * as Spacing from './src/items/spacing';
+import * as Sprite from './src/items/sprite';
+import * as SpriteButton from './src/items/spritebutton';
+import * as TextArea from './src/items/textarea';
+import * as TextEdit from './src/items/textedit';
 
 let isDebugEnabled: boolean = false;
 
@@ -52,12 +52,12 @@ globalThis.exports('endWindow', function (): PositionInterface {
 	return getCurrentContext().endWindow();
 });
 
-globalThis.exports('isWidgetHovered', function (): boolean {
-	return getCurrentContext().isWidgetHovered();
+globalThis.exports('isItemHovered', function (): boolean {
+	return getCurrentContext().isItemHovered();
 });
 
-globalThis.exports('isWidgetClicked', function (): boolean {
-	return getCurrentContext().isWidgetClicked();
+globalThis.exports('isItemClicked', function (): boolean {
+	return getCurrentContext().isItemClicked();
 });
 
 globalThis.exports('setWindowSkipNextDrawing', function (): void {
@@ -84,16 +84,16 @@ globalThis.exports('popTextEntry', function (): void {
 	getCurrentContext().popTextEntry();
 });
 
-globalThis.exports('setNextWidgetWidth', function (w: number): void {
-	getCurrentContext().setNextWidgetWidth(w);
+globalThis.exports('setNextItemWidth', function (w: number): void {
+	getCurrentContext().setNextItemWidth(w);
 });
 
-globalThis.exports('pushWidgetWidth', function (w: number): void {
-	getCurrentContext().pushWidgetWidth(w);
+globalThis.exports('pushItemWidth', function (w: number): void {
+	getCurrentContext().pushItemWidth(w);
 });
 
-globalThis.exports('popWidgetWidth', function (): void {
-	getCurrentContext().popWidgetWidth();
+globalThis.exports('popItemWidth', function (): void {
+	getCurrentContext().popItemWidth();
 });
 
 globalThis.exports('setStyleSheet', function (styleSheet: string): void {
