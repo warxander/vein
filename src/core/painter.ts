@@ -297,8 +297,8 @@ export class Painter {
 		return EndTextCommandGetWidth(true);
 	}
 
-	calculateTextLineHeight(): number {
-		return GetRenderedCharacterHeight(this.style.widget.text.scale, this.style.widget.text.font);
+	calculateTextLineHeight(font: number, scale: number): number {
+		return GetRenderedCharacterHeight(scale, font);
 	}
 
 	calculateTextLineCount(): number {
@@ -317,18 +317,18 @@ export class Painter {
 		if (text) this.context.setNextTextEntry('STRING', text);
 	}
 
-	setTextOpts(font = this.style.widget.text.font, scale = this.style.widget.text.scale) {
+	setTextOptions(font: number, scale: number) {
 		if (!this.context.getTextEntry()) return;
 
 		SetTextFont(font);
-		SetTextScale(scale * GetAspectRatio(false), scale);
+		SetTextScale(1, scale);
 	}
 
 	setTextMaxWidth(w: number) {
 		if (this.context.getTextEntry()) SetTextWrap(this.pos.x, this.pos.x + w);
 	}
 
-	drawText(offset = this.style.widget.text.offset) {
+	drawText() {
 		if (!this.isLayoutValid()) return;
 
 		const textEntry: string | undefined = this.context.getTextEntry();
@@ -341,7 +341,7 @@ export class Painter {
 		const textComponents: TextEntryComponents | undefined = this.context.getTextComponents();
 		if (textComponents) addTextComponents(textComponents);
 
-		EndTextCommandDisplayText(this.pos.x, this.pos.y - offset);
+		EndTextCommandDisplayText(this.pos.x, this.pos.y);
 	}
 
 	drawDebug(w: number, h = this.style.widget.height) {

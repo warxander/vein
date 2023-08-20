@@ -9,7 +9,12 @@ export function declareExport() {
 		const style = painter.getStyle();
 
 		painter.setText(text);
-		painter.setTextOpts();
+
+		const spriteButtonProperties = style.getProperties('sprite-button');
+		const font = spriteButtonProperties.get<number>('font-family');
+		const scale = spriteButtonProperties.get<number>('font-size');
+
+		painter.setTextOptions(font, scale);
 
 		const spriteButtonStyle = style.spriteButton;
 		const sw = spriteButtonStyle.spriteWidth;
@@ -21,7 +26,9 @@ export function declareExport() {
 
 		context.beginDraw(w, h);
 
-		const properties = style.getProperties(context.isWidgetHovered() ? 'sprite-button:hover' : 'sprite-button');
+		const properties = context.isWidgetHovered()
+			? style.getProperties('sprite-button:hover')
+			: spriteButtonProperties;
 
 		const backgroundImage = properties.tryGet<Image>('background-image');
 		if (backgroundImage !== undefined) {
@@ -41,7 +48,10 @@ export function declareExport() {
 		painter.move(style.button.spacing, so);
 		painter.drawSprite(dict, name, sw, sh);
 
-		painter.move(sw + spriteButtonStyle.spacing, -so);
+		painter.move(
+			sw + spriteButtonStyle.spacing,
+			-so + (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.widget.textOffset
+		);
 		painter.drawText();
 
 		context.endDraw();

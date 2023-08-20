@@ -9,14 +9,19 @@ export function declareExport() {
 		const style = painter.getStyle();
 
 		painter.setText(text);
-		painter.setTextOpts();
+
+		const buttonProperties = style.getProperties('button');
+		const font = buttonProperties.get<number>('font-family');
+		const scale = buttonProperties.get<number>('font-size');
+
+		painter.setTextOptions(font, scale);
 
 		const w = context.getWidgetWidth() ?? painter.calculateTextWidth() + style.button.spacing * 2;
 		const h = style.widget.height;
 
 		context.beginDraw(w, h);
 
-		const properties = style.getProperties(context.isWidgetHovered() ? 'button:hover' : 'button');
+		const properties = context.isWidgetHovered() ? style.getProperties('button:hover') : buttonProperties;
 
 		const backgroundImage = properties.tryGet<Image>('background-image');
 		if (backgroundImage !== undefined) {
@@ -29,7 +34,10 @@ export function declareExport() {
 		}
 
 		painter.setColor(properties.get<Color>('color'));
-		painter.move(style.button.spacing, 0);
+		painter.move(
+			style.button.spacing,
+			(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.widget.textOffset
+		);
 		painter.drawText();
 
 		context.endDraw();

@@ -8,15 +8,21 @@ export function declareExport() {
 		const style = painter.getStyle();
 
 		painter.setText(text);
-		painter.setTextOpts();
+
+		const properties = style.getProperties('label');
+		const font = properties.get<number>('font-family');
+		const scale = properties.get<number>('font-size');
+
+		painter.setTextOptions(font, scale);
 
 		const w = context.getWidgetWidth() ?? painter.calculateTextWidth();
 		const h = style.widget.height;
 
 		context.beginDraw(w, h);
 
-		painter.setColor(style.getProperty<Color>('label', 'color'));
-		painter.drawText(style.label.text.offset);
+		painter.setColor(properties.get<Color>('color'));
+		painter.move(0, (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.widget.textOffset);
+		painter.drawText();
 
 		context.endDraw();
 	});

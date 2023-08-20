@@ -1,14 +1,16 @@
-import { Color, Image } from '../common/types';
+import { Color, Image, Size } from '../common/types';
 
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
-type StylePropertyValue = Color | Image;
+type StylePropertyValue = Color | Image | Size;
 type StylePropertyValuesMap = Map<string, StylePropertyValue>;
 type StyleSelectorPropertyValuesMap = Map<string, StylePropertyValues>;
 
 enum StylePropertyValueType {
 	Color,
-	Image
+	FontSize,
+	Image,
+	Integer
 }
 
 class StylePropertyValues {
@@ -48,13 +50,13 @@ class StylePropertyValues {
 	}
 }
 
-const DEFAULT_STYLE = `button, slider, sprite-button, text-edit {
-	background-color: rgba(22, 25, 35, 1.0);
-	color: rgba(255, 255, 240, 1.0);
+const DEFAULT_STYLE = `button, check-box, label, sprite-button, text-area, text-edit {
+	font-family: 0;
+	font-size: 0.325em;
 }
 
-check-box {
-	background-color: rgba(34, 37, 45, 1.0);
+button, check-box, sprite-button, text-edit {
+	background-color: rgba(22, 25, 35, 1.0);
 	color: rgba(255, 255, 240, 1.0);
 }
 
@@ -70,15 +72,26 @@ button:hover, sprite-button:hover {
 
 heading {
 	color: rgba(255, 255, 240, 1.0);
+	font-family: 4;
+	font-size: 0.725em;
 }
 
-label, separator, text-area {
+label, text-area {
 	color: rgba(181, 181, 173, 1.0);
 }
 
 progress-bar {
 	background-color: rgba(22, 25, 35, 1.0);
 	color: rgba(0, 155, 103, 1.0);
+}
+
+separator {
+	color: rgba(22, 25, 35, 1.0);
+}
+
+slider {
+	background-color: rgba(22, 25, 35, 1.0);
+	color: rgba(181, 181, 173, 1.0);
 }
 
 slider:hover, text-edit:hover {
@@ -125,7 +138,9 @@ const KNOWN_PROPERTIES = new Map<string, StylePropertyValueType>([
 	['background-color', StylePropertyValueType.Color],
 	['background-image', StylePropertyValueType.Image],
 	['border-color', StylePropertyValueType.Color],
-	['color', StylePropertyValueType.Color]
+	['color', StylePropertyValueType.Color],
+	['font-family', StylePropertyValueType.Integer],
+	['font-size', StylePropertyValueType.FontSize]
 ]);
 
 function parseValueAsColor(value: string): Color {
@@ -151,12 +166,23 @@ function parseValueAsImage(value: string): Image {
 	throw new Error(`Failed to parseValueAsImage() for style value: ${value}`);
 }
 
+function parseValueAsFontSize(value: string): Size {
+	const match = value.match(/^(([0-9]*[.])?[0-9]+)em$/);
+	if (match) return parseFloat(match[1]);
+
+	throw new Error(`Failed to parseValueAsFontSize() for style value: ${value}`);
+}
+
 function parseValue(value: string, propertyType: StylePropertyValueType): StylePropertyValue {
 	switch (propertyType) {
 		case StylePropertyValueType.Color:
 			return parseValueAsColor(value);
+		case StylePropertyValueType.FontSize:
+			return parseValueAsFontSize(value);
 		case StylePropertyValueType.Image:
 			return parseValueAsImage(value);
+		case StylePropertyValueType.Integer:
+			return parseInt(value);
 		default:
 			throw new Error(`Failed to parseValue() of unsupported style type: ${propertyType}`);
 	}
@@ -177,7 +203,6 @@ export class Style {
 	readonly separator;
 	readonly slider;
 	readonly spriteButton;
-	readonly textArea;
 	readonly textEdit;
 	readonly widget;
 	readonly window;
@@ -199,12 +224,7 @@ export class Style {
 
 		this.heading = {
 			height: 0.045,
-			lineHeight: 0.001,
-			text: {
-				font: 4,
-				scale: 0.725,
-				offset: 0.003
-			}
+			lineHeight: 0.001
 		};
 
 		this.label = {
@@ -234,12 +254,6 @@ export class Style {
 			spacing: 0.001
 		};
 
-		this.textArea = {
-			text: {
-				offset: -0.005
-			}
-		};
-
 		this.textEdit = {
 			lineHeight: 0.002,
 			symbolWidth: 0.01
@@ -247,11 +261,7 @@ export class Style {
 
 		this.widget = {
 			height: 0.035,
-			text: {
-				font: 0,
-				offset: -0.0035,
-				scale: 0.325
-			}
+			textOffset: -0.0035
 		};
 
 		this.window = {
@@ -295,7 +305,7 @@ export class Style {
 	}
 
 	reset() {
-		this.selectorProperties?.clear();
+		this.selectorProperties = undefined;
 	}
 
 	private doSet(style: string, useDefaultProperties: boolean): StyleSelectorPropertyValuesMap {
@@ -337,9 +347,7 @@ export class Style {
 						selector,
 						new StylePropertyValues(properties, defaultProperties?.getProperties())
 					);
-				else {
-					for (const [key, value] of properties.entries()) existingProperties.set(key, value);
-				}
+				else for (const [key, value] of properties.entries()) existingProperties.set(key, value);
 			}
 		}
 

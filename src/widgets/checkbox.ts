@@ -8,7 +8,12 @@ export function declareExport() {
 		const style = painter.getStyle();
 
 		painter.setText(text);
-		painter.setTextOpts();
+
+		const checkBoxProperties = style.getProperties('check-box');
+		const font = checkBoxProperties.get<number>('font-family');
+		const scale = checkBoxProperties.get<number>('font-size');
+
+		painter.setTextOptions(font, scale);
 
 		const aspectRatio = GetAspectRatio(false);
 		const checkboxStyle = style.checkbox;
@@ -23,7 +28,7 @@ export function declareExport() {
 
 		const vo = (h - checkboxStyle.height) / 2;
 
-		const properties = style.getProperties(context.isWidgetHovered() ? 'check-box:hover' : 'check-box');
+		const properties = context.isWidgetHovered() ? style.getProperties('check-box:hover') : checkBoxProperties;
 		const color = properties.get<Color>('color');
 		const backgroundColor = properties.get<Color>('background-color');
 
@@ -49,8 +54,11 @@ export function declareExport() {
 		painter.move(-outlineWidth, -checkboxStyle.outlineHeight);
 		painter.move(0, -vo);
 
-		painter.setColor(style.getProperty<Color>('check-box', 'color'));
-		painter.move(checkboxStyle.height / aspectRatio + checkboxStyle.spacing * 2, 0);
+		painter.setColor(checkBoxProperties.get<Color>('color'));
+		painter.move(
+			checkboxStyle.height / aspectRatio + checkboxStyle.spacing * 2,
+			(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.widget.textOffset
+		);
 		painter.drawText();
 
 		context.endDraw();

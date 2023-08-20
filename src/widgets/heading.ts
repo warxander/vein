@@ -10,15 +10,21 @@ export function declareExport() {
 		const headingStyle = style.heading;
 
 		painter.setText(text);
-		painter.setTextOpts(headingStyle.text.font, headingStyle.text.scale);
+
+		const properties = style.getProperties('heading');
+		const font = properties.get<number>('font-family');
+		const scale = properties.get<number>('font-size');
+
+		painter.setTextOptions(font, scale);
 
 		const w = context.getWidgetWidth() ?? painter.calculateTextWidth();
 		const h = headingStyle.height;
 
 		context.beginDraw(w, h);
 
-		painter.setColor(style.getProperty<Color>('heading', 'color'));
-		painter.drawText(headingStyle.text.offset);
+		painter.setColor(properties.get<Color>('color'));
+		painter.move(0, (h - painter.calculateTextLineHeight(font, scale)) / 2);
+		painter.drawText();
 
 		context.endDraw();
 	});
