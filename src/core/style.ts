@@ -13,7 +13,7 @@ enum StylePropertyValueType {
 	Integer
 }
 
-class StylePropertyValues {
+export class StylePropertyValues {
 	constructor(
 		private properties: StylePropertyValuesMap,
 		private readonly defaultProperties?: StylePropertyValuesMap

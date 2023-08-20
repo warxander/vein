@@ -23,15 +23,7 @@ export function declareExport() {
 
 		const properties = context.isWidgetHovered() ? style.getProperties('button:hover') : buttonProperties;
 
-		const backgroundImage = properties.tryGet<Image>('background-image');
-		if (backgroundImage !== undefined) {
-			const backgroundColor = properties.tryGet<Color>('background-color');
-			painter.setColor(backgroundColor ?? Style.SPRITE_COLOR);
-			painter.drawSprite(backgroundImage[0], backgroundImage[1], w, h);
-		} else {
-			painter.setColor(properties.get<Color>('background-color'));
-			painter.drawRect(w, h);
-		}
+		painter.drawWidgetBackground(properties, w, h);
 
 		painter.setColor(properties.get<Color>('color'));
 		painter.move(

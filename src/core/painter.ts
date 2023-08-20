@@ -1,7 +1,7 @@
 import { Color, Image, Position, PositionInterface, TextEntryComponents } from '../common/types';
 import { getIsDebugEnabled } from '../../index';
 import { Context } from './context';
-import { Style } from './style';
+import { Style, StylePropertyValues } from './style';
 import { addTextComponents } from './utils';
 
 class Size {
@@ -94,20 +94,7 @@ export class Painter {
 		this.drawRect(this.windowGeometry.size.w + outlineWidth * 2, this.windowGeometry.size.h + outlineHeight * 2);
 		this.move(outlineWidth, outlineHeight);
 
-		const backgroundImage = properties.tryGet<Image>('background-image');
-		if (backgroundImage !== undefined) {
-			const backgroundColor = properties.tryGet<Color>('background-color');
-			this.setColor(backgroundColor ?? Style.SPRITE_COLOR);
-			this.drawSprite(
-				backgroundImage[0],
-				backgroundImage[1],
-				this.windowGeometry.size.w,
-				this.windowGeometry.size.h
-			);
-		} else {
-			this.setColor(properties.get<Color>('background-color'));
-			this.drawRect(this.windowGeometry.size.w, this.windowGeometry.size.h);
-		}
+		this.drawWidgetBackground(properties, this.windowGeometry.size.w, this.windowGeometry.size.h);
 	}
 
 	private beginDrag() {
@@ -252,6 +239,18 @@ export class Painter {
 
 	setColor(color: Color) {
 		this.color = color;
+	}
+
+	drawWidgetBackground(properties: StylePropertyValues, w: number, h: number) {
+		const backgroundImage = properties.tryGet<Image>('background-image');
+		if (backgroundImage !== undefined) {
+			const backgroundColor = properties.tryGet<Color>('background-color');
+			this.setColor(backgroundColor ?? Style.SPRITE_COLOR);
+			this.drawSprite(backgroundImage[0], backgroundImage[1], w, h);
+		} else {
+			this.setColor(properties.get<Color>('background-color'));
+			this.drawRect(w, h);
+		}
 	}
 
 	drawRect(w: number, h: number) {

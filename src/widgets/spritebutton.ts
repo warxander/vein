@@ -30,15 +30,7 @@ export function declareExport() {
 			? style.getProperties('sprite-button:hover')
 			: spriteButtonProperties;
 
-		const backgroundImage = properties.tryGet<Image>('background-image');
-		if (backgroundImage !== undefined) {
-			const backgroundColor = properties.tryGet<Color>('background-color');
-			painter.setColor(backgroundColor ?? Style.SPRITE_COLOR);
-			painter.drawSprite(backgroundImage[0], backgroundImage[1], w, h);
-		} else {
-			painter.setColor(properties.get<Color>('background-color'));
-			painter.drawRect(w, h);
-		}
+		painter.drawWidgetBackground(properties, w, h);
 
 		const sh = sw * GetAspectRatio(false);
 		const so = (h - sh) / 2;
