@@ -5,6 +5,16 @@ It's written on TypeScript and uses [exports](https://docs.fivem.net/docs/script
 
 ![alt text](https://raw.githubusercontent.com/warxander/vein-demo/master/demo.png)
 
+# Table of Contents
+1. [Getting Started](#getting-started)
+	1. [Usage](#usage)
+	2. [Limitations](#limitations)
+2. [API](#api)
+	1. [General](#general)
+	2. [Layout](#layout)
+	3. [Style](#style)
+	4. [Items](#items)
+
 ## Getting Started
 * Download it and put into `resources/` directory
 * Add `ensure vein` to `server.cfg`
