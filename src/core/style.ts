@@ -50,14 +50,11 @@ export class StylePropertyValues {
 	}
 }
 
-const DEFAULT_STYLE = `button, check-box, label, sprite-button, text-area, text-edit {
-	font-family: 0;
-	font-size: 0.325em;
-}
-
-button, check-box, sprite-button, text-edit {
+const DEFAULT_STYLE = `button, check-box, sprite-button, text-edit {
 	background-color: rgba(22, 25, 35, 1.0);
 	color: rgba(255, 255, 240, 1.0);
+	font-family: 0;
+	font-size: 0.325em;
 }
 
 check-box:hover {
@@ -78,6 +75,8 @@ heading {
 
 label, text-area {
 	color: rgba(181, 181, 173, 1.0);
+	font-family: 0;
+	font-size: 0.325em;
 }
 
 progress-bar {
@@ -91,7 +90,7 @@ separator {
 
 slider {
 	background-color: rgba(22, 25, 35, 1.0);
-	color: rgba(181, 181, 173, 1.0);
+	color: rgba(255, 255, 240, 1.0);
 }
 
 slider:hover, text-edit:hover {
