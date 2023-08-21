@@ -164,7 +164,6 @@ Examples:
 #### Properties
 * `background-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
 * `background-image` (`url('textureDict', 'textureName')`, use `CreateRuntimeTextureFromImage` FiveM API for custom images)
-* `border-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
 * `color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
 * `font-family` (`0`, use `RegisterFontId` FiveM API for custom fonts)
 * `font-size` (`0.15em`, equals `SetTextScale(1., 0.15)`)

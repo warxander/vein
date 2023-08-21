@@ -60,7 +60,12 @@ export class Painter {
 
 		if (!this.context.isWindowNoDrag()) this.beginDrag();
 
-		if (!this.context.isWindowNoBackground()) this.drawWindowBackground();
+		if (!this.context.isWindowNoBackground())
+			this.drawItemBackground(
+				this.style.getProperties(this.context.getWindowId() ?? 'window'),
+				this.windowGeometry.size.w,
+				this.windowGeometry.size.h
+			);
 	}
 
 	endWindow(): PositionInterface {
@@ -81,20 +86,6 @@ export class Painter {
 
 	private isLayoutValid(): boolean {
 		return this.layoutState.isValid && !this.context.isWindowSkipNextDrawing();
-	}
-
-	private drawWindowBackground() {
-		const outlineWidth = this.style.window.outlineWidth;
-		const outlineHeight = outlineWidth * GetAspectRatio(false);
-
-		const properties = this.style.getProperties(this.context.getWindowId() ?? 'window');
-
-		this.move(-outlineWidth, -outlineHeight);
-		this.setColor(properties.get<Color>('border-color'));
-		this.drawRect(this.windowGeometry.size.w + outlineWidth * 2, this.windowGeometry.size.h + outlineHeight * 2);
-		this.move(outlineWidth, outlineHeight);
-
-		this.drawItemBackground(properties, this.windowGeometry.size.w, this.windowGeometry.size.h);
 	}
 
 	private beginDrag() {

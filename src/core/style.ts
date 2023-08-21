@@ -100,7 +100,6 @@ slider:hover, text-edit:hover {
 
 window {
 	background-color: rgba(34, 37, 45, 1.0);
-	border-color: rgba(22, 25, 35, 1.0);
 	color: rgba(105, 255, 89, 0.125);
 }`;
 
@@ -136,7 +135,6 @@ const DEFAULT_SELECTORS = new Set<String>([
 const KNOWN_PROPERTIES = new Map<string, StylePropertyValueType>([
 	['background-color', StylePropertyValueType.Color],
 	['background-image', StylePropertyValueType.Image],
-	['border-color', StylePropertyValueType.Color],
 	['color', StylePropertyValueType.Color],
 	['font-family', StylePropertyValueType.Integer],
 	['font-size', StylePropertyValueType.FontSize]
@@ -264,7 +262,6 @@ export class Style {
 		};
 
 		this.window = {
-			outlineWidth: 0.0005,
 			margins: {
 				h: 0.01,
 				v: 0.018
