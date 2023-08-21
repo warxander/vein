@@ -53,23 +53,16 @@ export function declareExport() {
 			painter.setColor(properties.get<Color>('background-color'));
 			painter.drawRect(w, h);
 
-			const lineOffset = h - style.textEdit.lineHeight;
-			painter.move(0, lineOffset);
-
-			const color = properties.get<Color>('color');
-
-			painter.setColor(color);
-			painter.drawRect(w, style.textEdit.lineHeight);
-
-			painter.move(0, -lineOffset);
-
 			painter.setText(isSecretMode ? text.replace(/./g, '*') : text);
-			painter.setColor(style.getProperty<Color>(id, 'color'));
+			painter.setColor(properties.get<Color>('color'));
 
 			const font = textEditProperties.get<number>('font-family');
 			const scale = textEditProperties.get<number>('font-size');
 			painter.setTextOptions(font, scale);
-			painter.move(0, (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset);
+			painter.move(
+				style.textEdit.spacing,
+				(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset
+			);
 			painter.drawText();
 
 			context.endDraw();

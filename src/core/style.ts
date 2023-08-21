@@ -215,7 +215,7 @@ export class Style {
 		this.checkbox = {
 			height: 0.02,
 			spacing: 0.0025,
-			inlineHeight: 0.00
+			inlineHeight: 0.0035
 		};
 
 		this.heading = {
@@ -251,8 +251,8 @@ export class Style {
 		};
 
 		this.textEdit = {
-			lineHeight: 0.002,
-			symbolWidth: 0.01
+			symbolWidth: 0.01,
+			spacing: 0.002
 		};
 
 		this.item = {
