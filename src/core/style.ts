@@ -240,8 +240,8 @@ export class Style {
 		this.slider = {
 			height: 0.004,
 			tickMark: {
-				width: 0.012,
-				height: 0.007
+				width: 0.002,
+				height: 0.016
 			}
 		};
 

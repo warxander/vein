@@ -43,11 +43,10 @@ export function declareExport() {
 		painter.drawRect(w, sliderStyle.height);
 
 		const sx = (w * value) / (max + min);
-		const tx = sx - sliderStyle.tickMark.width / 2;
-		const ty = -sliderStyle.tickMark.height / 4;
-
 		painter.setColor(properties.get<Color>('color'));
-		painter.move(tx, ty);
+		painter.drawRect(sx, sliderStyle.height);
+
+		painter.move(sx - sliderStyle.tickMark.width / 2, (sliderStyle.height - sliderStyle.tickMark.height) / 2);
 		painter.drawRect(sliderStyle.tickMark.width, sliderStyle.tickMark.height);
 
 		context.endDraw();
