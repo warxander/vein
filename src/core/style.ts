@@ -30,7 +30,7 @@ export class StylePropertyValues {
 			value = this.defaultProperties.get(property);
 		}
 
-		if (value === undefined) throw new Error(`Failed to get() for style property: ${property}`);
+		if (value === undefined) throw new Error(`Failed to get style property: ${property}`);
 
 		return value as T;
 	}
@@ -332,17 +332,27 @@ export class Style {
 			if (properties.size === 0) continue;
 
 			for (const selector of (rule as CssRuleAST).selectors) {
-				let defaultProperties: StylePropertyValues | undefined = undefined;
-				if (useDefaultProperties && DEFAULT_SELECTORS.has(selector)) {
-					defaultProperties = Style.defaultSelectorProperties?.get(selector);
-					if (defaultProperties === undefined)
-						throw new Error(`Failed to get default properties for style selector: ${selector}`);
+				let propertySelector = selector;
+				let defaultSelector = selector;
+
+				if (selector.startsWith('#')) {
+					const match = selector.match(/^#(\S+)\.(\S+)$/);
+					if (!match) throw new Error(`Failed to parse selector name: ${selector}`);
+					propertySelector = match[1];
+					defaultSelector = match[2];
 				}
 
-				let existingProperties = selectorProperties.get(selector);
+				let defaultProperties: StylePropertyValues | undefined = undefined;
+				if (useDefaultProperties && DEFAULT_SELECTORS.has(defaultSelector)) {
+					defaultProperties = Style.defaultSelectorProperties?.get(defaultSelector);
+					if (defaultProperties === undefined)
+						throw new Error(`Failed to get default properties for style selector: ${defaultSelector}`);
+				}
+
+				let existingProperties = selectorProperties.get(propertySelector);
 				if (existingProperties === undefined)
 					selectorProperties.set(
-						selector,
+						propertySelector,
 						new StylePropertyValues(properties, defaultProperties?.getProperties())
 					);
 				else for (const [key, value] of properties.entries()) existingProperties.set(key, value);
