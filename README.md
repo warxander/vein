@@ -156,7 +156,11 @@ setNextWindowId(id)
 #### Selectors
 `button`, `button:hover`, `check-box`, `check-box:hover`, `heading`, `label`, `progress-bar`,
 `separator`, `slider`, `slider:hover`, `sprite-button`, `sprite-button:hover`, `text-area`, `text-edit`,
-`text-edit:hover`, `window`
+`text-edit:hover`, `window`\
+Examples:
+* `button { }`
+* `#myButton.button { }`
+* `#mySlider:hover.slider:hover { }`
 #### Properties
 * `background-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
 * `background-image` (`url('textureDict', 'textureName')`, use `CreateRuntimeTextureFromImage` FiveM API for custom images)
