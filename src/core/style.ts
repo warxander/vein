@@ -58,7 +58,7 @@ const DEFAULT_STYLE = `button, check-box, sprite-button, text-edit {
 }
 
 check-box:hover {
-	background-color: rgba(34, 37, 45, 1.0);
+	background-color: rgba(22, 25, 35, 1.0);
 	color: rgba(244, 5, 82, 1.0);
 }
 
@@ -215,8 +215,7 @@ export class Style {
 		this.checkbox = {
 			height: 0.02,
 			spacing: 0.0025,
-			inlineHeight: 0.002,
-			outlineHeight: 0.002
+			inlineHeight: 0.00
 		};
 
 		this.heading = {

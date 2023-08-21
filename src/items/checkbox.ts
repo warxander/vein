@@ -33,29 +33,22 @@ export function declareExport() {
 		const color = properties.get<Color>('color');
 		const backgroundColor = properties.get<Color>('background-color');
 
-		painter.setColor(color);
+		painter.setColor(backgroundColor);
 		painter.move(0, vo);
 		painter.drawRect(cw, checkboxStyle.height);
 
-		const outlineWidth = checkboxStyle.outlineHeight / aspectRatio;
-		cw = cw - outlineWidth * 2;
+		if (isChecked) {
+			const inlineWidth = checkboxStyle.inlineHeight / aspectRatio;
+			cw = cw - inlineWidth * 2;
+			painter.move(inlineWidth, checkboxStyle.inlineHeight);
+			painter.setColor(color);
+			painter.drawRect(cw, cw * aspectRatio);
+			painter.move(-inlineWidth, -checkboxStyle.inlineHeight);
+		}
 
-		painter.setColor(backgroundColor);
-		painter.move(outlineWidth, checkboxStyle.outlineHeight);
-		painter.drawRect(cw, cw * aspectRatio);
-
-		const inlineWidth = checkboxStyle.inlineHeight / aspectRatio;
-		cw = cw - inlineWidth * 2;
-
-		painter.setColor(isChecked ? color : backgroundColor);
-		painter.move(inlineWidth, checkboxStyle.inlineHeight);
-		painter.drawRect(cw, cw * aspectRatio);
-		painter.move(-inlineWidth, -checkboxStyle.inlineHeight);
-
-		painter.move(-outlineWidth, -checkboxStyle.outlineHeight);
 		painter.move(0, -vo);
 
-		painter.setColor(checkBoxProperties.get<Color>('color'));
+		painter.setColor(color);
 		painter.move(
 			checkboxStyle.height / aspectRatio + checkboxStyle.spacing * 2,
 			(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset
