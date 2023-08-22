@@ -7,8 +7,6 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		const headingStyle = style.heading;
-
 		painter.setText(text);
 
 		const properties = style.getProperties(context.getItemId() ?? 'heading');
@@ -18,7 +16,7 @@ export function declareExport() {
 		painter.setTextOptions(font, scale);
 
 		const w = context.getItemWidth() ?? painter.calculateTextWidth();
-		const h = headingStyle.height;
+		const h = style.item.height;
 
 		context.beginDraw(w, h);
 

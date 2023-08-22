@@ -69,8 +69,8 @@ button:hover, sprite-button:hover {
 
 heading {
 	color: #FFFFF0;
-	font-family: 4;
-	font-size: 0.725em;
+	font-family: 0;
+	font-size: 0.45em;
 }
 
 label, text-area {
@@ -194,7 +194,6 @@ export class Style {
 
 	readonly button;
 	readonly checkbox;
-	readonly heading;
 	readonly label;
 	readonly progressBar;
 	readonly separator;
@@ -216,11 +215,6 @@ export class Style {
 			height: 0.02,
 			spacing: 0.0025,
 			inlineHeight: 0.0035
-		};
-
-		this.heading = {
-			height: 0.045,
-			lineHeight: 0.001
 		};
 
 		this.label = {
