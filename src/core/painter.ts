@@ -308,14 +308,12 @@ export class Painter {
 	}
 
 	setTextOptions(font: number, scale: number) {
-		if (!this.context.getTextEntry()) return;
-
 		SetTextFont(font);
 		SetTextScale(1, scale);
 	}
 
 	setTextMaxWidth(w: number) {
-		if (this.context.getTextEntry()) SetTextWrap(this.pos.x, this.pos.x + w);
+		SetTextWrap(this.pos.x, this.pos.x + w);
 	}
 
 	drawText() {
