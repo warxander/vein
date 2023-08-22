@@ -51,55 +51,55 @@ export class StylePropertyValues {
 }
 
 const DEFAULT_STYLE = `button, check-box, sprite-button, text-edit {
-	background-color: rgba(22, 25, 35, 1.0);
-	color: rgba(255, 255, 240, 1.0);
+	background-color: #242730;
+	color: #FFFFF0;
 	font-family: 0;
 	font-size: 0.325em;
 }
 
 check-box:hover {
-	background-color: rgba(22, 25, 35, 1.0);
-	color: rgba(244, 5, 82, 1.0);
+	background-color: #242730;
+	color: #F50551;
 }
 
 button:hover, sprite-button:hover {
-	background-color: rgba(244, 5, 82, 1.0);
-	color: rgba(255, 255, 240, 1.0);
+	background-color: #F50551;
+	color: #FFFFF0;
 }
 
 heading {
-	color: rgba(255, 255, 240, 1.0);
+	color: #FFFFF0;
 	font-family: 4;
 	font-size: 0.725em;
 }
 
 label, text-area {
-	color: rgba(181, 181, 173, 1.0);
+	color: #C4C4BD;
 	font-family: 0;
 	font-size: 0.325em;
 }
 
 progress-bar {
-	background-color: rgba(22, 25, 35, 1.0);
+	background-color: #242730;
 	color: rgba(0, 155, 103, 1.0);
 }
 
 separator {
-	color: rgba(22, 25, 35, 1.0);
+	color: #242730;
 }
 
 slider {
-	background-color: rgba(22, 25, 35, 1.0);
-	color: rgba(255, 255, 240, 1.0);
+	background-color: #242730;
+	color: #C4C4BD;
 }
 
 slider:hover, text-edit:hover {
-	background-color: rgba(22, 25, 35, 1.0);
-	color: rgba(244, 5, 82, 1.0);
+	background-color: #242730;
+	color: #F50551;
 }
 
 window {
-	background-color: rgba(34, 37, 45, 1.0);
+	background-color: #32353D;
 	color: rgba(105, 255, 89, 0.125);
 }`;
 
