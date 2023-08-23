@@ -1,7 +1,7 @@
 # Vein
-Vein is a FiveM [IMGUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) framework.
-
-It's written on TypeScript and uses [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) to be available for other resources.
+Vein is a FiveM [IMGUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) framework.\
+It's written on TypeScript and uses [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) to be available from other resources.\
+Vein is using GTA V natives for rendering and most of UI customization can be done via CSS stylesheet.
 
 ![alt text](https://raw.githubusercontent.com/warxander/vein-demo/master/demo.png)
 # Table of Contents
@@ -16,16 +16,11 @@ It's written on TypeScript and uses [exports](https://docs.fivem.net/docs/script
 		2. [Properties](#properties)
 	4. [Items](#items)
 ## Getting Started
-* Download it and put into `resources/` directory
+* Download and put into `resources/` directory
 * Add `ensure vein` to `server.cfg`
 ### Usage
-Vein is responsible for layouting/drawing UI and input handling only.
-
-Organizing and managing data for it is user task as a programmer.
-
-Here is the example to illustrate IMGUI concepts:
 ```lua
-local vein = exports.vein -- Store it in local variable for performance reasons
+local vein = exports.vein
 
 local windowPos = { }
 local isWindowOpened = true
@@ -35,38 +30,37 @@ while isWindowOpened do
 
 	-- Call setNextWindow* methods
 
-	vein:beginWindow(windowPos.x, windowPos.y) -- Mandatory
+	vein:beginWindow(windowPos.x, windowPos.y)
 
-	-- Draw items in column
+	-- Call items API to draw them in a column
 
 	vein:beginRow()
-		-- Draw items in row
+		-- Call items API to draw them in a row
 	vein:endRow()
 
-	vein:label('Hello Vein')
-	if vein:isItemHovered() then
-		--
-		if vein:isItemClicked() then
-			--
-		end
-	end
-
-	if vein:button('Close Window') then -- Draw button and check if it were pressed
+	if vein:button('Close') then -- Draw 'Close' button and check if it is clicked
 		isWindowOpened = false
 	end
 
-	windowPos = vein:endWindow() -- Mandatory
+	vein:label('Hello Vein')
+	if vein:isItemHovered() then -- Check if the last drawn item is hovered
+		if vein:isItemClicked() then
+			-- Check if the last drawn item is clicked
+		end
+	end
+
+	windowPos = vein:endWindow()
 end
 ```
-Check this [repository](https://github.com/warxander/vein-demo) to learn more from Vein demo.
+Check this [demo](https://github.com/warxander/vein-demo) to learn more.
 ### Limitations
-These features are not supported due to RAGE API limitations:
+These features are not supported due to GTA V API limitations:
 * Clipping
 * Rotation
 * Circle drawing
 
-These features are not supported by design (can be a subject to change though):
-* Custom item sizes (Vein is out-of-box solution)
+These features are not supported by design (maybe subject to change):
+* Custom item sizes
 * Nested rows
 
 ## API
