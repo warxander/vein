@@ -253,7 +253,7 @@ local hasPressed = spriteButton(dict, name [, text])
 
 --! @brief textArea
 --! @comment Displays multiline text
---! @comment Width is required
+--! @comment Pass both parameters or use both SetNextTextEntry/SetNextItemWidth
 --! @param text: string
 --! @param w: number
 textArea([text, w])
