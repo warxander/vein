@@ -4,12 +4,12 @@ export function declareExport() {
 	globalThis.exports('spacing', function (count = 1) {
 		const context = getCurrentContext();
 		const painter = context.getPainter();
-		const style = painter.getStyle();
 
 		const isRowMode = painter.isRowMode();
 
-		const w = isRowMode ? style.window.spacing.h * count : 0;
-		const h = isRowMode ? 0 : style.window.spacing.v * count;
+		const windowSpacing = painter.getWindowSpacing();
+		const w = isRowMode ? windowSpacing[0] * count : 0;
+		const h = isRowMode ? 0 : windowSpacing[1] * count;
 
 		context.beginDraw(w, h);
 

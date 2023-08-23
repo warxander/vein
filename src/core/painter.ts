@@ -1,4 +1,4 @@
-import { Color, Image, Position, PositionInterface, TextEntryComponents } from '../common/types';
+import { Color, Image, Position, PositionInterface, TextEntryComponents, Vector2 } from '../common/types';
 import { getIsDebugEnabled } from '../../index';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
@@ -45,6 +45,7 @@ export class Painter {
 	private rowState = new RowState();
 	private itemGeometry = new Geometry();
 	private windowGeometry = new Geometry();
+	private windowSpacing: Vector2 = [0, 0];
 
 	constructor(private context: Context) {}
 
@@ -66,6 +67,10 @@ export class Painter {
 				this.windowGeometry.size.w,
 				this.windowGeometry.size.h
 			);
+
+		const windowSpacing = this.context.getWindowSpacing();
+		this.windowSpacing[0] = windowSpacing !== undefined ? windowSpacing[0] : this.style.window.spacing[0];
+		this.windowSpacing[1] = windowSpacing !== undefined ? windowSpacing[1] : this.style.window.spacing[1];
 	}
 
 	endWindow(): PositionInterface {
@@ -163,12 +168,12 @@ export class Painter {
 		else {
 			let ho = 0;
 			if (this.rowState.isInRowMode && !this.rowState.isFirstItem) {
-				ho = this.style.window.spacing.h;
+				ho = this.windowSpacing[0];
 				this.rowState.size.w += ho;
 			}
 
 			let vo = 0;
-			if (!this.rowState.isInRowMode || this.rowState.isFirstItem) vo = this.style.window.spacing.v;
+			if (!this.rowState.isInRowMode || this.rowState.isFirstItem) vo = this.windowSpacing[1];
 
 			this.layoutState.size.w += ho;
 			this.layoutState.size.h += vo;
@@ -212,6 +217,10 @@ export class Painter {
 
 	getItemHeight(): number {
 		return this.itemGeometry.size.h;
+	}
+
+	getWindowSpacing(): Readonly<Vector2> {
+		return this.windowSpacing;
 	}
 
 	setPos(x: number, y: number) {

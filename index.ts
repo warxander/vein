@@ -49,6 +49,10 @@ globalThis.exports('setNextWindowId', function (id: string) {
 	getCurrentContext().setWindowId(id);
 });
 
+globalThis.exports('setNextWindowSpacing', function(x: number, y: number) {
+	getCurrentContext().setWindowSpacing(x, y);
+});
+
 globalThis.exports('beginWindow', function (x?: number, y?: number) {
 	getCurrentContext().beginWindow(x, y);
 });

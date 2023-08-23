@@ -1,6 +1,7 @@
 export type Color = [number, number, number, number];
+export type FontSize = number;
 export type Image = [string, string];
-export type Size = number;
+export type Vector2 = [number, number];
 
 export type TextEntryComponents = Array<string | number>;
 

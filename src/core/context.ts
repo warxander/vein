@@ -1,4 +1,4 @@
-import { PositionInterface, TextEntryComponents } from '../common/types';
+import { PositionInterface, TextEntryComponents, Vector2 } from '../common/types';
 import { Input } from './input';
 import { Painter } from './painter';
 
@@ -26,10 +26,12 @@ enum WindowFlags {
 
 class WindowFrameState {
 	id?: string;
+	spacing?: Vector2;
 	windowFlags: WindowFlags = WindowFlags.None;
 
 	reset() {
 		this.id = undefined;
+		this.spacing = undefined;
 		this.windowFlags = WindowFlags.None;
 	}
 }
@@ -58,6 +60,10 @@ export class Context {
 		this.windowFrameState.id = id;
 	}
 
+	setWindowSpacing(x: number, y: number) {
+		this.windowFrameState.spacing = [x, y];
+	}
+
 	isWindowNoDrag(): boolean {
 		return !!(this.windowFrameState.windowFlags & WindowFlags.NoDrag);
 	}
@@ -68,6 +74,10 @@ export class Context {
 
 	getWindowId(): string | undefined {
 		return this.windowFrameState.id;
+	}
+
+	getWindowSpacing(): Vector2 | undefined {
+		return this.windowFrameState.spacing;
 	}
 
 	beginWindow(x?: number, y?: number) {

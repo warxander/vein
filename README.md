@@ -91,6 +91,11 @@ setNextWindowNoDrag(isNoDrag)
 --! @param isNoBackground: boolean
 setNextWindowNoBackground(isNoBackground)
 
+--! @brief setNextWindowSpacing
+--! @param x: number
+--! @param y: number
+setNextWindowSpacing(x, y)
+
 --! @brief beginWindow
 --! @param x: number
 --! @param y: number

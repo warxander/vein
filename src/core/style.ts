@@ -1,8 +1,8 @@
-import { Color, Image, Size } from '../common/types';
+import { Color, Image, FontSize } from '../common/types';
 
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
-type StylePropertyValue = Color | Image | Size;
+type StylePropertyValue = Color | Image | FontSize;
 type StylePropertyValuesMap = Map<string, StylePropertyValue>;
 type StyleSelectorPropertyValuesMap = Map<string, StylePropertyValues>;
 
@@ -180,7 +180,7 @@ function parseValueAsImage(value: string): Image {
 	throw new Error(`Failed to parseValueAsImage() for style value: ${value}`);
 }
 
-function parseValueAsFontSize(value: string): Size {
+function parseValueAsFontSize(value: string): FontSize {
 	const match = value.match(/^(([0-9]*[.])?[0-9]+)em$/);
 	if (match) return parseFloat(match[1]);
 
@@ -281,10 +281,7 @@ export class Style {
 				h: 0.01,
 				v: 0.018
 			},
-			spacing: {
-				h: 0.005,
-				v: 0.01
-			}
+			spacing: [0.005, 0.01]
 		};
 	}
 
