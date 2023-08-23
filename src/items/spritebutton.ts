@@ -7,21 +7,19 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		painter.setText(text);
-
 		const id = context.getItemId() ?? 'sprite-button';
 		const spriteButtonProperties = style.getProperties(id);
 		const font = spriteButtonProperties.get<number>('font-family');
 		const scale = spriteButtonProperties.get<number>('font-size');
 
-		painter.setTextOptions(font, scale);
+		painter.setText(font, scale, text);
 
 		const spriteButtonStyle = style.spriteButton;
 		const sw = spriteButtonStyle.spriteWidth;
 
 		const w =
 			context.getItemWidth() ||
-			painter.calculateTextWidth() + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
+			painter.getTextWidth() + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
 		const h = style.item.height;
 
 		context.beginDraw(w, h);
@@ -40,7 +38,7 @@ export function declareExport() {
 
 		painter.move(
 			sw + spriteButtonStyle.spacing,
-			-so + (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset
+			-so + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
 		);
 		painter.drawText();
 

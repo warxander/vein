@@ -275,7 +275,7 @@ export class Painter {
 			);
 	}
 
-	calculateTextWidth(): number {
+	getTextWidth(): number {
 		const textEntry: string | undefined = this.context.getTextEntry();
 		if (!textEntry) return 0;
 
@@ -287,11 +287,7 @@ export class Painter {
 		return EndTextCommandGetWidth(true);
 	}
 
-	calculateTextLineHeight(font: number, scale: number): number {
-		return GetRenderedCharacterHeight(scale, font);
-	}
-
-	calculateTextLineCount(): number {
+	getTextLineCount(): number {
 		const textEntry: string | undefined = this.context.getTextEntry();
 		if (!textEntry) return 0;
 
@@ -303,17 +299,11 @@ export class Painter {
 		return EndTextCommandLineCount(this.pos.x, this.pos.y);
 	}
 
-	setText(text?: string) {
-		if (text) this.context.setNextTextEntry('STRING', text);
-	}
-
-	setTextOptions(font: number, scale: number) {
+	setText(font: number, scale: number, text?: string, w?: number) {
 		SetTextFont(font);
 		SetTextScale(1, scale);
-	}
-
-	setTextMaxWidth(w: number) {
-		SetTextWrap(this.pos.x, this.pos.x + w);
+		if (text !== undefined) this.context.setNextTextEntry('STRING', text);
+		if (w !== undefined) SetTextWrap(this.pos.x, this.pos.x + w);
 	}
 
 	drawText() {

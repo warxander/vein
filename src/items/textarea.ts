@@ -9,18 +9,14 @@ export function declareExport() {
 
 		w = (w ?? context.getItemWidth()) as number;
 
-		painter.setText(text);
-
 		const properties = style.getProperties(context.getItemId() ?? 'text-area');
 		const font = properties.get<number>('font-family');
 		const scale = properties.get<number>('font-size');
 
-		painter.setTextOptions(font, scale);
+		painter.setText(font, scale, text, w);
 
-		painter.setTextMaxWidth(w);
-
-		const lc = painter.calculateTextLineCount();
-		const h = lc === 1 ? style.item.height : painter.calculateTextLineHeight(font, scale) * (lc + 1);
+		const lc = painter.getTextLineCount();
+		const h = lc === 1 ? style.item.height : GetRenderedCharacterHeight(scale, font) * (lc + 1);
 
 		context.beginDraw(w, h);
 

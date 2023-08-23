@@ -7,21 +7,19 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		painter.setText(text);
-
 		const properties = style.getProperties(context.getItemId() ?? 'label');
 		const font = properties.get<number>('font-family');
 		const scale = properties.get<number>('font-size');
 
-		painter.setTextOptions(font, scale);
+		painter.setText(font, scale, text);
 
-		const w = context.getItemWidth() ?? painter.calculateTextWidth();
+		const w = context.getItemWidth() ?? painter.getTextWidth();
 		const h = style.item.height;
 
 		context.beginDraw(w, h);
 
 		painter.setColor(properties.get<Color>('color'));
-		painter.move(0, (h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset);
+		painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 		painter.drawText();
 
 		context.endDraw();

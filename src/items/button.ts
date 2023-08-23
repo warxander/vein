@@ -7,16 +7,14 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		painter.setText(text);
-
 		const id = context.getItemId() ?? 'button';
 		const buttonProperties = style.getProperties(id);
 		const font = buttonProperties.get<number>('font-family');
 		const scale = buttonProperties.get<number>('font-size');
 
-		painter.setTextOptions(font, scale);
+		painter.setText(font, scale, text);
 
-		const w = context.getItemWidth() ?? painter.calculateTextWidth() + style.button.spacing * 2;
+		const w = context.getItemWidth() ?? painter.getTextWidth() + style.button.spacing * 2;
 		const h = style.item.height;
 
 		context.beginDraw(w, h);
@@ -26,10 +24,7 @@ export function declareExport() {
 		painter.drawItemBackground(properties, w, h);
 
 		painter.setColor(properties.get<Color>('color'));
-		painter.move(
-			style.button.spacing,
-			(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset
-		);
+		painter.move(style.button.spacing, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 		painter.drawText();
 
 		context.endDraw();

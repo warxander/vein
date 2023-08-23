@@ -7,20 +7,18 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		painter.setText(text);
-
 		const id = context.getItemId() ?? 'check-box';
 		const checkBoxProperties = style.getProperties(id);
 		const font = checkBoxProperties.get<number>('font-family');
 		const scale = checkBoxProperties.get<number>('font-size');
 
-		painter.setTextOptions(font, scale);
+		painter.setText(font, scale, text);
 
 		const aspectRatio = GetAspectRatio(false);
 		const checkboxStyle = style.checkbox;
 		let cw = checkboxStyle.height / aspectRatio;
 
-		const w = context.getItemWidth() ?? cw + checkboxStyle.spacing + painter.calculateTextWidth();
+		const w = context.getItemWidth() ?? cw + checkboxStyle.spacing + painter.getTextWidth();
 		const h = style.item.height;
 
 		context.beginDraw(w, h);
@@ -51,7 +49,7 @@ export function declareExport() {
 		painter.setColor(color);
 		painter.move(
 			checkboxStyle.height / aspectRatio + checkboxStyle.spacing * 2,
-			(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset
+			(h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
 		);
 		painter.drawText();
 

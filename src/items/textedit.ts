@@ -11,7 +11,7 @@ export function declareExport() {
 	globalThis.exports(
 		'textEdit',
 		async function (
-			text = '',
+			text: string,
 			keyboardTitle: string,
 			maxTextLength: number,
 			isSecretMode: boolean
@@ -53,15 +53,14 @@ export function declareExport() {
 			painter.setColor(properties.get<Color>('background-color'));
 			painter.drawRect(w, h);
 
-			painter.setText(isSecretMode ? text.replace(/./g, '*') : text);
 			painter.setColor(properties.get<Color>('color'));
 
 			const font = textEditProperties.get<number>('font-family');
 			const scale = textEditProperties.get<number>('font-size');
-			painter.setTextOptions(font, scale);
+			painter.setText(font, scale, isSecretMode ? text.replace(/./g, '*') : text);
 			painter.move(
 				style.textEdit.spacing,
-				(h - painter.calculateTextLineHeight(font, scale)) / 2 + style.item.textOffset
+				(h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
 			);
 			painter.drawText();
 
