@@ -11,6 +11,7 @@ export function addTextComponents(components: TextEntryComponents) {
 			case 'number':
 				if (Number.isInteger(component)) AddTextComponentInteger(component);
 				else AddTextComponentFloat(component, 2); // TODO:
+				break;
 			default:
 				break;
 		}
