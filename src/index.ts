@@ -1,19 +1,19 @@
-import { Context } from './src/core/context';
+import { Context } from './core/context';
 
-import * as Button from './src/items/button';
-import * as Checkbox from './src/items/checkbox';
-import * as Dummy from './src/items/dummy';
-import * as Heading from './src/items/heading';
-import * as Label from './src/items/label';
-import * as ProgressBar from './src/items/progressbar';
-import * as Selectable from './src/items/selectable';
-import * as Separator from './src/items/separator';
-import * as Slider from './src/items/slider';
-import * as Spacing from './src/items/spacing';
-import * as Sprite from './src/items/sprite';
-import * as SpriteButton from './src/items/spritebutton';
-import * as TextArea from './src/items/textarea';
-import * as TextEdit from './src/items/textedit';
+import * as Button from './items/button';
+import * as Checkbox from './items/checkbox';
+import * as Dummy from './items/dummy';
+import * as Heading from './items/heading';
+import * as Label from './items/label';
+import * as ProgressBar from './items/progressbar';
+import * as Selectable from './items/selectable';
+import * as Separator from './items/separator';
+import * as Slider from './items/slider';
+import * as Spacing from './items/spacing';
+import * as Sprite from './items/sprite';
+import * as SpriteButton from './items/spritebutton';
+import * as TextArea from './items/textarea';
+import * as TextEdit from './items/textedit';
 
 let isDebugEnabled: boolean = false;
 

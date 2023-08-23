@@ -10,7 +10,6 @@
 		"moduleResolution": "node"
 	},
 	"include": [
-		"./src/**/*",
-		"index.ts"
+		"./src/**/*"
 	]
 }

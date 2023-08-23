@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../../index';
+import { getCurrentContext } from '../index';
 import { Style } from '../core/style';
 
 export function declareExport() {

@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../../index';
+import { getCurrentContext } from '../index';
 
 export function declareExport() {
 	globalThis.exports('dummy', function (w: number, h: number) {

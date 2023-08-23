@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../../index';
+import { getCurrentContext } from '../index';
 import { Color } from '../common/types';
 
 export function declareExport() {

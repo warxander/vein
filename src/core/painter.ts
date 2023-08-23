@@ -1,5 +1,5 @@
 import { Color, Image, TextEntryComponents, Vector2 } from '../common/types';
-import { getIsDebugEnabled } from '../../index';
+import { getIsDebugEnabled } from '../index';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
 import { addTextComponents } from './utils';
