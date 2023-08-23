@@ -1,7 +1,7 @@
-import { Position } from '../common/types';
+import { Vector2 } from '../common/types';
 
 class State {
-	mousePos = new Position();
+	mousePos = new Vector2();
 	isLmbPressed = false;
 	isLmbReleased = false;
 	isLmbDown = false;
@@ -43,7 +43,7 @@ export class Input {
 		this.state.reset();
 	}
 
-	getMousePos(): Position {
+	getMousePos(): Vector2 {
 		return this.state.mousePos;
 	}
 

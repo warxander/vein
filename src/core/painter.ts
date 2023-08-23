@@ -1,51 +1,41 @@
-import { Color, Image, Position, PositionInterface, TextEntryComponents, Vector2 } from '../common/types';
+import { Color, Image, TextEntryComponents, Vector2 } from '../common/types';
 import { getIsDebugEnabled } from '../../index';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
 import { addTextComponents } from './utils';
 
-class Size {
-	w = 0;
-	h = 0;
-
-	set(w: number, h: number) {
-		this.w = w;
-		this.h = h;
-	}
-}
-
 class LayoutState {
 	isValid = false;
 	isFirstItem = false;
-	size = new Size();
+	size = new Vector2();
 }
 
 class RowState {
 	isInRowMode = false;
 	isFirstItem = false;
-	size = new Size();
+	size = new Vector2();
 }
 
 class DragState {
 	isInProcess = false;
-	origin = new Position();
+	origin = new Vector2();
 }
 
 class Geometry {
-	pos = new Position();
-	size = new Size();
+	pos = new Vector2();
+	size = new Vector2();
 }
 
 export class Painter {
 	private style = new Style();
-	private pos = new Position();
+	private pos = new Vector2();
 	private color: Color = [0, 0, 0, 255];
 	private layoutState = new LayoutState();
 	private dragState = new DragState();
 	private rowState = new RowState();
 	private itemGeometry = new Geometry();
 	private windowGeometry = new Geometry();
-	private windowSpacing: Vector2 = [0, 0];
+	private windowSpacing = new Vector2();
 
 	constructor(private context: Context) {}
 
@@ -53,8 +43,8 @@ export class Painter {
 		this.windowGeometry.pos.set(x, y);
 
 		this.setPos(
-			this.windowGeometry.pos.x - this.windowGeometry.size.w / 2,
-			this.windowGeometry.pos.y - this.windowGeometry.size.h / 2
+			this.windowGeometry.pos.x - this.windowGeometry.size.x / 2,
+			this.windowGeometry.pos.y - this.windowGeometry.size.y / 2
 		);
 
 		if (!this.isLayoutValid()) return;
@@ -64,29 +54,29 @@ export class Painter {
 		if (!this.context.isWindowNoBackground())
 			this.drawItemBackground(
 				this.style.getProperties(this.context.getWindowId() ?? 'window'),
-				this.windowGeometry.size.w,
-				this.windowGeometry.size.h
+				this.windowGeometry.size.x,
+				this.windowGeometry.size.y
 			);
 
 		const windowSpacing = this.context.getWindowSpacing();
-		this.windowSpacing[0] = windowSpacing !== undefined ? windowSpacing[0] : this.style.window.spacing[0];
-		this.windowSpacing[1] = windowSpacing !== undefined ? windowSpacing[1] : this.style.window.spacing[1];
+		this.windowSpacing.x = windowSpacing !== undefined ? windowSpacing.x : this.style.window.spacing.x;
+		this.windowSpacing.y = windowSpacing !== undefined ? windowSpacing.y : this.style.window.spacing.y;
 	}
 
-	endWindow(): PositionInterface {
+	endWindow(): Vector2 {
 		if (!this.context.isWindowNoDrag()) this.endDrag();
 
 		this.layoutState.isValid = !this.layoutState.isFirstItem;
 		this.layoutState.isFirstItem = true;
 
 		this.windowGeometry.size.set(
-			this.layoutState.isValid ? this.layoutState.size.w + this.style.window.margins.h * 2 : 0,
-			this.layoutState.isValid ? this.layoutState.size.h + this.style.window.margins.v * 2 : 0
+			this.layoutState.isValid ? this.layoutState.size.x + this.style.window.margins.x * 2 : 0,
+			this.layoutState.isValid ? this.layoutState.size.y + this.style.window.margins.y * 2 : 0
 		);
 
 		this.layoutState.size.set(0, 0);
 
-		return { x: this.windowGeometry.pos.x, y: this.windowGeometry.pos.y };
+		return this.windowGeometry.pos;
 	}
 
 	private isLayoutValid(): boolean {
@@ -99,10 +89,10 @@ export class Painter {
 		const input = this.context.getInput();
 
 		if (
-			input.isRectHovered(this.pos.x, this.pos.y, this.windowGeometry.size.w, this.style.window.margins.v) &&
+			input.isRectHovered(this.pos.x, this.pos.y, this.windowGeometry.size.x, this.style.window.margins.y) &&
 			input.getIsLmbPressed()
 		) {
-			const mousePos: Position = input.getMousePos();
+			const mousePos = input.getMousePos();
 			this.dragState.origin.set(mousePos.x, mousePos.y);
 			this.dragState.isInProcess = true;
 		}
@@ -114,7 +104,7 @@ export class Painter {
 		const input = this.context.getInput();
 
 		if (input.getIsLmbDown()) {
-			const mousePos: Position = input.getMousePos();
+			const mousePos = input.getMousePos();
 
 			this.windowGeometry.pos.set(
 				this.windowGeometry.pos.x + mousePos.x - this.dragState.origin.x,
@@ -144,13 +134,13 @@ export class Painter {
 		if (!this.rowState.isInRowMode) return;
 
 		this.layoutState.size.set(
-			Math.max(this.layoutState.size.w, this.rowState.size.w),
-			this.layoutState.size.h + this.rowState.size.h
+			Math.max(this.layoutState.size.x, this.rowState.size.x),
+			this.layoutState.size.y + this.rowState.size.y
 		);
 
 		this.setPos(
-			this.windowGeometry.pos.x - this.windowGeometry.size.w / 2 + this.style.window.margins.h,
-			this.pos.y + this.rowState.size.h
+			this.windowGeometry.pos.x - this.windowGeometry.size.x / 2 + this.style.window.margins.x,
+			this.pos.y + this.rowState.size.y
 		);
 
 		this.rowState.isInRowMode = false;
@@ -164,19 +154,19 @@ export class Painter {
 	}
 
 	beginDraw(w: number, h: number) {
-		if (this.layoutState.isFirstItem) this.move(this.style.window.margins.h, this.style.window.margins.v);
+		if (this.layoutState.isFirstItem) this.move(this.style.window.margins.x, this.style.window.margins.y);
 		else {
 			let ho = 0;
 			if (this.rowState.isInRowMode && !this.rowState.isFirstItem) {
-				ho = this.windowSpacing[0];
-				this.rowState.size.w += ho;
+				ho = this.windowSpacing.x;
+				this.rowState.size.x += ho;
 			}
 
 			let vo = 0;
-			if (!this.rowState.isInRowMode || this.rowState.isFirstItem) vo = this.windowSpacing[1];
+			if (!this.rowState.isInRowMode || this.rowState.isFirstItem) vo = this.windowSpacing.y;
 
-			this.layoutState.size.w += ho;
-			this.layoutState.size.h += vo;
+			this.layoutState.size.x += ho;
+			this.layoutState.size.y += vo;
 
 			this.move(ho, vo);
 		}
@@ -186,17 +176,17 @@ export class Painter {
 	}
 
 	endDraw() {
-		const w = this.itemGeometry.size.w;
-		const h = this.itemGeometry.size.h;
+		const w = this.itemGeometry.size.x;
+		const h = this.itemGeometry.size.y;
 
 		this.drawDebug(w, h);
 
 		if (this.rowState.isInRowMode) {
-			this.rowState.size.set(this.rowState.size.w + w, Math.max(this.rowState.size.h, h));
+			this.rowState.size.set(this.rowState.size.x + w, Math.max(this.rowState.size.y, h));
 			this.setPos(this.itemGeometry.pos.x + w, this.itemGeometry.pos.y);
 			this.rowState.isFirstItem = false;
 		} else {
-			this.layoutState.size.set(Math.max(w, this.layoutState.size.w), this.layoutState.size.h + h);
+			this.layoutState.size.set(Math.max(w, this.layoutState.size.x), this.layoutState.size.y + h);
 			this.setPos(this.itemGeometry.pos.x, this.itemGeometry.pos.y + h);
 		}
 
@@ -212,14 +202,14 @@ export class Painter {
 	}
 
 	getItemWidth(): number {
-		return this.itemGeometry.size.w;
+		return this.itemGeometry.size.x;
 	}
 
 	getItemHeight(): number {
-		return this.itemGeometry.size.h;
+		return this.itemGeometry.size.y;
 	}
 
-	getWindowSpacing(): Readonly<Vector2> {
+	getWindowSpacing(): Vector2 {
 		return this.windowSpacing;
 	}
 

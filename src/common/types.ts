@@ -1,18 +1,10 @@
 export type Color = [number, number, number, number];
 export type FontSize = number;
 export type Image = [string, string];
-export type Vector2 = [number, number];
-
 export type TextEntryComponents = Array<string | number>;
 
-export interface PositionInterface {
-	x: number;
-	y: number;
-}
-
-export class Position implements PositionInterface {
-	x = 0;
-	y = 0;
+export class Vector2 {
+	constructor(public x: number = 0, public y: number = 0) {}
 
 	set(x: number, y: number) {
 		this.x = x;

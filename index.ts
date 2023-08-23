@@ -1,4 +1,3 @@
-import { PositionInterface, TextEntryComponents } from './src/common/types';
 import { Context } from './src/core/context';
 
 import * as Button from './src/items/button';
@@ -49,7 +48,7 @@ globalThis.exports('setNextWindowId', function (id: string) {
 	getCurrentContext().setWindowId(id);
 });
 
-globalThis.exports('setNextWindowSpacing', function(x: number, y: number) {
+globalThis.exports('setNextWindowSpacing', function (x: number, y: number) {
 	getCurrentContext().setWindowSpacing(x, y);
 });
 
@@ -57,8 +56,9 @@ globalThis.exports('beginWindow', function (x?: number, y?: number) {
 	getCurrentContext().beginWindow(x, y);
 });
 
-globalThis.exports('endWindow', function (): PositionInterface {
-	return getCurrentContext().endWindow();
+globalThis.exports('endWindow', function (): any {
+	const windowPos = getCurrentContext().endWindow();
+	return { x: windowPos.x, y: windowPos.y };
 });
 
 globalThis.exports('isItemHovered', function (): boolean {
@@ -81,11 +81,11 @@ globalThis.exports('endRow', function () {
 	getCurrentContext().getPainter().endRow();
 });
 
-globalThis.exports('setNextTextEntry', function (entry: string, ...components: TextEntryComponents) {
+globalThis.exports('setNextTextEntry', function (entry: string, ...components: any) {
 	getCurrentContext().setNextTextEntry(entry, ...components);
 });
 
-globalThis.exports('pushTextEntry', function (entry: string, ...components: TextEntryComponents) {
+globalThis.exports('pushTextEntry', function (entry: string, ...components: any) {
 	getCurrentContext().pushTextEntry(entry, ...components);
 });
 

@@ -236,9 +236,7 @@ export class Style {
 		};
 
 		this.label = {
-			text: {
-				offset: -0.005
-			}
+			text: { offset: -0.005 }
 		};
 
 		this.progressBar = {
@@ -255,10 +253,7 @@ export class Style {
 
 		this.slider = {
 			height: 0.004,
-			tickMark: {
-				width: 0.002,
-				height: 0.016
-			}
+			tickMarkSize: { x: 0.002, y: 0.016 }
 		};
 
 		this.spriteButton = {
@@ -277,11 +272,8 @@ export class Style {
 		};
 
 		this.window = {
-			margins: {
-				h: 0.01,
-				v: 0.018
-			},
-			spacing: [0.005, 0.01]
+			margins: { x: 0.01, y: 0.018 },
+			spacing: { x: 0.005, y: 0.01 }
 		};
 	}
 

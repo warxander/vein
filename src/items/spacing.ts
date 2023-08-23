@@ -8,8 +8,8 @@ export function declareExport() {
 		const isRowMode = painter.isRowMode();
 
 		const windowSpacing = painter.getWindowSpacing();
-		const w = isRowMode ? windowSpacing[0] * count : 0;
-		const h = isRowMode ? 0 : windowSpacing[1] * count;
+		const w = isRowMode ? windowSpacing.x * count : 0;
+		const h = isRowMode ? 0 : windowSpacing.y * count;
 
 		context.beginDraw(w, h);
 

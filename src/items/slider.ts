@@ -24,9 +24,9 @@ export function declareExport() {
 		let newValue = value;
 
 		const isHovered = input.isRectHovered(
-			painter.getX() - sliderStyle.tickMark.width / 2,
+			painter.getX() - sliderStyle.tickMarkSize.x / 2,
 			painter.getY(),
-			w + sliderStyle.tickMark.width,
+			w + sliderStyle.tickMarkSize.x,
 			h
 		);
 
@@ -46,8 +46,8 @@ export function declareExport() {
 		painter.setColor(properties.get<Color>('color'));
 		painter.drawRect(sx, sliderStyle.height);
 
-		painter.move(sx - sliderStyle.tickMark.width / 2, (sliderStyle.height - sliderStyle.tickMark.height) / 2);
-		painter.drawRect(sliderStyle.tickMark.width, sliderStyle.tickMark.height);
+		painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);
+		painter.drawRect(sliderStyle.tickMarkSize.x, sliderStyle.tickMarkSize.y);
 
 		context.endDraw();
 

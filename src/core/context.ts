@@ -1,4 +1,4 @@
-import { PositionInterface, TextEntryComponents, Vector2 } from '../common/types';
+import { TextEntryComponents, Vector2 } from '../common/types';
 import { Input } from './input';
 import { Painter } from './painter';
 
@@ -61,7 +61,7 @@ export class Context {
 	}
 
 	setWindowSpacing(x: number, y: number) {
-		this.windowFrameState.spacing = [x, y];
+		this.windowFrameState.spacing = new Vector2(x, y);
 	}
 
 	isWindowNoDrag(): boolean {
@@ -85,7 +85,7 @@ export class Context {
 		this.painter.beginWindow(x ?? 0.5, y ?? 0.5);
 	}
 
-	endWindow(): PositionInterface {
+	endWindow(): Vector2 {
 		const windowPos = this.painter.endWindow();
 
 		this.input.endWindow();
