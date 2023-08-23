@@ -50,72 +50,6 @@ export class StylePropertyValues {
 	}
 }
 
-const DEFAULT_STYLE = `button, check-box, sprite-button, text-edit {
-	background-color: #242730;
-	color: #FFFFF0;
-	font-family: 0;
-	font-size: 0.325em;
-}
-
-check-box:hover {
-	background-color: #242730;
-	color: #F50551;
-}
-
-button:hover, sprite-button:hover {
-	background-color: #F50551;
-	color: #FFFFF0;
-}
-
-heading {
-	color: #FFFFF0;
-	font-family: 0;
-	font-size: 0.45em;
-}
-
-label, text-area {
-	color: #C4C4BD;
-	font-family: 0;
-	font-size: 0.325em;
-}
-
-progress-bar {
-	background-color: #242730;
-	color: #009B67;
-}
-
-selectable {
-	accent-color: #009B67;
-	background-color: #32353D;
-	color: #FFFFF0;
-	font-family: 0;
-	font-size: 0.325em;
-}
-
-selectable:hover {
-	background-color: #242730;
-	color: #FFFFF0;
-}
-
-separator {
-	color: #242730;
-}
-
-slider {
-	background-color: #242730;
-	color: #C4C4BD;
-}
-
-slider:hover, text-edit:hover {
-	background-color: #242730;
-	color: #F50551;
-}
-
-window {
-	background-color: #32353D;
-	color: rgba(105, 255, 89, 0.125);
-}`;
-
 const DEFAULT_SELECTORS = new Set<String>([
 	'button',
 	'button:hover',
@@ -223,7 +157,7 @@ export class Style {
 
 	constructor() {
 		if (Style.defaultSelectorProperties === undefined)
-			Style.defaultSelectorProperties = this.parseSheet(DEFAULT_STYLE, false);
+			Style.defaultSelectorProperties = this.parseSheet(LoadResourceFile('vein', 'src/style.css'), false);
 
 		this.button = {
 			spacing: 0.005

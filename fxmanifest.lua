@@ -6,6 +6,10 @@ dependencies {
 	'webpack'
 }
 
+files {
+	'src/style.css'
+}
+
 client_script 'dist/vein.js'
 
 webpack_config 'webpack.config.js'

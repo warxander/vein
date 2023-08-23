@@ -12,8 +12,7 @@ Vein is using GTA V natives for rendering and most of UI customization can be do
 	1. [General](#general)
 	2. [Layout](#layout)
 	3. [Style](#style)
-		1. [Selectors](#selectors)
-		2. [Properties](#properties)
+		1. [Tips](#tips)
 	4. [Items](#items)
 ## Getting Started
 * Download and put into `resources/` directory
@@ -128,9 +127,9 @@ endRow()
 spacing([count])
 ```
 ### Style
+Check default [style.css](src/style.css) to know about supported selector names and properties.
 ```lua
 --! @brief setStyleSheet
---! @comment CSS-like format
 --! @param styleSheet: string
 setStyleSheet(styleSheet)
 
@@ -152,21 +151,9 @@ pushItemId(id)
 --! @param id: string
 setNextWindowId(id)
 ```
-#### Selectors
-`button`, `button:hover`, `check-box`, `check-box:hover`, `heading`, `label`, `progress-bar`, `selectable`,
-`selectable:hover`, `separator`, `slider`, `slider:hover`, `sprite-button`, `sprite-button:hover`, `text-area`, `text-edit`,
-`text-edit:hover`, `window`\
-Examples:
-* `button { }`
-* `#myButton.button { }`
-* `#mySlider:hover.slider:hover { }`
-#### Properties
-* `accent-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
-* `background-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
-* `background-image` (`url('textureDict', 'textureName')`, use `CreateRuntimeTextureFromImage` FiveM API for custom images)
-* `color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
-* `font-family` (`0`, use `RegisterFontId` FiveM API for custom fonts)
-* `font-size` (`0.15em`, equals `SetTextScale(1., 0.15)`)
+#### Tips
+* Use `RegisterFontId` FiveM API for custom fonts
+* Use `CreateRuntimeTextureFromImage` FiveM API for custom images
 ### Items
 ```lua
 --! @brief setNextTextEntry
