@@ -154,14 +154,15 @@ pushItemId(id)
 setNextWindowId(id)
 ```
 #### Selectors
-`button`, `button:hover`, `check-box`, `check-box:hover`, `heading`, `label`, `progress-bar`,
-`separator`, `slider`, `slider:hover`, `sprite-button`, `sprite-button:hover`, `text-area`, `text-edit`,
+`button`, `button:hover`, `check-box`, `check-box:hover`, `heading`, `label`, `progress-bar`, `selectable`,
+`selectable:hover`, `separator`, `slider`, `slider:hover`, `sprite-button`, `sprite-button:hover`, `text-area`, `text-edit`,
 `text-edit:hover`, `window`\
 Examples:
 * `button { }`
 * `#myButton.button { }`
 * `#mySlider:hover.slider:hover { }`
 #### Properties
+* `accent-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
 * `background-color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
 * `background-image` (`url('textureDict', 'textureName')`, use `CreateRuntimeTextureFromImage` FiveM API for custom images)
 * `color` (`#FEFEFE` or `rgba(254, 254, 254, 1.0)`)
@@ -222,6 +223,12 @@ label([text])
 --! @param max: number
 --! @param w: number
 progressBar(min, value, max [, w])
+
+--! @brief selectable
+--! @param isSelected: boolean
+--! @param text: string
+--! @return hasSelected: boolean
+local hasSelected = selectable(isSelected [, text])
 
 --! @brief separator
 --! @param w: number

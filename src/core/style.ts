@@ -81,7 +81,20 @@ label, text-area {
 
 progress-bar {
 	background-color: #242730;
-	color: rgba(0, 155, 103, 1.0);
+	color: #009B67;
+}
+
+selectable {
+	accent-color: #009B67;
+	background-color: #32353D;
+	color: #FFFFF0;
+	font-family: 0;
+	font-size: 0.325em;
+}
+
+selectable:hover {
+	background-color: #242730;
+	color: #FFFFF0;
 }
 
 separator {
@@ -116,6 +129,9 @@ const DEFAULT_SELECTORS = new Set<String>([
 
 	'progress-bar',
 
+	'selectable',
+	'selectable:hover',
+
 	'separator',
 
 	'slider',
@@ -133,6 +149,7 @@ const DEFAULT_SELECTORS = new Set<String>([
 ]);
 
 const KNOWN_PROPERTIES = new Map<string, StylePropertyValueType>([
+	['accent-color', StylePropertyValueType.Color],
 	['background-color', StylePropertyValueType.Color],
 	['background-image', StylePropertyValueType.Image],
 	['color', StylePropertyValueType.Color],
@@ -196,6 +213,7 @@ export class Style {
 	readonly checkbox;
 	readonly label;
 	readonly progressBar;
+	readonly selectable;
 	readonly separator;
 	readonly slider;
 	readonly spriteButton;
@@ -225,6 +243,10 @@ export class Style {
 
 		this.progressBar = {
 			height: 0.004
+		};
+
+		this.selectable = {
+			spacing: 0.005
 		};
 
 		this.separator = {
