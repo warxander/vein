@@ -1,9 +1,8 @@
-import { getCurrentContext } from '../index';
+import { context } from '../index';
 import { Color } from '../common/types';
 
-export function declareExport() {
+export function registerExport() {
 	globalThis.exports('label', function (text?: string) {
-		const context = getCurrentContext();
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 

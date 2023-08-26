@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../index';
+import { context } from '../index';
 import { wait } from '../core/utils';
 import { Color } from '../common/types';
 
@@ -7,7 +7,7 @@ interface TextEditResult {
 	text: string;
 }
 
-export function declareExport() {
+export function registerExport() {
 	globalThis.exports(
 		'textEdit',
 		async function (
@@ -16,7 +16,6 @@ export function declareExport() {
 			maxTextLength: number,
 			isSecretMode: boolean
 		): Promise<TextEditResult> {
-			const context = getCurrentContext();
 			const painter = context.getPainter();
 			const style = painter.getStyle();
 

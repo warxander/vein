@@ -1,10 +1,9 @@
-import { getCurrentContext } from '../index';
+import { context } from '../index';
 import { numberEquals } from '../core/utils';
 import { Color } from '../common/types';
 
-export function declareExport() {
+export function registerExport() {
 	globalThis.exports('progressBar', function (min: number, value: number, max: number, w?: number) {
-		const context = getCurrentContext();
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 

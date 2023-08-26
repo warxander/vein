@@ -1,9 +1,8 @@
-import { getCurrentContext } from '../index';
+import { context } from '../index';
 import { Style } from '../core/style';
 
-export function declareExport() {
+export function registerExport() {
 	globalThis.exports('sprite', function (dict: string, name: string, w: number, h: number) {
-		const context = getCurrentContext();
 		const painter = context.getPainter();
 
 		context.beginItem(w, h);

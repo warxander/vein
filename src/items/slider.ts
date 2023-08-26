@@ -1,4 +1,4 @@
-import { getCurrentContext } from '../index';
+import { context } from '../index';
 import { numberEquals } from '../core/utils';
 import { Color } from '../common/types';
 
@@ -7,9 +7,8 @@ interface SliderResult {
 	value: number;
 }
 
-export function declareExport() {
+export function registerExport() {
 	globalThis.exports('slider', function (min: number, value: number, max: number, w?: number): SliderResult {
-		const context = getCurrentContext();
 		const input = context.getInput();
 		const painter = context.getPainter();
 		const style = painter.getStyle();

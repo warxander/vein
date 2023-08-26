@@ -45,6 +45,15 @@ export class Context {
 	private textStack: Text[] = [];
 	private itemIdStack: string[] = [];
 	private skipDrawingNumber = 1;
+	private isDebugEnabled_ = false;
+
+	setDebugEnabled(enabled: boolean) {
+		this.isDebugEnabled_ = enabled;
+	}
+
+	isDebugEnabled(): boolean {
+		return this.isDebugEnabled_;
+	}
 
 	setWindowNoDrag(isNoDrag: boolean) {
 		if (isNoDrag) this.windowFrameState.windowFlags |= WindowFlags.NoDrag;

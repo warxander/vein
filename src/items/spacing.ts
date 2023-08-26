@@ -1,8 +1,7 @@
-import { getCurrentContext } from '../index';
+import { context } from '../index';
 
-export function declareExport() {
+export function registerExport() {
 	globalThis.exports('spacing', function (count = 1) {
-		const context = getCurrentContext();
 		const painter = context.getPainter();
 
 		const isRowMode = painter.isRowMode();

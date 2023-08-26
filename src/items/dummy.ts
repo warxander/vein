@@ -1,8 +1,7 @@
-import { getCurrentContext } from '../index';
+import { context } from '../index';
 
-export function declareExport() {
+export function registerExport() {
 	globalThis.exports('dummy', function (w: number, h: number) {
-		const context = getCurrentContext();
 		context.beginItem(w, h);
 		context.endItem();
 	});

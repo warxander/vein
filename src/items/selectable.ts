@@ -1,9 +1,8 @@
-import { getCurrentContext } from '../index';
+import { context } from '../index';
 import { Color } from '../common/types';
 
-export function declareExport() {
+export function registerExport() {
 	globalThis.exports('selectable', function (isSelected: boolean, text?: string): boolean {
-		const context = getCurrentContext();
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 

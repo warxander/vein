@@ -1,5 +1,4 @@
 import { Color, Image, TextEntryComponents, Vector2 } from '../common/types';
-import { getIsDebugEnabled } from '../index';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
 import { addTextComponents } from './utils';
@@ -324,7 +323,7 @@ export class Painter {
 	}
 
 	drawDebug(w: number, h = this.style.item.height) {
-		if (!this.isLayoutValid() || !getIsDebugEnabled()) return;
+		if (!this.isLayoutValid() || !this.context.isDebugEnabled()) return;
 
 		this.setPosition(this.itemGeometry.pos.x, this.itemGeometry.pos.y);
 		this.setColor(this.style.getProperty<Color>('window', 'color'));

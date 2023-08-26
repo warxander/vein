@@ -15,127 +15,116 @@ import * as SpriteButton from './items/spritebutton';
 import * as TextArea from './items/textarea';
 import * as TextEdit from './items/textedit';
 
-let isDebugEnabled: boolean = false;
-
-let currentContext: Context | undefined = undefined;
-const globalContext: Context = new Context();
-
-export function getCurrentContext(): Context {
-	return currentContext ?? globalContext;
-}
-
-export function getIsDebugEnabled(): boolean {
-	return isDebugEnabled;
-}
+export const context: Context = new Context();
 
 globalThis.exports('setDebugEnabled', function (enabled: boolean) {
-	isDebugEnabled = enabled;
+	context.setDebugEnabled(enabled);
 });
 
 globalThis.exports('isDebugEnabled', function (): boolean {
-	return getIsDebugEnabled();
+	return context.isDebugEnabled();
 });
 
 globalThis.exports('setNextWindowNoDrag', function (isNoDrag: boolean) {
-	getCurrentContext().setWindowNoDrag(isNoDrag);
+	context.setWindowNoDrag(isNoDrag);
 });
 
 globalThis.exports('setNextWindowNoBackground', function (isNoBackground: boolean) {
-	getCurrentContext().setWindowNoBackground(isNoBackground);
+	context.setWindowNoBackground(isNoBackground);
 });
 
 globalThis.exports('setNextWindowId', function (id: string) {
-	getCurrentContext().setWindowId(id);
+	context.setWindowId(id);
 });
 
 globalThis.exports('setNextWindowSpacing', function (x: number, y: number) {
-	getCurrentContext().setWindowSpacing(x, y);
+	context.setWindowSpacing(x, y);
 });
 
 globalThis.exports('beginWindow', function (x?: number, y?: number) {
-	getCurrentContext().beginWindow(x, y);
+	context.beginWindow(x, y);
 });
 
 globalThis.exports('endWindow', function (): any {
-	const windowPos = getCurrentContext().endWindow();
+	const windowPos = context.endWindow();
 	return { x: windowPos.x, y: windowPos.y };
 });
 
 globalThis.exports('isItemHovered', function (): boolean {
-	return getCurrentContext().isItemHovered();
+	return context.isItemHovered();
 });
 
 globalThis.exports('isItemClicked', function (): boolean {
-	return getCurrentContext().isItemClicked();
+	return context.isItemClicked();
 });
 
 globalThis.exports('setWindowSkipNextDrawing', function () {
-	getCurrentContext().setWindowSkipNextDrawing();
+	context.setWindowSkipNextDrawing();
 });
 
 globalThis.exports('beginRow', function () {
-	getCurrentContext().getPainter().beginRow();
+	context.getPainter().beginRow();
 });
 
 globalThis.exports('endRow', function () {
-	getCurrentContext().getPainter().endRow();
+	context.getPainter().endRow();
 });
 
 globalThis.exports('setNextTextEntry', function (entry: string, ...components: any) {
-	getCurrentContext().setNextTextEntry(entry, ...components);
+	context.setNextTextEntry(entry, ...components);
 });
 
 globalThis.exports('pushTextEntry', function (entry: string, ...components: any) {
-	getCurrentContext().pushTextEntry(entry, ...components);
+	context.pushTextEntry(entry, ...components);
 });
 
 globalThis.exports('popTextEntry', function () {
-	getCurrentContext().popTextEntry();
+	context.popTextEntry();
 });
 
 globalThis.exports('setNextItemWidth', function (w: number) {
-	getCurrentContext().setNextItemWidth(w);
+	context.setNextItemWidth(w);
 });
 
 globalThis.exports('pushItemWidth', function (w: number) {
-	getCurrentContext().pushItemWidth(w);
+	context.pushItemWidth(w);
 });
 
 globalThis.exports('popItemWidth', function () {
-	getCurrentContext().popItemWidth();
+	context.popItemWidth();
 });
 
 globalThis.exports('setStyleSheet', function (styleSheet: string) {
-	getCurrentContext().getPainter().getStyle().setSheet(styleSheet);
+	context.getPainter().getStyle().setSheet(styleSheet);
 });
 
 globalThis.exports('useDefaultStyle', function () {
-	getCurrentContext().getPainter().getStyle().useDefault();
+	context.getPainter().getStyle().useDefault();
 });
 
 globalThis.exports('setNextItemId', function (id: string) {
-	getCurrentContext().setNextItemId(id);
+	context.setNextItemId(id);
 });
 
 globalThis.exports('pushItemId', function (id: string) {
-	getCurrentContext().pushItemId(id);
+	context.pushItemId(id);
 });
 
 globalThis.exports('popItemId', function () {
-	getCurrentContext().popItemId();
+	context.popItemId();
 });
 
-Button.declareExport();
-Checkbox.declareExport();
-Dummy.declareExport();
-Heading.declareExport();
-Label.declareExport();
-ProgressBar.declareExport();
-Selectable.declareExport();
-Separator.declareExport();
-Slider.declareExport();
-Spacing.declareExport();
-Sprite.declareExport();
-SpriteButton.declareExport();
-TextArea.declareExport();
-TextEdit.declareExport();
+Button.registerExport();
+Checkbox.registerExport();
+Dummy.registerExport();
+Heading.registerExport();
+Label.registerExport();
+ProgressBar.registerExport();
+Selectable.registerExport();
+Separator.registerExport();
+Slider.registerExport();
+Spacing.registerExport();
+Sprite.registerExport();
+SpriteButton.registerExport();
+TextArea.registerExport();
+TextEdit.registerExport();
