@@ -117,12 +117,12 @@ export class Context {
 		return this.skipDrawingNumber != 0;
 	}
 
-	beginDraw(w: number, h: number) {
-		this.painter.beginDraw(w, h);
+	beginItem(w: number, h: number) {
+		this.painter.beginItem(w, h);
 	}
 
-	endDraw() {
-		this.painter.endDraw();
+	endItem() {
+		this.painter.endItem();
 
 		this.nextItemState.reset();
 	}
@@ -167,7 +167,7 @@ export class Context {
 		this.itemWidthStack.pop();
 	}
 
-	getItemWidth(): number | undefined {
+	tryGetItemWidth(): number | undefined {
 		return this.nextItemState.width ?? this.itemWidthStack[this.itemWidthStack.length - 1];
 	}
 
@@ -183,7 +183,7 @@ export class Context {
 		this.itemIdStack.pop();
 	}
 
-	getItemId(): string | undefined {
+	tryGetItemId(): string | undefined {
 		return this.nextItemState.id ?? this.itemIdStack[this.itemIdStack.length - 1];
 	}
 

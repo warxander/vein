@@ -7,7 +7,7 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		const id = context.getItemId() ?? 'sprite-button';
+		const id = context.tryGetItemId() ?? 'sprite-button';
 		const spriteButtonProperties = style.getProperties(id);
 		const font = spriteButtonProperties.get<number>('font-family');
 		const scale = spriteButtonProperties.get<number>('font-size');
@@ -18,11 +18,11 @@ export function declareExport() {
 		const sw = spriteButtonStyle.spriteWidth;
 
 		const w =
-			context.getItemWidth() ||
+			context.tryGetItemWidth() ||
 			painter.getTextWidth() + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
 		const h = style.item.height;
 
-		context.beginDraw(w, h);
+		context.beginItem(w, h);
 
 		const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : spriteButtonProperties;
 
@@ -42,7 +42,7 @@ export function declareExport() {
 		);
 		painter.drawText();
 
-		context.endDraw();
+		context.endItem();
 
 		return context.isItemClicked();
 	});

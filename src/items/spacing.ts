@@ -11,8 +11,8 @@ export function declareExport() {
 		const w = isRowMode ? windowSpacing.x * count : 0;
 		const h = isRowMode ? 0 : windowSpacing.y * count;
 
-		context.beginDraw(w, h);
+		context.beginItem(w, h);
 
-		context.endDraw();
+		context.endItem();
 	});
 }

@@ -7,7 +7,7 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		const id = context.getItemId() ?? 'check-box';
+		const id = context.tryGetItemId() ?? 'check-box';
 		const checkBoxProperties = style.getProperties(id);
 		const font = checkBoxProperties.get<number>('font-family');
 		const scale = checkBoxProperties.get<number>('font-size');
@@ -18,10 +18,10 @@ export function declareExport() {
 		const checkboxStyle = style.checkbox;
 		let cw = checkboxStyle.height / aspectRatio;
 
-		const w = context.getItemWidth() ?? cw + checkboxStyle.spacing + painter.getTextWidth();
+		const w = context.tryGetItemWidth() ?? cw + checkboxStyle.spacing + painter.getTextWidth();
 		const h = style.item.height;
 
-		context.beginDraw(w, h);
+		context.beginItem(w, h);
 
 		if (context.isItemClicked()) isChecked = !isChecked;
 
@@ -53,7 +53,7 @@ export function declareExport() {
 		);
 		painter.drawText();
 
-		context.endDraw();
+		context.endItem();
 
 		return isChecked;
 	});

@@ -42,7 +42,7 @@ export class Painter {
 	beginWindow(x: number, y: number) {
 		this.windowGeometry.pos.set(x, y);
 
-		this.setPos(
+		this.setPosition(
 			this.windowGeometry.pos.x - this.windowGeometry.size.x / 2,
 			this.windowGeometry.pos.y - this.windowGeometry.size.y / 2
 		);
@@ -138,7 +138,7 @@ export class Painter {
 			this.layoutState.size.y + this.rowState.size.y
 		);
 
-		this.setPos(
+		this.setPosition(
 			this.windowGeometry.pos.x - this.windowGeometry.size.x / 2 + this.style.window.margins.x,
 			this.pos.y + this.rowState.size.y
 		);
@@ -153,7 +153,7 @@ export class Painter {
 		return this.rowState.isInRowMode;
 	}
 
-	beginDraw(w: number, h: number) {
+	beginItem(w: number, h: number) {
 		if (this.layoutState.isFirstItem) this.move(this.style.window.margins.x, this.style.window.margins.y);
 		else {
 			let ho = 0;
@@ -175,7 +175,7 @@ export class Painter {
 		this.itemGeometry.size.set(w, h);
 	}
 
-	endDraw() {
+	endItem() {
 		const w = this.itemGeometry.size.x;
 		const h = this.itemGeometry.size.y;
 
@@ -183,11 +183,11 @@ export class Painter {
 
 		if (this.rowState.isInRowMode) {
 			this.rowState.size.set(this.rowState.size.x + w, Math.max(this.rowState.size.y, h));
-			this.setPos(this.itemGeometry.pos.x + w, this.itemGeometry.pos.y);
+			this.setPosition(this.itemGeometry.pos.x + w, this.itemGeometry.pos.y);
 			this.rowState.isFirstItem = false;
 		} else {
 			this.layoutState.size.set(Math.max(w, this.layoutState.size.x), this.layoutState.size.y + h);
-			this.setPos(this.itemGeometry.pos.x, this.itemGeometry.pos.y + h);
+			this.setPosition(this.itemGeometry.pos.x, this.itemGeometry.pos.y + h);
 		}
 
 		this.layoutState.isFirstItem = false;
@@ -213,7 +213,7 @@ export class Painter {
 		return this.windowSpacing;
 	}
 
-	setPos(x: number, y: number) {
+	setPosition(x: number, y: number) {
 		this.pos.x = x;
 		this.pos.y = y;
 	}
@@ -324,7 +324,7 @@ export class Painter {
 	drawDebug(w: number, h = this.style.item.height) {
 		if (!this.isLayoutValid() || !getIsDebugEnabled()) return;
 
-		this.setPos(this.itemGeometry.pos.x, this.itemGeometry.pos.y);
+		this.setPosition(this.itemGeometry.pos.x, this.itemGeometry.pos.y);
 		this.setColor(this.style.getProperty<Color>('window', 'color'));
 		this.drawRect(w, h);
 	}

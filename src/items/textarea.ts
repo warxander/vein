@@ -7,9 +7,9 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		w = (w ?? context.getItemWidth()) as number;
+		w = (w ?? context.tryGetItemWidth()) as number;
 
-		const properties = style.getProperties(context.getItemId() ?? 'text-area');
+		const properties = style.getProperties(context.tryGetItemId() ?? 'text-area');
 		const font = properties.get<number>('font-family');
 		const scale = properties.get<number>('font-size');
 
@@ -18,12 +18,12 @@ export function declareExport() {
 		const lc = painter.getTextLineCount();
 		const h = lc === 1 ? style.item.height : GetRenderedCharacterHeight(scale, font) * (lc + 1);
 
-		context.beginDraw(w, h);
+		context.beginItem(w, h);
 
 		painter.setColor(properties.get<Color>('color'));
 		if (lc == 1) painter.move(0, style.item.textOffset);
 		painter.drawText();
 
-		context.endDraw();
+		context.endItem();
 	});
 }

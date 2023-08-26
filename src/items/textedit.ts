@@ -22,10 +22,10 @@ export function declareExport() {
 
 			const _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE';
 
-			const w = context.getItemWidth() ?? maxTextLength * style.textEdit.symbolWidth;
+			const w = context.tryGetItemWidth() ?? maxTextLength * style.textEdit.symbolWidth;
 			const h = style.item.height;
 
-			context.beginDraw(w, h);
+			context.beginItem(w, h);
 
 			let newText = text;
 
@@ -46,7 +46,7 @@ export function declareExport() {
 				}
 			}
 
-			const id = context.getItemId() ?? 'text-edit';
+			const id = context.tryGetItemId() ?? 'text-edit';
 			const textEditProperties = style.getProperties(id);
 			const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : textEditProperties;
 
@@ -64,7 +64,7 @@ export function declareExport() {
 			);
 			painter.drawText();
 
-			context.endDraw();
+			context.endItem();
 
 			return { isTextChanged: newText != text, text: newText };
 		}

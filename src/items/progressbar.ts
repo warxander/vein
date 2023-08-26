@@ -8,13 +8,13 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		w = (w ?? context.getItemWidth()) as number;
+		w = (w ?? context.tryGetItemWidth()) as number;
 
-		context.beginDraw(w, style.item.height);
+		context.beginItem(w, style.item.height);
 
 		const h = style.progressBar.height;
 
-		const properties = style.getProperties(context.getItemId() ?? 'progress-bar');
+		const properties = style.getProperties(context.tryGetItemId() ?? 'progress-bar');
 
 		painter.setColor(properties.get<Color>('background-color'));
 		painter.move(0, (style.item.height - h) / 2);
@@ -27,6 +27,6 @@ export function declareExport() {
 			painter.drawRect(pw, h);
 		}
 
-		context.endDraw();
+		context.endItem();
 	});
 }

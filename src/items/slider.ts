@@ -14,10 +14,10 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		w = (w ?? context.getItemWidth()) as number;
+		w = (w ?? context.tryGetItemWidth()) as number;
 		const h = style.item.height;
 
-		context.beginDraw(w, h);
+		context.beginItem(w, h);
 
 		const sliderStyle = style.slider;
 
@@ -35,7 +35,7 @@ export function declareExport() {
 
 		const sh = (h - sliderStyle.height) / 2;
 
-		const id = context.getItemId() ?? 'slider';
+		const id = context.tryGetItemId() ?? 'slider';
 		const properties = style.getProperties(context.isItemHovered() ? `${id}:hover` : id);
 
 		painter.setColor(properties.get<Color>('background-color'));
@@ -49,7 +49,7 @@ export function declareExport() {
 		painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);
 		painter.drawRect(sliderStyle.tickMarkSize.x, sliderStyle.tickMarkSize.y);
 
-		context.endDraw();
+		context.endItem();
 
 		return { isValueChanged: !numberEquals(newValue, value), value: newValue };
 	});

@@ -7,17 +7,17 @@ export function declareExport() {
 		const painter = context.getPainter();
 		const style = painter.getStyle();
 
-		const id = context.getItemId() ?? 'selectable';
+		const id = context.tryGetItemId() ?? 'selectable';
 		const selectableProperties = style.getProperties(id);
 		const font = selectableProperties.get<number>('font-family');
 		const scale = selectableProperties.get<number>('font-size');
 
 		painter.setText(font, scale, text);
 
-		const w = context.getItemWidth() ?? painter.getTextWidth() + style.selectable.spacing * 2;
+		const w = context.tryGetItemWidth() ?? painter.getTextWidth() + style.selectable.spacing * 2;
 		const h = style.item.height;
 
-		context.beginDraw(w, h);
+		context.beginItem(w, h);
 
 		if (context.isItemClicked()) isSelected = !isSelected;
 
@@ -36,7 +36,7 @@ export function declareExport() {
 		);
 		painter.drawText();
 
-		context.endDraw();
+		context.endItem();
 
 		return isSelected;
 	});
