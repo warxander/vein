@@ -12,7 +12,8 @@ export function declareExport() {
 		const font = checkBoxProperties.get<number>('font-family');
 		const scale = checkBoxProperties.get<number>('font-size');
 
-		painter.setText(font, scale, text);
+		painter.setTextFont(font, scale);
+		if (text !== undefined) context.setNextTextEntry('STRING', text);
 
 		const aspectRatio = GetAspectRatio(false);
 		const checkboxStyle = style.checkbox;

@@ -11,7 +11,8 @@ export function declareExport() {
 		const font = properties.get<number>('font-family');
 		const scale = properties.get<number>('font-size');
 
-		painter.setText(font, scale, text);
+		painter.setTextFont(font, scale);
+		if (text !== undefined) context.setNextTextEntry('STRING', text);
 
 		const w = context.tryGetItemWidth() ?? painter.getTextWidth();
 		const h = style.item.height;

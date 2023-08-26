@@ -298,11 +298,13 @@ export class Painter {
 		return EndTextCommandLineCount(this.pos.x, this.pos.y);
 	}
 
-	setText(font: number, scale: number, text?: string, w?: number) {
+	setTextFont(font: number, scale: number) {
 		SetTextFont(font);
 		SetTextScale(1, scale);
-		if (text !== undefined) this.context.setNextTextEntry('STRING', text);
-		if (w !== undefined) SetTextWrap(this.pos.x, this.pos.x + w);
+	}
+
+	setTextWidth(w: number) {
+		SetTextWrap(this.pos.x, this.pos.x + w);
 	}
 
 	drawText() {

@@ -57,7 +57,9 @@ export function declareExport() {
 
 			const font = textEditProperties.get<number>('font-family');
 			const scale = textEditProperties.get<number>('font-size');
-			painter.setText(font, scale, isSecretMode ? text.replace(/./g, '*') : text);
+
+			painter.setTextFont(font, scale);
+			context.setNextTextEntry('STRING', isSecretMode ? text.replace(/./g, '*') : text);
 			painter.move(
 				style.textEdit.spacing,
 				(h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset

@@ -13,7 +13,9 @@ export function declareExport() {
 		const font = properties.get<number>('font-family');
 		const scale = properties.get<number>('font-size');
 
-		painter.setText(font, scale, text, w);
+		painter.setTextFont(font, scale);
+		if (text !== undefined) context.setNextTextEntry('STRING', text);
+		if (w !== undefined) painter.setTextWidth(w);
 
 		const lc = painter.getTextLineCount();
 		const h = lc === 1 ? style.item.height : GetRenderedCharacterHeight(scale, font) * (lc + 1);

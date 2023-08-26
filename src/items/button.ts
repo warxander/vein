@@ -12,7 +12,8 @@ export function declareExport() {
 		const font = buttonProperties.get<number>('font-family');
 		const scale = buttonProperties.get<number>('font-size');
 
-		painter.setText(font, scale, text);
+		painter.setTextFont(font, scale);
+		if (text !== undefined) context.setNextTextEntry('STRING', text);
 
 		const w = context.tryGetItemWidth() ?? painter.getTextWidth() + style.button.spacing * 2;
 		const h = style.item.height;
