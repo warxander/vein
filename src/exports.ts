@@ -150,14 +150,17 @@ export function isDebugEnabled(): boolean {
 	return context.isDebugEnabled();
 }
 
+/** `false` by default */
 export function setNextWindowNoDrag(isNoDrag: boolean) {
 	context.setWindowNoDrag(isNoDrag);
 }
 
+/** `false` by default */
 export function setNextWindowNoBackground(isNoBackground: boolean) {
 	context.setWindowNoBackground(isNoBackground);
 }
 
+/** Used as a selector name */
 export function setNextWindowId(id: string) {
 	context.setWindowId(id);
 }
@@ -174,14 +177,17 @@ export function endWindow(): Vector2 {
 	return context.endWindow();
 }
 
+/** `true` if the last drawn item was hovered */
 export function isItemHovered(): boolean {
 	return context.isItemHovered();
 }
 
+/** `true` if the last drawn item was clicked */
 export function isItemClicked(): boolean {
 	return context.isItemClicked();
 }
 
+/** Eliminates visual redrawing artifacts if the item layout was drastically changed */
 export function setWindowSkipNextDrawing() {
 	context.setWindowSkipNextDrawing();
 }
@@ -226,10 +232,12 @@ export function useDefaultStyle() {
 	context.getPainter().getStyle().useDefault();
 }
 
+/** Used as a selector name */
 export function setNextItemId(id: string) {
 	context.setNextItemId(id);
 }
 
+/** Used as a selector name */
 export function pushItemId(id: string) {
 	context.pushItemId(id);
 }

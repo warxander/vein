@@ -2,6 +2,7 @@ import { context } from '../exports';
 import { numberEquals } from '../core/utils';
 import { Color } from '../exports';
 
+/** Width is required */
 export function progressBar(min: number, value: number, max: number, w?: number) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();

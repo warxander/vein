@@ -1,6 +1,7 @@
 import { context } from '../exports';
 import { Color } from '../exports';
 
+/** Pass both parameters or use both {@link setNextTextEntry} and {@link setNextItemWidth} */
 export function textArea(text?: string, w?: number) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();

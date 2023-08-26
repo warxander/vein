@@ -1,5 +1,6 @@
 import { context } from '../exports';
 
+/** Horizontal if in row mode, vertical otherwise */
 export function spacing(count = 1) {
 	const painter = context.getPainter();
 
