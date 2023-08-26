@@ -1,4 +1,4 @@
-import { Color, Image, TextEntryComponents, Vector2 } from '../common/types';
+import { Color, Image, TextEntryComponents, Vector2 } from '../exports';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
 import { addTextComponents } from './utils';

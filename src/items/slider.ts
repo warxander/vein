@@ -1,55 +1,53 @@
-import { context } from '../index';
+import { context } from '../exports';
 import { numberEquals } from '../core/utils';
-import { Color } from '../common/types';
+import { Color } from '../exports';
 
-interface SliderResult {
+export interface ISliderResult {
 	isValueChanged: boolean;
 	value: number;
 }
 
-export function registerExport() {
-	globalThis.exports('slider', function (min: number, value: number, max: number, w?: number): SliderResult {
-		const input = context.getInput();
-		const painter = context.getPainter();
-		const style = painter.getStyle();
+export function slider(min: number, value: number, max: number, w?: number): ISliderResult {
+	const input = context.getInput();
+	const painter = context.getPainter();
+	const style = painter.getStyle();
 
-		w = (w ?? context.tryGetItemWidth()) as number;
-		const h = style.item.height;
+	w = (w ?? context.tryGetItemWidth()) as number;
+	const h = style.item.height;
 
-		context.beginItem(w, h);
+	context.beginItem(w, h);
 
-		const sliderStyle = style.slider;
+	const sliderStyle = style.slider;
 
-		let newValue = value;
+	let newValue = value;
 
-		const isHovered = input.isRectHovered(
-			painter.getX() - sliderStyle.tickMarkSize.x / 2,
-			painter.getY(),
-			w + sliderStyle.tickMarkSize.x,
-			h
-		);
+	const isHovered = input.isRectHovered(
+		painter.getX() - sliderStyle.tickMarkSize.x / 2,
+		painter.getY(),
+		w + sliderStyle.tickMarkSize.x,
+		h
+	);
 
-		if (isHovered && (input.getIsLmbDown() || input.getIsLmbPressed()))
-			newValue = Math.min(max, Math.max(min, min + ((input.getMousePos().x - painter.getX()) / w) * (max + min)));
+	if (isHovered && (input.getIsLmbDown() || input.getIsLmbPressed()))
+		newValue = Math.min(max, Math.max(min, min + ((input.getMousePos().x - painter.getX()) / w) * (max + min)));
 
-		const sh = (h - sliderStyle.height) / 2;
+	const sh = (h - sliderStyle.height) / 2;
 
-		const id = context.tryGetItemId() ?? 'slider';
-		const properties = style.getProperties(context.isItemHovered() ? `${id}:hover` : id);
+	const id = context.tryGetItemId() ?? 'slider';
+	const properties = style.getProperties(context.isItemHovered() ? `${id}:hover` : id);
 
-		painter.setColor(properties.get<Color>('background-color'));
-		painter.move(0, sh);
-		painter.drawRect(w, sliderStyle.height);
+	painter.setColor(properties.get<Color>('background-color'));
+	painter.move(0, sh);
+	painter.drawRect(w, sliderStyle.height);
 
-		const sx = (w * value) / (max + min);
-		painter.setColor(properties.get<Color>('color'));
-		painter.drawRect(sx, sliderStyle.height);
+	const sx = (w * value) / (max + min);
+	painter.setColor(properties.get<Color>('color'));
+	painter.drawRect(sx, sliderStyle.height);
 
-		painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);
-		painter.drawRect(sliderStyle.tickMarkSize.x, sliderStyle.tickMarkSize.y);
+	painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);
+	painter.drawRect(sliderStyle.tickMarkSize.x, sliderStyle.tickMarkSize.y);
 
-		context.endItem();
+	context.endItem();
 
-		return { isValueChanged: !numberEquals(newValue, value), value: newValue };
-	});
+	return { isValueChanged: !numberEquals(newValue, value), value: newValue };
 }

@@ -1,8 +1,6 @@
-import { context } from '../index';
+import { context } from '../exports';
 
-export function registerExport() {
-	globalThis.exports('dummy', function (w: number, h: number) {
-		context.beginItem(w, h);
-		context.endItem();
-	});
+export function dummy(w: number, h: number) {
+	context.beginItem(w, h);
+	context.endItem();
 }

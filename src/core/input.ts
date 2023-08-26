@@ -1,4 +1,4 @@
-import { Vector2 } from '../common/types';
+import { Vector2 } from '../exports';
 
 class State {
 	mousePos = new Vector2();

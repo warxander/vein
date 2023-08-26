@@ -1,4 +1,4 @@
-import { TextEntryComponents } from '../common/types';
+import { TextEntryComponents } from '../exports';
 
 const PIXEL_EPSILON = 0.0005;
 

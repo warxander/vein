@@ -1,130 +1,55 @@
-import { Context } from './core/context';
+import * as Exports from './exports';
 
-import * as Button from './items/button';
-import * as Checkbox from './items/checkbox';
-import * as Dummy from './items/dummy';
-import * as Heading from './items/heading';
-import * as Label from './items/label';
-import * as ProgressBar from './items/progressbar';
-import * as Selectable from './items/selectable';
-import * as Separator from './items/separator';
-import * as Slider from './items/slider';
-import * as Spacing from './items/spacing';
-import * as Sprite from './items/sprite';
-import * as SpriteButton from './items/spritebutton';
-import * as TextArea from './items/textarea';
-import * as TextEdit from './items/textedit';
+globalThis.exports('getContext', Exports.getContext);
 
-export const context: Context = new Context();
+globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
+globalThis.exports('isDebugEnabled', Exports.isDebugEnabled);
 
-globalThis.exports('setDebugEnabled', function (enabled: boolean) {
-	context.setDebugEnabled(enabled);
-});
+globalThis.exports('setNextWindowNoDrag', Exports.setNextWindowNoDrag);
+globalThis.exports('setNextWindowNoBackground', Exports.setNextWindowNoBackground);
+globalThis.exports('setNextWindowId', Exports.setNextWindowId);
+globalThis.exports('setNextWindowSpacing', Exports.setNextWindowSpacing);
 
-globalThis.exports('isDebugEnabled', function (): boolean {
-	return context.isDebugEnabled();
-});
-
-globalThis.exports('setNextWindowNoDrag', function (isNoDrag: boolean) {
-	context.setWindowNoDrag(isNoDrag);
-});
-
-globalThis.exports('setNextWindowNoBackground', function (isNoBackground: boolean) {
-	context.setWindowNoBackground(isNoBackground);
-});
-
-globalThis.exports('setNextWindowId', function (id: string) {
-	context.setWindowId(id);
-});
-
-globalThis.exports('setNextWindowSpacing', function (x: number, y: number) {
-	context.setWindowSpacing(x, y);
-});
-
-globalThis.exports('beginWindow', function (x?: number, y?: number) {
-	context.beginWindow(x, y);
-});
-
+globalThis.exports('beginWindow', Exports.beginWindow);
 globalThis.exports('endWindow', function (): any {
-	const windowPos = context.endWindow();
-	return { x: windowPos.x, y: windowPos.y };
+	const windowPosition = Exports.endWindow();
+	return { x: windowPosition.x, y: windowPosition.y };
 });
 
-globalThis.exports('isItemHovered', function (): boolean {
-	return context.isItemHovered();
-});
+globalThis.exports('isItemHovered', Exports.isItemHovered);
+globalThis.exports('isItemClicked', Exports.isItemClicked);
 
-globalThis.exports('isItemClicked', function (): boolean {
-	return context.isItemClicked();
-});
+globalThis.exports('setWindowSkipNextDrawing', Exports.setWindowSkipNextDrawing);
 
-globalThis.exports('setWindowSkipNextDrawing', function () {
-	context.setWindowSkipNextDrawing();
-});
+globalThis.exports('beginRow', Exports.beginRow);
+globalThis.exports('endRow', Exports.endRow);
 
-globalThis.exports('beginRow', function () {
-	context.getPainter().beginRow();
-});
+globalThis.exports('setNextTextEntry', Exports.setNextTextEntry);
+globalThis.exports('pushTextEntry', Exports.pushTextEntry);
+globalThis.exports('popTextEntry', Exports.popTextEntry);
 
-globalThis.exports('endRow', function () {
-	context.getPainter().endRow();
-});
+globalThis.exports('setNextItemWidth', Exports.setNextItemWidth);
+globalThis.exports('pushItemWidth', Exports.pushItemWidth);
+globalThis.exports('popItemWidth', Exports.popItemWidth);
 
-globalThis.exports('setNextTextEntry', function (entry: string, ...components: any) {
-	context.setNextTextEntry(entry, ...components);
-});
+globalThis.exports('setStyleSheet', Exports.setStyleSheet);
+globalThis.exports('useDefaultStyle', Exports.useDefaultStyle);
 
-globalThis.exports('pushTextEntry', function (entry: string, ...components: any) {
-	context.pushTextEntry(entry, ...components);
-});
+globalThis.exports('setNextItemId', Exports.setNextItemId);
+globalThis.exports('pushItemId', Exports.pushItemId);
+globalThis.exports('popItemId', Exports.popItemId);
 
-globalThis.exports('popTextEntry', function () {
-	context.popTextEntry();
-});
-
-globalThis.exports('setNextItemWidth', function (w: number) {
-	context.setNextItemWidth(w);
-});
-
-globalThis.exports('pushItemWidth', function (w: number) {
-	context.pushItemWidth(w);
-});
-
-globalThis.exports('popItemWidth', function () {
-	context.popItemWidth();
-});
-
-globalThis.exports('setStyleSheet', function (styleSheet: string) {
-	context.getPainter().getStyle().setSheet(styleSheet);
-});
-
-globalThis.exports('useDefaultStyle', function () {
-	context.getPainter().getStyle().useDefault();
-});
-
-globalThis.exports('setNextItemId', function (id: string) {
-	context.setNextItemId(id);
-});
-
-globalThis.exports('pushItemId', function (id: string) {
-	context.pushItemId(id);
-});
-
-globalThis.exports('popItemId', function () {
-	context.popItemId();
-});
-
-Button.registerExport();
-Checkbox.registerExport();
-Dummy.registerExport();
-Heading.registerExport();
-Label.registerExport();
-ProgressBar.registerExport();
-Selectable.registerExport();
-Separator.registerExport();
-Slider.registerExport();
-Spacing.registerExport();
-Sprite.registerExport();
-SpriteButton.registerExport();
-TextArea.registerExport();
-TextEdit.registerExport();
+globalThis.exports('button', Exports.button);
+globalThis.exports('checkBox', Exports.checkBox);
+globalThis.exports('dummy', Exports.dummy);
+globalThis.exports('heading', Exports.heading);
+globalThis.exports('label', Exports.label);
+globalThis.exports('progressBar', Exports.progressBar);
+globalThis.exports('selectable', Exports.selectable);
+globalThis.exports('separator', Exports.separator);
+globalThis.exports('slider', Exports.slider);
+globalThis.exports('spacing', Exports.spacing);
+globalThis.exports('sprite', Exports.sprite);
+globalThis.exports('spriteButton', Exports.spriteButton);
+globalThis.exports('textArea', Exports.textArea);
+globalThis.exports('textEdit', Exports.textEdit);

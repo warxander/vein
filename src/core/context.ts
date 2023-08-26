@@ -1,4 +1,4 @@
-import { TextEntryComponents, Vector2 } from '../common/types';
+import { TextEntryComponents, Vector2 } from '../exports';
 import { Input } from './input';
 import { Painter } from './painter';
 

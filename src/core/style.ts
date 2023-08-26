@@ -1,4 +1,4 @@
-import { Color, Image, FontSize } from '../common/types';
+import { Color, Image, FontSize } from '../exports';
 
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
