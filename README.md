@@ -1,56 +1,32 @@
-# Vein
-Vein is a FiveM [IMGUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) framework.\
-It's written on TypeScript and uses [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) to be available from other resources.\
-Vein is using GTA V graphics API for rendering and most of UI customization can be done via CSS stylesheet.
+# Vein: an easy-to-use GUI library for FiveM
+Vein is an [immediate mode](https://en.wikipedia.org/wiki/Immediate_mode_GUI) GUI library for [FiveM](https://fivem.net/).\
+The main goal was to create a newbie-friendly and fun-to-use GUI library without Web technologies.\
+Vein uses GTA V graphics API for input handling and rendering.\
+It is written on [TypeScript](https://www.typescriptlang.org/), but you can use it with your favourite programming language, thanks to FiveM [exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) mechanism.\
+Vein provides a decent built-in items library, which you can customize or extend with your own items.
 
 ![alt text](https://raw.githubusercontent.com/warxander/vein-demo/master/demo.png)
-## Getting Started
+## Quick Start
 * Download and put into `resources/` directory
 * Add `ensure vein` to `server.cfg`
-### Example
+## Features
+### Immediate mode
 ```lua
--- Lua
-
 local vein = exports.vein
-
-local windowPos = { }
-local isWindowOpened = true
-
-while isWindowOpened do
-	Citizen.Wait(0)
-
-	-- Call setNextWindow* methods
-
-	vein:beginWindow(windowPos.x, windowPos.y)
-
-	-- Call items API to draw them in a column
-
-	vein:beginRow()
-		-- Call items API to draw them in a row
-	vein:endRow()
-
-	if vein:button('Close') then -- Draw 'Close' button and check if it is clicked
-		isWindowOpened = false
-	end
-
-	vein:label('Hello Vein')
-	if vein:isItemHovered() then -- Check if the last drawn item is hovered
-		if vein:isItemClicked() then
-			-- Check if the last drawn item is clicked
-		end
-	end
-
-	windowPos = vein:endWindow()
+vein:beginWindow()
+if vein:button('Click Me') then
+  print('Hello World!')
 end
+vein:endWindow()
 ```
-Check this [demo](https://github.com/warxander/vein-demo) to learn more.
-### Limitations
-These features are not supported due to GTA V graphics API limitations:
-* Clipping
-* Rotation
-* Circles
-
-These features are not supported by design (maybe subject to change):
-* Nested rows
-## API
-Visit [docs website](https://warxander.github.io/vein/) for documentation.
+### Documentation
+Visit [Vein website](https://warxander.github.io/vein/) for documentation.
+### Extensibility
+Vein provides an API to write your own items.\
+_TODO: Example_
+### Customization
+Vein supports a CSS subset for customizing built-in and your own items.\
+Use default [style.css](src/style.css) as a template.
+### Demo
+Follow [Vein demo](https://github.com/warxander/vein-demo) as an example for your own GUI.\
+Run it as FiveM server resource to see how Vein looks like in game (use `/veinDemo` command).
