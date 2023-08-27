@@ -17,7 +17,7 @@ export function heading(text: string) {
 	context.beginItem(w, h);
 
 	painter.setColor(properties.get<Color>('color'));
-	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2);
+	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText();
 
 	context.endItem();
