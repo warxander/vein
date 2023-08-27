@@ -1,11 +1,10 @@
 import { context } from '../exports';
 import { Color } from '../exports';
 
-export function separator(w?: number) {
+export function separator(w: number) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	w = (w ?? context.tryGetItemWidth()) as number;
 	const h = style.item.height;
 
 	context.beginItem(w, h);

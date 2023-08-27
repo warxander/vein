@@ -2,12 +2,9 @@ import { context } from '../exports';
 import { numberEquals } from '../core/utils';
 import { Color } from '../exports';
 
-/** Width is required */
-export function progressBar(min: number, value: number, max: number, w?: number) {
+export function progressBar(min: number, value: number, max: number, w: number) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
-
-	w = (w ?? context.tryGetItemWidth()) as number;
 
 	context.beginItem(w, style.item.height);
 

@@ -7,13 +7,11 @@ export interface ISliderResult {
 	value: number;
 }
 
-/** Width is required */
-export function slider(min: number, value: number, max: number, w?: number): ISliderResult {
+export function slider(min: number, value: number, max: number, w: number): ISliderResult {
 	const input = context.getInput();
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
-	w = (w ?? context.tryGetItemWidth()) as number;
 	const h = style.item.height;
 
 	context.beginItem(w, h);
