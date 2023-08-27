@@ -10,8 +10,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	const font = checkBoxProperties.get<number>('font-family');
 	const scale = checkBoxProperties.get<number>('font-size');
 
-	painter.setTextFont(font, scale);
-	painter.setText(text);
+	painter.setText(font, scale, text);
 
 	const aspectRatio = GetAspectRatio(false);
 	const checkboxStyle = style.checkbox;

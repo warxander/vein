@@ -10,8 +10,7 @@ export function button(text: string): boolean {
 	const font = buttonProperties.get<number>('font-family');
 	const scale = buttonProperties.get<number>('font-size');
 
-	painter.setTextFont(font, scale);
-	painter.setText(text);
+	painter.setText(font, scale, text);
 
 	const w = context.tryGetItemWidth() ?? painter.getTextWidth() + style.button.spacing * 2;
 	const h = style.item.height;

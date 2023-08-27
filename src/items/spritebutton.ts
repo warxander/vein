@@ -10,8 +10,7 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	const font = spriteButtonProperties.get<number>('font-family');
 	const scale = spriteButtonProperties.get<number>('font-size');
 
-	painter.setTextFont(font, scale);
-	painter.setText(text);
+	painter.setText(font, scale, text);
 
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;

@@ -61,8 +61,7 @@ export interface IPainter {
 
 	drawSprite(dict: string, name: string, w: number, h: number): void;
 
-	setTextFont(font: number, scale: number): void;
-	setText(text: string): void;
+	setText(font: number, scale: number, text: string): void;
 	setTextWidth(w: number): void;
 	getTextWidth(): number;
 	drawText(): void;
@@ -113,12 +112,8 @@ export function getContext(): IContext {
 					context.getPainter().drawSprite(dict, name, w, h);
 				},
 
-				setTextFont(font: number, scale: number) {
-					context.getPainter().setTextFont(font, scale);
-				},
-
-				setText(text: string) {
-					context.getPainter().setText(text);
+				setText(font: number, scale: number, text: string) {
+					context.getPainter().setText(font, scale, text);
 				},
 
 				setTextWidth(w: number) {

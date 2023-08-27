@@ -289,18 +289,16 @@ export class Painter {
 		return EndTextCommandLineCount(this.pos.x, this.pos.y);
 	}
 
-	setTextFont(font: number, scale: number) {
+	setText(font: number, scale: number, text: string) {
 		SetTextFont(font);
 		SetTextScale(1, scale);
+
+		++this.layoutState.textEntryIndex;
+		AddTextEntry(this.getTextEntry(), text);
 	}
 
 	setTextWidth(w: number) {
 		SetTextWrap(this.pos.x, this.pos.x + w);
-	}
-
-	setText(text: string) {
-		++this.layoutState.textEntryIndex;
-		AddTextEntry(this.getTextEntry(), text);
 	}
 
 	drawText() {

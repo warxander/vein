@@ -9,9 +9,8 @@ export function textArea(text: string, w: number) {
 	const font = properties.get<number>('font-family');
 	const scale = properties.get<number>('font-size');
 
-	painter.setTextFont(font, scale);
 	painter.setTextWidth(w);
-	painter.setText(text);
+	painter.setText(font, scale, text);
 
 	const lc = painter.getTextLineCount();
 	const h = lc === 1 ? style.item.height : GetRenderedCharacterHeight(scale, font) * (lc + 1);

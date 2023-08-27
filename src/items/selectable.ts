@@ -10,8 +10,7 @@ export function selectable(isSelected: boolean, text: string): boolean {
 	const font = selectableProperties.get<number>('font-family');
 	const scale = selectableProperties.get<number>('font-size');
 
-	painter.setTextFont(font, scale);
-	painter.setText(text);
+	painter.setText(font, scale, text);
 
 	const w = context.tryGetItemWidth() ?? painter.getTextWidth() + style.selectable.spacing * 2;
 	const h = style.item.height;

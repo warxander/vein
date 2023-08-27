@@ -9,8 +9,7 @@ export function label(text: string) {
 	const font = properties.get<number>('font-family');
 	const scale = properties.get<number>('font-size');
 
-	painter.setTextFont(font, scale);
-	painter.setText(text);
+	painter.setText(font, scale, text);
 
 	const w = context.tryGetItemWidth() ?? painter.getTextWidth();
 	const h = style.item.height;
