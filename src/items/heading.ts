@@ -1,7 +1,7 @@
 import { context } from '../exports';
 import { Color } from '../exports';
 
-export function heading(text?: string) {
+export function heading(text: string) {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
@@ -10,7 +10,7 @@ export function heading(text?: string) {
 	const scale = properties.get<number>('font-size');
 
 	painter.setTextFont(font, scale);
-	if (text !== undefined) context.setNextTextEntry('STRING', text);
+	painter.setText(text);
 
 	const w = context.tryGetItemWidth() ?? painter.getTextWidth();
 	const h = style.item.height;

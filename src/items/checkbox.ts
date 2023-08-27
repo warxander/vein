@@ -1,7 +1,7 @@
 import { context } from '../exports';
 import { Color } from '../exports';
 
-export function checkBox(isChecked: boolean, text?: string): boolean {
+export function checkBox(isChecked: boolean, text: string): boolean {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
@@ -11,7 +11,7 @@ export function checkBox(isChecked: boolean, text?: string): boolean {
 	const scale = checkBoxProperties.get<number>('font-size');
 
 	painter.setTextFont(font, scale);
-	if (text !== undefined) context.setNextTextEntry('STRING', text);
+	painter.setText(text);
 
 	const aspectRatio = GetAspectRatio(false);
 	const checkboxStyle = style.checkbox;

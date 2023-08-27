@@ -1,19 +1,13 @@
-import { TextEntryComponents, Vector2 } from '../exports';
+import { Vector2 } from '../exports';
 import { Input } from './input';
 import { Painter } from './painter';
 
-class Text {
-	constructor(public entry: string, public components: TextEntryComponents) {}
-}
-
 class NextItemState {
 	id?: string;
-	text?: Text;
 	width?: number;
 
 	reset() {
 		this.id = undefined;
-		this.text = undefined;
 		this.width = undefined;
 	}
 }
@@ -42,7 +36,6 @@ export class Context {
 	private windowFrameState = new WindowFrameState();
 	private nextItemState = new NextItemState();
 	private itemWidthStack: number[] = [];
-	private textStack: Text[] = [];
 	private itemIdStack: string[] = [];
 	private skipDrawingNumber = 1;
 	private isDebugEnabled_ = false;
@@ -89,9 +82,9 @@ export class Context {
 		return this.windowFrameState.spacing;
 	}
 
-	beginWindow(x?: number, y?: number) {
+	beginWindow(x: number, y: number) {
 		this.input.beginWindow();
-		this.painter.beginWindow(x ?? 0.5, y ?? 0.5);
+		this.painter.beginWindow(x, y);
 	}
 
 	endWindow(): Vector2 {
@@ -134,34 +127,6 @@ export class Context {
 		this.painter.endItem();
 
 		this.nextItemState.reset();
-	}
-
-	setNextTextEntry(entry: string, ...components: TextEntryComponents) {
-		this.nextItemState.text = {
-			entry: entry,
-			components: components
-		};
-	}
-
-	pushTextEntry(entry: string, ...components: TextEntryComponents) {
-		this.textStack.push({
-			entry: entry,
-			components: components
-		});
-	}
-
-	popTextEntry() {
-		this.textStack.pop();
-	}
-
-	getTextEntry(): string | undefined {
-		if (this.nextItemState.text) return this.nextItemState.text.entry;
-		return this.textStack[this.textStack.length - 1]?.entry;
-	}
-
-	getTextComponents(): TextEntryComponents | undefined {
-		if (this.nextItemState.text) return this.nextItemState.text.components;
-		return this.textStack[this.textStack.length - 1]?.components;
 	}
 
 	setNextItemWidth(w: number) {

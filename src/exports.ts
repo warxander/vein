@@ -24,8 +24,6 @@ export type FontSize = number;
 /** @ignore */
 export type Image = [string, string];
 
-export type TextEntryComponents = Array<string | number>;
-
 export class Vector2 {
 	constructor(public x: number = 0, public y: number = 0) {}
 
@@ -42,8 +40,8 @@ export interface IContext {
 	beginItem(w: number, h: number): void;
 	endItem(): void;
 
-	tryGetItemWidth(): number | undefined;
-	tryGetItemId(): string | undefined;
+	tryGetItemWidth(): number | null;
+	tryGetItemId(): string | null;
 
 	getPainter(): IPainter;
 
@@ -64,6 +62,7 @@ export interface IPainter {
 	drawSprite(dict: string, name: string, w: number, h: number): void;
 
 	setTextFont(font: number, scale: number): void;
+	setText(text: string): void;
 	setTextWidth(w: number): void;
 	getTextWidth(): number;
 	drawText(): void;
@@ -79,12 +78,12 @@ export function getContext(): IContext {
 			context.endItem();
 		},
 
-		tryGetItemWidth(): number | undefined {
-			return context.tryGetItemWidth();
+		tryGetItemWidth(): number | null {
+			return context.tryGetItemWidth() ?? null;
 		},
 
-		tryGetItemId(): string | undefined {
-			return context.tryGetItemId();
+		tryGetItemId(): string | null {
+			return context.tryGetItemId() ?? null;
 		},
 
 		getPainter(): IPainter {
@@ -116,6 +115,10 @@ export function getContext(): IContext {
 
 				setTextFont(font: number, scale: number) {
 					context.getPainter().setTextFont(font, scale);
+				},
+
+				setText(text: string) {
+					context.getPainter().setText(text);
 				},
 
 				setTextWidth(w: number) {
@@ -169,8 +172,8 @@ export function setNextWindowSpacing(x: number, y: number) {
 	context.setWindowSpacing(x, y);
 }
 
-export function beginWindow(x?: number, y?: number) {
-	context.beginWindow(x, y);
+export function beginWindow(x: number | null, y: number | null) {
+	context.beginWindow(x !== null ? x : 0.5, y !== null ? y : 0.5);
 }
 
 export function endWindow(): Vector2 {
@@ -198,18 +201,6 @@ export function beginRow() {
 
 export function endRow() {
 	context.getPainter().endRow();
-}
-
-export function setNextTextEntry(entry: string, ...components: TextEntryComponents) {
-	context.setNextTextEntry(entry, ...components);
-}
-
-export function pushTextEntry(entry: string, ...components: TextEntryComponents) {
-	context.pushTextEntry(entry, ...components);
-}
-
-export function popTextEntry() {
-	context.popTextEntry();
 }
 
 export function setNextItemWidth(w: number) {

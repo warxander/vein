@@ -1,7 +1,7 @@
 import { context } from '../exports';
 import { Color } from '../exports';
 
-export function spriteButton(dict: string, name: string, text?: string): boolean {
+export function spriteButton(dict: string, name: string, text: string): boolean {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
@@ -11,7 +11,7 @@ export function spriteButton(dict: string, name: string, text?: string): boolean
 	const scale = spriteButtonProperties.get<number>('font-size');
 
 	painter.setTextFont(font, scale);
-	if (text !== undefined) context.setNextTextEntry('STRING', text);
+	painter.setText(text);
 
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;

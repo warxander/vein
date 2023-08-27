@@ -55,7 +55,7 @@ export async function textEdit(
 	const scale = textEditProperties.get<number>('font-size');
 
 	painter.setTextFont(font, scale);
-	context.setNextTextEntry('STRING', isSecretMode ? text.replace(/./g, '*') : text);
+	painter.setText(isSecretMode ? text.replace(/./g, '*') : text);
 	painter.move(style.textEdit.spacing, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText();
 

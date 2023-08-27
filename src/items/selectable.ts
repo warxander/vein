@@ -1,7 +1,7 @@
 import { context } from '../exports';
 import { Color } from '../exports';
 
-export function selectable(isSelected: boolean, text?: string): boolean {
+export function selectable(isSelected: boolean, text: string): boolean {
 	const painter = context.getPainter();
 	const style = painter.getStyle();
 
@@ -11,7 +11,7 @@ export function selectable(isSelected: boolean, text?: string): boolean {
 	const scale = selectableProperties.get<number>('font-size');
 
 	painter.setTextFont(font, scale);
-	if (text !== undefined) context.setNextTextEntry('STRING', text);
+	painter.setText(text);
 
 	const w = context.tryGetItemWidth() ?? painter.getTextWidth() + style.selectable.spacing * 2;
 	const h = style.item.height;

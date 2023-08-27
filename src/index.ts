@@ -24,10 +24,6 @@ globalThis.exports('setWindowSkipNextDrawing', Exports.setWindowSkipNextDrawing)
 globalThis.exports('beginRow', Exports.beginRow);
 globalThis.exports('endRow', Exports.endRow);
 
-globalThis.exports('setNextTextEntry', Exports.setNextTextEntry);
-globalThis.exports('pushTextEntry', Exports.pushTextEntry);
-globalThis.exports('popTextEntry', Exports.popTextEntry);
-
 globalThis.exports('setNextItemWidth', Exports.setNextItemWidth);
 globalThis.exports('pushItemWidth', Exports.pushItemWidth);
 globalThis.exports('popItemWidth', Exports.popItemWidth);

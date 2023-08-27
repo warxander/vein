@@ -1,12 +1,12 @@
-import { Color, Image, TextEntryComponents, Vector2 } from '../exports';
+import { Color, Image, Vector2 } from '../exports';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
-import { addTextComponents } from './utils';
 
 class LayoutState {
 	isValid = false;
 	isFirstItem = false;
 	size = new Vector2();
+	textEntryIndex = -1;
 }
 
 class RowState {
@@ -60,6 +60,8 @@ export class Painter {
 		const windowSpacing = this.context.getWindowSpacing();
 		this.windowSpacing.x = windowSpacing !== undefined ? windowSpacing.x : this.style.window.spacing.x;
 		this.windowSpacing.y = windowSpacing !== undefined ? windowSpacing.y : this.style.window.spacing.y;
+
+		this.layoutState.textEntryIndex = -1;
 	}
 
 	endWindow(): Vector2 {
@@ -274,26 +276,16 @@ export class Painter {
 	}
 
 	getTextWidth(): number {
-		const textEntry: string | undefined = this.context.getTextEntry();
-		if (!textEntry) return 0;
+		if (this.layoutState.textEntryIndex == -1) return 0;
 
-		BeginTextCommandGetWidth(textEntry);
-
-		const textComponents: TextEntryComponents | undefined = this.context.getTextComponents();
-		if (textComponents) addTextComponents(textComponents);
-
+		BeginTextCommandGetWidth(this.getTextEntry());
 		return EndTextCommandGetWidth(true);
 	}
 
 	getTextLineCount(): number {
-		const textEntry: string | undefined = this.context.getTextEntry();
-		if (!textEntry) return 0;
+		if (this.layoutState.textEntryIndex == -1) return 0;
 
-		BeginTextCommandLineCount(textEntry);
-
-		const textComponents: TextEntryComponents | undefined = this.context.getTextComponents();
-		if (textComponents) addTextComponents(textComponents);
-
+		BeginTextCommandLineCount(this.getTextEntry());
 		return EndTextCommandLineCount(this.pos.x, this.pos.y);
 	}
 
@@ -306,19 +298,17 @@ export class Painter {
 		SetTextWrap(this.pos.x, this.pos.x + w);
 	}
 
-	drawText() {
-		if (!this.isLayoutValid()) return;
+	setText(text: string) {
+		++this.layoutState.textEntryIndex;
+		AddTextEntry(this.getTextEntry(), text);
+	}
 
-		const textEntry: string | undefined = this.context.getTextEntry();
-		if (!textEntry) return;
+	drawText() {
+		if (!this.isLayoutValid() || this.layoutState.textEntryIndex == -1) return;
 
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
-		BeginTextCommandDisplayText(textEntry);
-
-		const textComponents: TextEntryComponents | undefined = this.context.getTextComponents();
-		if (textComponents) addTextComponents(textComponents);
-
+		BeginTextCommandDisplayText(this.getTextEntry());
 		EndTextCommandDisplayText(this.pos.x, this.pos.y);
 	}
 
@@ -328,5 +318,9 @@ export class Painter {
 		this.setPosition(this.itemGeometry.pos.x, this.itemGeometry.pos.y);
 		this.setColor(this.style.getProperty<Color>('window', 'color'));
 		this.drawRect(w, h);
+	}
+
+	private getTextEntry(): string {
+		return `VEIN_TEXT_ENTRY_${this.layoutState.textEntryIndex}`;
 	}
 }
