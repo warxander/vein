@@ -39,12 +39,14 @@ export class Painter {
 	constructor(private context: Context) {}
 
 	beginWindow(x: number, y: number) {
-		this.windowGeometry.pos.set(x, y);
+		this.windowGeometry.pos = new Vector2(x, y);
 
 		this.setPosition(
 			this.windowGeometry.pos.x - this.windowGeometry.size.x / 2,
 			this.windowGeometry.pos.y - this.windowGeometry.size.y / 2
 		);
+
+		this.layoutState.isValid = !this.layoutState.isFirstItem;
 
 		if (!this.isLayoutValid()) return;
 
@@ -61,21 +63,18 @@ export class Painter {
 		this.windowSpacing.x = windowSpacing !== undefined ? windowSpacing.x : this.style.window.spacing.x;
 		this.windowSpacing.y = windowSpacing !== undefined ? windowSpacing.y : this.style.window.spacing.y;
 
+		this.layoutState.isFirstItem = true;
 		this.layoutState.textEntryIndex = -1;
+		this.layoutState.size = new Vector2();
 	}
 
 	endWindow(): Vector2 {
 		if (!this.context.isWindowNoDrag()) this.endDrag();
 
-		this.layoutState.isValid = !this.layoutState.isFirstItem;
-		this.layoutState.isFirstItem = true;
-
-		this.windowGeometry.size.set(
+		this.windowGeometry.size = new Vector2(
 			this.layoutState.isValid ? this.layoutState.size.x + this.style.window.margins.x * 2 : 0,
 			this.layoutState.isValid ? this.layoutState.size.y + this.style.window.margins.y * 2 : 0
 		);
-
-		this.layoutState.size.set(0, 0);
 
 		return this.windowGeometry.pos;
 	}
@@ -94,7 +93,7 @@ export class Painter {
 			input.getIsLmbPressed()
 		) {
 			const mousePos = input.getMousePos();
-			this.dragState.origin.set(mousePos.x, mousePos.y);
+			this.dragState.origin = new Vector2(mousePos.x, mousePos.y);
 			this.dragState.isInProcess = true;
 		}
 	}
@@ -107,12 +106,12 @@ export class Painter {
 		if (input.getIsLmbDown()) {
 			const mousePos = input.getMousePos();
 
-			this.windowGeometry.pos.set(
+			this.windowGeometry.pos = new Vector2(
 				this.windowGeometry.pos.x + mousePos.x - this.dragState.origin.x,
 				this.windowGeometry.pos.y + mousePos.y - this.dragState.origin.y
 			);
 
-			this.dragState.origin.set(mousePos.x, mousePos.y);
+			this.dragState.origin = new Vector2(mousePos.x, mousePos.y);
 		} else this.dragState.isInProcess = false;
 	}
 
@@ -134,7 +133,7 @@ export class Painter {
 	endRow() {
 		if (!this.rowState.isInRowMode) return;
 
-		this.layoutState.size.set(
+		this.layoutState.size = new Vector2(
 			Math.max(this.layoutState.size.x, this.rowState.size.x),
 			this.layoutState.size.y + this.rowState.size.y
 		);
@@ -147,7 +146,7 @@ export class Painter {
 		this.rowState.isInRowMode = false;
 		this.rowState.isFirstItem = true;
 
-		this.rowState.size.set(0, 0);
+		this.rowState.size = new Vector2();
 	}
 
 	isRowMode(): boolean {
@@ -172,8 +171,8 @@ export class Painter {
 			this.move(ho, vo);
 		}
 
-		this.itemGeometry.pos.set(this.pos.x, this.pos.y);
-		this.itemGeometry.size.set(w, h);
+		this.itemGeometry.pos = new Vector2(this.pos.x, this.pos.y);
+		this.itemGeometry.size = new Vector2(w, h);
 	}
 
 	endItem() {
@@ -183,11 +182,11 @@ export class Painter {
 		this.drawDebug(w, h);
 
 		if (this.rowState.isInRowMode) {
-			this.rowState.size.set(this.rowState.size.x + w, Math.max(this.rowState.size.y, h));
+			this.rowState.size = new Vector2(this.rowState.size.x + w, Math.max(this.rowState.size.y, h));
 			this.setPosition(this.itemGeometry.pos.x + w, this.itemGeometry.pos.y);
 			this.rowState.isFirstItem = false;
 		} else {
-			this.layoutState.size.set(Math.max(w, this.layoutState.size.x), this.layoutState.size.y + h);
+			this.layoutState.size = new Vector2(Math.max(w, this.layoutState.size.x), this.layoutState.size.y + h);
 			this.setPosition(this.itemGeometry.pos.x, this.itemGeometry.pos.y + h);
 		}
 

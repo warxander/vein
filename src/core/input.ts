@@ -1,17 +1,12 @@
 import { Vector2 } from '../exports';
 
 class State {
-	mousePos = new Vector2();
-	isLmbPressed = false;
-	isLmbReleased = false;
-	isLmbDown = false;
-
-	reset() {
-		this.mousePos.set(0, 0);
-		this.isLmbPressed = false;
-		this.isLmbReleased = false;
-		this.isLmbDown = false;
-	}
+	constructor(
+		public mousePos = new Vector2(),
+		public isLmbPressed = false,
+		public isLmbReleased = false,
+		public isLmbDown = false
+	) {}
 }
 
 export class Input {
@@ -32,15 +27,12 @@ export class Input {
 
 		SetMouseCursorActiveThisFrame();
 
-		this.state.mousePos.set(GetControlNormal(2, 239), GetControlNormal(2, 240));
-
-		this.state.isLmbPressed = IsControlJustPressed(2, 237);
-		this.state.isLmbReleased = !this.state.isLmbPressed && IsControlJustReleased(2, 237);
-		this.state.isLmbDown = !this.state.isLmbReleased && IsControlPressed(2, 237);
-	}
-
-	endWindow() {
-		this.state.reset();
+		this.state = new State(
+			new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240)),
+			IsControlJustPressed(2, 237),
+			!this.state.isLmbPressed && IsControlJustReleased(2, 237),
+			!this.state.isLmbReleased && IsControlPressed(2, 237)
+		);
 	}
 
 	getMousePos(): Vector2 {

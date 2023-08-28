@@ -3,13 +3,7 @@ import { Input } from './input';
 import { Painter } from './painter';
 
 class NextItemState {
-	id?: string;
-	width?: number;
-
-	reset() {
-		this.id = undefined;
-		this.width = undefined;
-	}
+	constructor(public id: string | undefined = undefined, public width: number | undefined = undefined) {}
 }
 
 enum WindowFlags {
@@ -19,15 +13,11 @@ enum WindowFlags {
 }
 
 class WindowFrameState {
-	id?: string;
-	spacing?: Vector2;
-	windowFlags: WindowFlags = WindowFlags.None;
-
-	reset() {
-		this.id = undefined;
-		this.spacing = undefined;
-		this.windowFlags = WindowFlags.None;
-	}
+	constructor(
+		public id: string | undefined = undefined,
+		public spacing: Vector2 | undefined = undefined,
+		public windowFlags: WindowFlags = WindowFlags.None
+	) {}
 }
 
 export class Context {
@@ -83,6 +73,8 @@ export class Context {
 	}
 
 	beginWindow(x: number, y: number) {
+		this.windowFrameState = new WindowFrameState();
+
 		this.input.beginWindow();
 		this.painter.beginWindow(x, y);
 	}
@@ -90,9 +82,6 @@ export class Context {
 	endWindow(): Vector2 {
 		const windowPos = this.painter.endWindow();
 
-		this.input.endWindow();
-
-		this.windowFrameState.reset();
 		if (this.skipDrawingNumber != 0) --this.skipDrawingNumber;
 
 		return windowPos;
@@ -126,7 +115,7 @@ export class Context {
 	endItem() {
 		this.painter.endItem();
 
-		this.nextItemState.reset();
+		this.nextItemState = new NextItemState();
 	}
 
 	setNextItemWidth(w: number) {
