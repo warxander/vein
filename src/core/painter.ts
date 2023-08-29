@@ -3,8 +3,7 @@ import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
 
 class LayoutState {
-	isValid = false;
-	isFirstItem = false;
+	hasItems = false;
 	size = new Vector2();
 	textEntryIndex = -1;
 }
@@ -46,7 +45,8 @@ export class Painter {
 			this.windowGeometry.pos.y - this.windowGeometry.size.y / 2
 		);
 
-		this.layoutState.isValid = !this.layoutState.isFirstItem;
+		this.layoutState.size = new Vector2();
+		this.layoutState.textEntryIndex = -1;
 
 		if (!this.isLayoutValid()) return;
 
@@ -63,24 +63,22 @@ export class Painter {
 		this.windowSpacing.x = windowSpacing !== undefined ? windowSpacing.x : this.style.window.spacing.x;
 		this.windowSpacing.y = windowSpacing !== undefined ? windowSpacing.y : this.style.window.spacing.y;
 
-		this.layoutState.isFirstItem = true;
-		this.layoutState.textEntryIndex = -1;
-		this.layoutState.size = new Vector2();
+		this.layoutState = new LayoutState();
 	}
 
 	endWindow(): Vector2 {
 		if (!this.context.isWindowNoDrag()) this.endDrag();
 
 		this.windowGeometry.size = new Vector2(
-			this.layoutState.isValid ? this.layoutState.size.x + this.style.window.margins.x * 2 : 0,
-			this.layoutState.isValid ? this.layoutState.size.y + this.style.window.margins.y * 2 : 0
+			this.layoutState.hasItems ? this.layoutState.size.x + this.style.window.margins.x * 2 : 0,
+			this.layoutState.hasItems ? this.layoutState.size.y + this.style.window.margins.y * 2 : 0
 		);
 
 		return this.windowGeometry.pos;
 	}
 
 	private isLayoutValid(): boolean {
-		return this.layoutState.isValid && !this.context.isWindowSkipNextDrawing();
+		return this.layoutState.hasItems && !this.context.isWindowSkipNextDrawing();
 	}
 
 	private beginDrag() {
@@ -154,7 +152,7 @@ export class Painter {
 	}
 
 	beginItem(w: number, h: number) {
-		if (this.layoutState.isFirstItem) this.move(this.style.window.margins.x, this.style.window.margins.y);
+		if (!this.layoutState.hasItems) this.move(this.style.window.margins.x, this.style.window.margins.y);
 		else {
 			let ho = 0;
 			if (this.rowState.isInRowMode && !this.rowState.isFirstItem) {
@@ -173,6 +171,9 @@ export class Painter {
 
 		this.itemGeometry.pos = new Vector2(this.pos.x, this.pos.y);
 		this.itemGeometry.size = new Vector2(w, h);
+
+		if (this.rowState.isInRowMode) this.rowState.isFirstItem = false;
+		this.layoutState.hasItems = true;
 	}
 
 	endItem() {
@@ -184,13 +185,10 @@ export class Painter {
 		if (this.rowState.isInRowMode) {
 			this.rowState.size = new Vector2(this.rowState.size.x + w, Math.max(this.rowState.size.y, h));
 			this.setPosition(this.itemGeometry.pos.x + w, this.itemGeometry.pos.y);
-			this.rowState.isFirstItem = false;
 		} else {
 			this.layoutState.size = new Vector2(Math.max(w, this.layoutState.size.x), this.layoutState.size.y + h);
 			this.setPosition(this.itemGeometry.pos.x, this.itemGeometry.pos.y + h);
 		}
-
-		this.layoutState.isFirstItem = false;
 	}
 
 	getItemX(): number {
