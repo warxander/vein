@@ -37,6 +37,7 @@ globalThis.exports('popItemId', Exports.popItemId);
 
 globalThis.exports('button', Exports.button);
 globalThis.exports('checkBox', Exports.checkBox);
+globalThis.exports('collapsingHeader', Exports.collapsingHeader);
 globalThis.exports('dummy', Exports.dummy);
 globalThis.exports('heading', Exports.heading);
 globalThis.exports('label', Exports.label);

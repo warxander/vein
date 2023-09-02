@@ -255,7 +255,7 @@ export class Painter {
 			);
 	}
 
-	drawSprite(dict: string, name: string, w: number, h: number) {
+	drawSprite(dict: string, name: string, w: number, h: number, heading?: number) {
 		if (this.isLayoutValid())
 			DrawSprite(
 				dict,
@@ -264,7 +264,7 @@ export class Painter {
 				this.pos.y + h / 2,
 				w,
 				h,
-				0,
+				heading ?? 0,
 				this.color[0],
 				this.color[1],
 				this.color[2],

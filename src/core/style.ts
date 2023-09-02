@@ -57,6 +57,8 @@ const DEFAULT_SELECTORS = new Set<String>([
 	'check-box',
 	'check-box:hover',
 
+	'collapsing-header',
+
 	'heading',
 
 	'label',
@@ -145,6 +147,7 @@ export class Style {
 
 	readonly button;
 	readonly checkbox;
+	readonly collapsingHeader;
 	readonly label;
 	readonly progressBar;
 	readonly selectable;
@@ -167,6 +170,11 @@ export class Style {
 			height: 0.02,
 			spacing: 0.0025,
 			inlineHeight: 0.0035
+		};
+
+		this.collapsingHeader = {
+			spriteWidth: 0.0125,
+			spacing: 0.0025
 		};
 
 		this.label = {

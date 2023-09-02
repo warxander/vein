@@ -2,6 +2,7 @@ import { Context } from './core/context';
 
 export * from './items/button';
 export * from './items/checkbox';
+export * from './items/collapsingheader';
 export * from './items/dummy';
 export * from './items/heading';
 export * from './items/label';
