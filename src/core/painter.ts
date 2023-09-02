@@ -1,4 +1,4 @@
-import { Color, Image, Vector2 } from '../exports';
+import { Color, Image, Rect, Vector2 } from '../exports';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
 
@@ -19,11 +19,6 @@ class DragState {
 	origin = new Vector2();
 }
 
-class Geometry {
-	pos = new Vector2();
-	size = new Vector2();
-}
-
 export class Painter {
 	private style = new Style();
 	private pos = new Vector2();
@@ -31,19 +26,16 @@ export class Painter {
 	private layoutState = new LayoutState();
 	private dragState = new DragState();
 	private rowState = new RowState();
-	private itemGeometry = new Geometry();
-	private windowGeometry = new Geometry();
+	private itemRect = new Rect();
+	private windowRect = new Rect();
 	private windowSpacing = new Vector2();
 
 	constructor(private context: Context) {}
 
 	beginWindow(x: number, y: number) {
-		this.windowGeometry.pos = new Vector2(x, y);
+		this.windowRect.pos = new Vector2(x, y);
 
-		this.setPosition(
-			this.windowGeometry.pos.x - this.windowGeometry.size.x / 2,
-			this.windowGeometry.pos.y - this.windowGeometry.size.y / 2
-		);
+		this.setPosition(this.windowRect.pos.x, this.windowRect.pos.y);
 
 		this.layoutState.size = new Vector2();
 		this.layoutState.textEntryIndex = -1;
@@ -55,8 +47,8 @@ export class Painter {
 		if (!this.context.isWindowNoBackground())
 			this.drawItemBackground(
 				this.style.getProperties(this.context.getWindowId() ?? 'window'),
-				this.windowGeometry.size.x,
-				this.windowGeometry.size.y
+				this.windowRect.size.x,
+				this.windowRect.size.y
 			);
 
 		const windowSpacing = this.context.getWindowSpacing();
@@ -66,15 +58,15 @@ export class Painter {
 		this.layoutState = new LayoutState();
 	}
 
-	endWindow(): Vector2 {
+	endWindow(): Rect {
 		if (!this.context.isWindowNoDrag()) this.endDrag();
 
-		this.windowGeometry.size = new Vector2(
+		this.windowRect.size = new Vector2(
 			this.layoutState.hasItems ? this.layoutState.size.x + this.style.window.margins.x * 2 : 0,
 			this.layoutState.hasItems ? this.layoutState.size.y + this.style.window.margins.y * 2 : 0
 		);
 
-		return this.windowGeometry.pos;
+		return new Rect(this.windowRect.pos, this.windowRect.size);
 	}
 
 	private isLayoutValid(): boolean {
@@ -87,7 +79,7 @@ export class Painter {
 		const input = this.context.getInput();
 
 		if (
-			input.isRectHovered(this.pos.x, this.pos.y, this.windowGeometry.size.x, this.style.window.margins.y) &&
+			input.isRectHovered(this.pos.x, this.pos.y, this.windowRect.size.x, this.style.window.margins.y) &&
 			input.getIsLmbPressed()
 		) {
 			const mousePos = input.getMousePos();
@@ -104,9 +96,9 @@ export class Painter {
 		if (input.getIsLmbDown()) {
 			const mousePos = input.getMousePos();
 
-			this.windowGeometry.pos = new Vector2(
-				this.windowGeometry.pos.x + mousePos.x - this.dragState.origin.x,
-				this.windowGeometry.pos.y + mousePos.y - this.dragState.origin.y
+			this.windowRect.pos = new Vector2(
+				this.windowRect.pos.x + mousePos.x - this.dragState.origin.x,
+				this.windowRect.pos.y + mousePos.y - this.dragState.origin.y
 			);
 
 			this.dragState.origin = new Vector2(mousePos.x, mousePos.y);
@@ -136,10 +128,7 @@ export class Painter {
 			this.layoutState.size.y + this.rowState.size.y
 		);
 
-		this.setPosition(
-			this.windowGeometry.pos.x - this.windowGeometry.size.x / 2 + this.style.window.margins.x,
-			this.pos.y + this.rowState.size.y
-		);
+		this.setPosition(this.windowRect.pos.x + this.style.window.margins.x, this.pos.y + this.rowState.size.y);
 
 		this.rowState.isInRowMode = false;
 		this.rowState.isFirstItem = true;
@@ -169,42 +158,42 @@ export class Painter {
 			this.move(ho, vo);
 		}
 
-		this.itemGeometry.pos = new Vector2(this.pos.x, this.pos.y);
-		this.itemGeometry.size = new Vector2(w, h);
+		this.itemRect.pos = new Vector2(this.pos.x, this.pos.y);
+		this.itemRect.size = new Vector2(w, h);
 
 		if (this.rowState.isInRowMode) this.rowState.isFirstItem = false;
 		this.layoutState.hasItems = true;
 	}
 
 	endItem() {
-		const w = this.itemGeometry.size.x;
-		const h = this.itemGeometry.size.y;
+		const w = this.itemRect.size.x;
+		const h = this.itemRect.size.y;
 
 		this.drawDebug(w, h);
 
 		if (this.rowState.isInRowMode) {
 			this.rowState.size = new Vector2(this.rowState.size.x + w, Math.max(this.rowState.size.y, h));
-			this.setPosition(this.itemGeometry.pos.x + w, this.itemGeometry.pos.y);
+			this.setPosition(this.itemRect.pos.x + w, this.itemRect.pos.y);
 		} else {
 			this.layoutState.size = new Vector2(Math.max(w, this.layoutState.size.x), this.layoutState.size.y + h);
-			this.setPosition(this.itemGeometry.pos.x, this.itemGeometry.pos.y + h);
+			this.setPosition(this.itemRect.pos.x, this.itemRect.pos.y + h);
 		}
 	}
 
 	getItemX(): number {
-		return this.itemGeometry.pos.x;
+		return this.itemRect.pos.x;
 	}
 
 	getItemY(): number {
-		return this.itemGeometry.pos.y;
+		return this.itemRect.pos.y;
 	}
 
 	getItemWidth(): number {
-		return this.itemGeometry.size.x;
+		return this.itemRect.size.x;
 	}
 
 	getItemHeight(): number {
-		return this.itemGeometry.size.y;
+		return this.itemRect.size.y;
 	}
 
 	getWindowSpacing(): Vector2 {
@@ -310,7 +299,7 @@ export class Painter {
 	drawDebug(w: number, h = this.style.item.height) {
 		if (!this.isLayoutValid() || !this.context.isDebugEnabled()) return;
 
-		this.setPosition(this.itemGeometry.pos.x, this.itemGeometry.pos.y);
+		this.setPosition(this.itemRect.pos.x, this.itemRect.pos.y);
 		this.setColor(this.style.getProperty<Color>('window', 'color'));
 		this.drawRect(w, h);
 	}

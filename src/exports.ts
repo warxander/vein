@@ -29,6 +29,10 @@ export class Vector2 {
 	constructor(public x: number = 0, public y: number = 0) {}
 }
 
+export class Rect {
+	constructor(public pos: Vector2 = new Vector2(), public size: Vector2 = new Vector2()) {}
+}
+
 /** @ignore */
 export const context: Context = new Context();
 
@@ -164,10 +168,10 @@ export function setNextWindowSpacing(x: number, y: number) {
 }
 
 export function beginWindow(x: number | null, y: number | null) {
-	context.beginWindow(x !== null ? x : 0.5, y !== null ? y : 0.5);
+	context.beginWindow(x !== null ? x : 0.33, y !== null ? y : 0.33);
 }
 
-export function endWindow(): Vector2 {
+export function endWindow(): Rect {
 	return context.endWindow();
 }
 

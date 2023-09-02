@@ -12,8 +12,8 @@ globalThis.exports('setNextWindowSpacing', Exports.setNextWindowSpacing);
 
 globalThis.exports('beginWindow', Exports.beginWindow);
 globalThis.exports('endWindow', function (): any {
-	const windowPosition = Exports.endWindow();
-	return { x: windowPosition.x, y: windowPosition.y };
+	const windowRect = Exports.endWindow();
+	return { x: windowRect.pos.x, y: windowRect.pos.y, w: windowRect.size.x, h: windowRect.size.y };
 });
 
 globalThis.exports('isItemHovered', Exports.isItemHovered);

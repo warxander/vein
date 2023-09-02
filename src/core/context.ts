@@ -1,4 +1,4 @@
-import { Vector2 } from '../exports';
+import { Rect, Vector2 } from '../exports';
 import { Input } from './input';
 import { Painter } from './painter';
 
@@ -80,15 +80,15 @@ export class Context {
 		this.painter.beginWindow(x, y);
 	}
 
-	endWindow(): Vector2 {
-		const windowPos = this.painter.endWindow();
+	endWindow(): Rect {
+		const windowRect = this.painter.endWindow();
 
 		if (this.scheduleSkipNextDrawing) {
 			this.skipNextDrawing = true;
 			this.scheduleSkipNextDrawing = false;
 		} else this.skipNextDrawing = false;
 
-		return windowPos;
+		return windowRect;
 	}
 
 	isItemHovered(): boolean {
