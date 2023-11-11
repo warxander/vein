@@ -10,13 +10,15 @@ Vein provides a decent built-in item library, which you can [customize](src/styl
 * Download and put into `resources/` directory
 * Add `ensure vein` to `server.cfg`
 ## Immediate mode
-```lua
-local vein = exports.vein
-vein:beginWindow()
-if vein:button('Click Me') then
-  print('Hello World!')
-end
-vein:endWindow()
+```js
+const vein = exports.vein;
+
+vein.beginWindow();
+
+if (vein.button('Click Me'))
+    console.log('Hello World!');
+
+vein.endWindow();
 ```
 ## Documentation
 Visit [Vein website](https://warxander.github.io/vein/) for documentation.
