@@ -57,6 +57,7 @@ export interface IPainter {
 	setPosition(x: number, y: number): void;
 
 	setColor(r: number, g: number, b: number, a: number): void;
+	setMouseCursor(mouseCursor: number): void;
 
 	drawRect(w: number, h: number): void;
 
@@ -103,6 +104,10 @@ export function getContext(): IContext {
 
 				setColor(r: number, g: number, b: number, a: number) {
 					context.getPainter().setColor([r, g, b, a]);
+				},
+
+				setMouseCursor(mouseCursor: number) {
+					context.getPainter().setMouseCursor(mouseCursor);
 				},
 
 				drawRect(w: number, h: number) {
