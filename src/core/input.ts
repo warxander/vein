@@ -25,8 +25,6 @@ export class Input {
 		if (IsPedInAnyVehicle(PlayerPedId(), false))
 			for (const control of Input.DISABLED_CONTROLS_IN_VEHICLE) DisableControlAction(0, control, true);
 
-		SetMouseCursorActiveThisFrame();
-
 		this.state = new State(
 			new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240)),
 			IsControlJustPressed(2, 237),

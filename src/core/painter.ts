@@ -2,6 +2,12 @@ import { Color, Image, Rect, Vector2 } from '../exports';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
 
+enum MouseCursor {
+	Normal = 1,
+	PreGrab = 3,
+	Grab = 4
+}
+
 class RowState {
 	isFirstItem = true;
 	size = new Vector2();
@@ -15,6 +21,7 @@ export class Painter {
 	private style = new Style();
 	private pos = new Vector2();
 	private color: Color = [0, 0, 0, 255];
+	private mouseCursor: MouseCursor = MouseCursor.Normal;
 	private skipDrawing = true;
 	private contentSize = new Vector2();
 	private textEntryIndex = -1;
@@ -28,6 +35,8 @@ export class Painter {
 	constructor(private context: Context) {}
 
 	beginWindow(x: number, y: number) {
+		this.mouseCursor = MouseCursor.Normal;
+
 		this.contentSize = new Vector2();
 		this.textEntryIndex = -1;
 		this.isFirstItem = true;
@@ -61,6 +70,9 @@ export class Painter {
 
 		this.skipDrawing = false;
 
+		SetMouseCursorActiveThisFrame();
+		SetMouseCursorSprite(this.mouseCursor);
+
 		return new Rect(this.windowRect.pos, this.windowRect.size);
 	}
 
@@ -71,18 +83,22 @@ export class Painter {
 	private beginWindowDrag() {
 		const input = this.context.getInput();
 
-		if (
-			input.isRectHovered(this.pos.x, this.pos.y, this.windowRect.size.x, this.style.window.margins.y) &&
-			input.getIsLmbPressed()
-		) {
-			if (!this.windowDragState) this.windowDragState = new WindowDragState();
-			const mousePos = input.getMousePos();
-			this.windowDragState.pos = new Vector2(mousePos.x, mousePos.y);
-		}
+		if (!input.isRectHovered(this.pos.x, this.pos.y, this.windowRect.size.x, this.style.window.margins.y)) return;
+
+		if (!this.windowDragState) this.mouseCursor = MouseCursor.PreGrab;
+
+		if (!input.getIsLmbPressed()) return;
+
+		if (!this.windowDragState) this.windowDragState = new WindowDragState();
+
+		const mousePos = input.getMousePos();
+		this.windowDragState.pos = new Vector2(mousePos.x, mousePos.y);
 	}
 
 	private endWindowDrag() {
 		if (!this.windowDragState) return;
+
+		this.mouseCursor = MouseCursor.Grab;
 
 		const input = this.context.getInput();
 
