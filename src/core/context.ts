@@ -28,7 +28,6 @@ export class Context {
 	private itemWidthStack: number[] = [];
 	private itemIdStack: string[] = [];
 	private scheduleSkipNextDrawing = false;
-	private skipNextDrawing = true;
 	private isDebugEnabled_ = false;
 
 	setDebugEnabled(enabled: boolean) {
@@ -84,9 +83,9 @@ export class Context {
 		const windowRect = this.painter.endWindow();
 
 		if (this.scheduleSkipNextDrawing) {
-			this.skipNextDrawing = true;
+			this.painter.skipNextDrawing();
 			this.scheduleSkipNextDrawing = false;
-		} else this.skipNextDrawing = false;
+		}
 
 		return windowRect;
 	}
@@ -106,10 +105,6 @@ export class Context {
 
 	setWindowSkipNextDrawing() {
 		this.scheduleSkipNextDrawing = true;
-	}
-
-	isWindowSkipNextDrawing(): boolean {
-		return this.skipNextDrawing;
 	}
 
 	beginItem(w: number, h: number) {
