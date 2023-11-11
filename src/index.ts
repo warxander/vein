@@ -40,6 +40,7 @@ globalThis.exports('checkBox', Exports.checkBox);
 globalThis.exports('collapsingHeader', Exports.collapsingHeader);
 globalThis.exports('dummy', Exports.dummy);
 globalThis.exports('heading', Exports.heading);
+globalThis.exports('hyperlink', Exports.hyperlink);
 globalThis.exports('label', Exports.label);
 globalThis.exports('progressBar', Exports.progressBar);
 globalThis.exports('selectable', Exports.selectable);

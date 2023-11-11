@@ -2,12 +2,6 @@ import { Color, Image, Rect, Vector2 } from '../exports';
 import { Context } from './context';
 import { Style, StylePropertyValues } from './style';
 
-enum MouseCursor {
-	Normal = 1,
-	PreGrab = 3,
-	Grab = 4
-}
-
 class RowState {
 	isFirstItem = true;
 	size = new Vector2();
@@ -15,6 +9,22 @@ class RowState {
 
 class WindowDragState {
 	pos = new Vector2();
+}
+
+export enum MouseCursor {
+	None = 0,
+	Normal = 1,
+	TransparentNormal = 2,
+	PreGrab = 3,
+	Grab = 4,
+	MiddleFinger = 5,
+	LeftArrow = 6,
+	RightArrow = 7,
+	UpArrow = 8,
+	DownArrow = 9,
+	HorizontalExpand = 10,
+	Add = 11,
+	Remove = 12
 }
 
 export class Painter {
@@ -35,7 +45,7 @@ export class Painter {
 	constructor(private context: Context) {}
 
 	beginWindow(x: number, y: number) {
-		this.mouseCursor = MouseCursor.Normal;
+		this.setMouseCursor(MouseCursor.Normal);
 
 		this.contentSize = new Vector2();
 		this.textEntryIndex = -1;
@@ -80,12 +90,16 @@ export class Painter {
 		this.skipDrawing = true;
 	}
 
+	setMouseCursor(mouseCursor: MouseCursor) {
+		this.mouseCursor = mouseCursor;
+	}
+
 	private beginWindowDrag() {
 		const input = this.context.getInput();
 
 		if (!input.isRectHovered(this.pos.x, this.pos.y, this.windowRect.size.x, this.style.window.margins.y)) return;
 
-		if (!this.windowDragState) this.mouseCursor = MouseCursor.PreGrab;
+		if (!this.windowDragState) this.setMouseCursor(MouseCursor.PreGrab);
 
 		if (!input.getIsLmbPressed()) return;
 
@@ -98,7 +112,7 @@ export class Painter {
 	private endWindowDrag() {
 		if (!this.windowDragState) return;
 
-		this.mouseCursor = MouseCursor.Grab;
+		this.setMouseCursor(MouseCursor.Grab);
 
 		const input = this.context.getInput();
 

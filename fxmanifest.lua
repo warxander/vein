@@ -7,8 +7,13 @@ dependencies {
 }
 
 files {
+	'src/nui/index.html',
+	'src/nui/index.js',
+
 	'src/style.css'
 }
+
+ui_page 'src/nui/index.html'
 
 client_script 'dist/vein.js'
 

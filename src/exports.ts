@@ -5,6 +5,7 @@ export * from './items/checkbox';
 export * from './items/collapsingheader';
 export * from './items/dummy';
 export * from './items/heading';
+export * from './items/hyperlink';
 export * from './items/label';
 export * from './items/progressbar';
 export * from './items/selectable';

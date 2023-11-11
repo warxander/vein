@@ -31,6 +31,16 @@ heading {
 	font-size: 0.45em;
 }
 
+hyperlink {
+	color: #009B67;
+	font-family: 0;
+	font-size: 0.325em;
+}
+
+hyperlink:hover {
+	color: #00E296;
+}
+
 label, text-area {
 	color: #C4C4BD;
 	font-family: 0;

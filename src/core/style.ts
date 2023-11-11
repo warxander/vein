@@ -61,6 +61,8 @@ const DEFAULT_SELECTORS = new Set<String>([
 
 	'heading',
 
+	'hyperlink',
+
 	'label',
 
 	'progress-bar',
