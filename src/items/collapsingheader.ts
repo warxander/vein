@@ -22,8 +22,6 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 
 	const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : collapsingHeaderProperties;
 
-	painter.drawItemBackground(properties, w, h);
-
 	painter.setColor(properties.get<Color>('color'));
 
 	const sh = style.collapsingHeader.spriteWidth * GetAspectRatio(false);

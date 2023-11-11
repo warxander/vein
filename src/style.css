@@ -1,4 +1,4 @@
-button, check-box, collapsing-header, sprite-button, text-edit {
+button, check-box, sprite-button, text-edit {
 	background-color: #242730;
 	color: #FFFFF0;
 	font-family: 0;
@@ -10,8 +10,13 @@ check-box:hover {
 	color: #F50551;
 }
 
+collapsing-header {
+	color: #FFFFF0;
+	font-family: 0;
+	font-size: 0.325em;
+}
+
 collapsing-header:hover {
-	background-color: #242730;
 	color: #F50551;
 }
 
