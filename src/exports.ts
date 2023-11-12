@@ -156,21 +156,21 @@ export function isDebugEnabled(): boolean {
 
 /** `false` by default */
 export function setNextWindowNoDrag(isNoDrag: boolean) {
-	context.setWindowNoDrag(isNoDrag);
+	context.setNextWindowNoDrag(isNoDrag);
 }
 
 /** `false` by default */
 export function setNextWindowNoBackground(isNoBackground: boolean) {
-	context.setWindowNoBackground(isNoBackground);
+	context.setNextWindowNoBackground(isNoBackground);
 }
 
 /** Used as a selector name */
 export function setNextWindowId(id: string) {
-	context.setWindowId(id);
+	context.setNextWindowId(id);
 }
 
 export function setNextWindowSpacing(x: number, y: number) {
-	context.setWindowSpacing(x, y);
+	context.setNextWindowSpacing(x, y);
 }
 
 export function beginWindow(x: number | null, y: number | null) {
@@ -192,8 +192,8 @@ export function isItemClicked(): boolean {
 }
 
 /** Eliminates visual redrawing artifacts if the item layout was drastically changed */
-export function setWindowSkipNextDrawing() {
-	context.setWindowSkipNextDrawing();
+export function setNextWindowSkipDrawing() {
+	context.setNextWindowSkipDrawing();
 }
 
 export function beginRow() {

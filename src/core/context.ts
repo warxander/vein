@@ -2,7 +2,7 @@ import { Rect, Vector2 } from '../exports';
 import { Input } from './input';
 import { Painter } from './painter';
 
-class NextItemState {
+class ItemState {
 	constructor(public id: string | undefined = undefined, public width: number | undefined = undefined) {}
 }
 
@@ -12,22 +12,23 @@ enum WindowFlags {
 	NoBackground = 1 << 2
 }
 
-class WindowFrameState {
+class WindowState {
 	constructor(
 		public id: string | undefined = undefined,
 		public spacing: Vector2 | undefined = undefined,
-		public windowFlags: WindowFlags = WindowFlags.None
+		public windowFlags = WindowFlags.None,
+		public skipDrawing = false
 	) {}
 }
 
 export class Context {
 	private input = new Input();
 	private painter = new Painter(this);
-	private windowFrameState = new WindowFrameState();
-	private nextItemState = new NextItemState();
+	private isFirstWindow = false;
+	private nextWindowState = new WindowState();
+	private nextItemState = new ItemState();
 	private itemWidthStack: number[] = [];
 	private itemIdStack: string[] = [];
-	private scheduleSkipNextDrawing = false;
 	private isDebugEnabled_ = false;
 
 	setDebugEnabled(enabled: boolean) {
@@ -38,42 +39,53 @@ export class Context {
 		return this.isDebugEnabled_;
 	}
 
-	setWindowNoDrag(isNoDrag: boolean) {
-		if (isNoDrag) this.windowFrameState.windowFlags |= WindowFlags.NoDrag;
-		else this.windowFrameState.windowFlags &= ~WindowFlags.NoDrag;
+	setNextWindowNoDrag(isNoDrag: boolean) {
+		if (isNoDrag) this.nextWindowState.windowFlags |= WindowFlags.NoDrag;
+		else this.nextWindowState.windowFlags &= ~WindowFlags.NoDrag;
 	}
 
-	setWindowNoBackground(isNoBackground: boolean) {
-		if (isNoBackground) this.windowFrameState.windowFlags |= WindowFlags.NoBackground;
-		else this.windowFrameState.windowFlags &= ~WindowFlags.NoBackground;
+	setNextWindowNoBackground(isNoBackground: boolean) {
+		if (isNoBackground) this.nextWindowState.windowFlags |= WindowFlags.NoBackground;
+		else this.nextWindowState.windowFlags &= ~WindowFlags.NoBackground;
 	}
 
-	setWindowId(id: string) {
-		this.windowFrameState.id = id;
+	setNextWindowId(id: string) {
+		this.nextWindowState.id = id;
 	}
 
-	setWindowSpacing(x: number, y: number) {
-		this.windowFrameState.spacing = new Vector2(x, y);
+	setNextWindowSpacing(x: number, y: number) {
+		this.nextWindowState.spacing = new Vector2(x, y);
+	}
+
+	setNextWindowSkipDrawing() {
+		this.nextWindowState.skipDrawing = true;
 	}
 
 	isWindowNoDrag(): boolean {
-		return !!(this.windowFrameState.windowFlags & WindowFlags.NoDrag);
+		return !!(this.nextWindowState.windowFlags & WindowFlags.NoDrag);
 	}
 
 	isWindowNoBackground(): boolean {
-		return !!(this.windowFrameState.windowFlags & WindowFlags.NoBackground);
+		return !!(this.nextWindowState.windowFlags & WindowFlags.NoBackground);
 	}
 
 	getWindowId(): string | undefined {
-		return this.windowFrameState.id;
+		return this.nextWindowState.id;
 	}
 
 	getWindowSpacing(): Vector2 | undefined {
-		return this.windowFrameState.spacing;
+		return this.nextWindowState.spacing;
+	}
+
+	isWindowSkipDrawing(): boolean {
+		return this.nextWindowState.skipDrawing;
 	}
 
 	beginWindow(x: number, y: number) {
-		this.windowFrameState = new WindowFrameState();
+		if (this.isFirstWindow) {
+			this.nextWindowState.skipDrawing = true;
+			this.isFirstWindow = false;
+		}
 
 		this.input.beginWindow();
 		this.painter.beginWindow(x, y);
@@ -82,10 +94,7 @@ export class Context {
 	endWindow(): Rect {
 		const windowRect = this.painter.endWindow();
 
-		if (this.scheduleSkipNextDrawing) {
-			this.painter.skipNextDrawing();
-			this.scheduleSkipNextDrawing = false;
-		}
+		this.nextWindowState = new WindowState();
 
 		return windowRect;
 	}
@@ -103,10 +112,6 @@ export class Context {
 		return this.input.getIsLmbPressed() && this.isItemHovered();
 	}
 
-	setWindowSkipNextDrawing() {
-		this.scheduleSkipNextDrawing = true;
-	}
-
 	beginItem(w: number, h: number) {
 		this.painter.beginItem(w, h);
 	}
@@ -114,7 +119,7 @@ export class Context {
 	endItem() {
 		this.painter.endItem();
 
-		this.nextItemState = new NextItemState();
+		this.nextItemState = new ItemState();
 	}
 
 	setNextItemWidth(w: number) {
