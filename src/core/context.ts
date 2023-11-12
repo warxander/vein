@@ -16,15 +16,13 @@ class WindowState {
 	constructor(
 		public id: string | undefined = undefined,
 		public spacing: Vector2 | undefined = undefined,
-		public windowFlags = WindowFlags.None,
-		public skipDrawing = false
+		public windowFlags = WindowFlags.None
 	) {}
 }
 
 export class Context {
 	private input = new Input();
 	private painter = new Painter(this);
-	private isFirstWindow = false;
 	private nextWindowState = new WindowState();
 	private nextItemState = new ItemState();
 	private itemWidthStack: number[] = [];
@@ -57,10 +55,6 @@ export class Context {
 		this.nextWindowState.spacing = new Vector2(x, y);
 	}
 
-	setNextWindowSkipDrawing() {
-		this.nextWindowState.skipDrawing = true;
-	}
-
 	isWindowNoDrag(): boolean {
 		return !!(this.nextWindowState.windowFlags & WindowFlags.NoDrag);
 	}
@@ -77,16 +71,7 @@ export class Context {
 		return this.nextWindowState.spacing;
 	}
 
-	isWindowSkipDrawing(): boolean {
-		return this.nextWindowState.skipDrawing;
-	}
-
 	beginWindow(x: number, y: number) {
-		if (this.isFirstWindow) {
-			this.nextWindowState.skipDrawing = true;
-			this.isFirstWindow = false;
-		}
-
 		this.input.beginWindow();
 		this.painter.beginWindow(x, y);
 	}

@@ -19,8 +19,6 @@ globalThis.exports('endWindow', function (): any {
 globalThis.exports('isItemHovered', Exports.isItemHovered);
 globalThis.exports('isItemClicked', Exports.isItemClicked);
 
-globalThis.exports('setWindowSkipNextDrawing', Exports.setNextWindowSkipDrawing);
-
 globalThis.exports('beginRow', Exports.beginRow);
 globalThis.exports('endRow', Exports.endRow);
 

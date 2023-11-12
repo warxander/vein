@@ -191,11 +191,6 @@ export function isItemClicked(): boolean {
 	return context.isItemClicked();
 }
 
-/** Eliminates visual redrawing artifacts if the item layout was drastically changed */
-export function setNextWindowSkipDrawing() {
-	context.setNextWindowSkipDrawing();
-}
-
 export function beginRow() {
 	context.getPainter().beginRow();
 }

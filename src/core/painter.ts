@@ -57,8 +57,6 @@ export class Painter {
 		this.windowSpacing.x = windowSpacing !== undefined ? windowSpacing.x : this.style.window.spacing.x;
 		this.windowSpacing.y = windowSpacing !== undefined ? windowSpacing.y : this.style.window.spacing.y;
 
-		if (this.context.isWindowSkipDrawing()) return;
-
 		if (!this.context.isWindowNoDrag()) this.beginWindowDrag();
 
 		if (!this.context.isWindowNoBackground())
@@ -240,34 +238,32 @@ export class Painter {
 	}
 
 	drawRect(w: number, h: number) {
-		if (!this.context.isWindowSkipDrawing())
-			DrawRect(
-				this.pos.x + w / 2,
-				this.pos.y + h / 2,
-				w,
-				h,
-				this.color[0],
-				this.color[1],
-				this.color[2],
-				this.color[3]
-			);
+		DrawRect(
+			this.pos.x + w / 2,
+			this.pos.y + h / 2,
+			w,
+			h,
+			this.color[0],
+			this.color[1],
+			this.color[2],
+			this.color[3]
+		);
 	}
 
 	drawSprite(dict: string, name: string, w: number, h: number, heading?: number) {
-		if (!this.context.isWindowSkipDrawing())
-			DrawSprite(
-				dict,
-				name,
-				this.pos.x + w / 2,
-				this.pos.y + h / 2,
-				w,
-				h,
-				heading ?? 0,
-				this.color[0],
-				this.color[1],
-				this.color[2],
-				this.color[3]
-			);
+		DrawSprite(
+			dict,
+			name,
+			this.pos.x + w / 2,
+			this.pos.y + h / 2,
+			w,
+			h,
+			heading ?? 0,
+			this.color[0],
+			this.color[1],
+			this.color[2],
+			this.color[3]
+		);
 	}
 
 	getTextWidth(): number {
@@ -297,7 +293,7 @@ export class Painter {
 	}
 
 	drawText() {
-		if (this.context.isWindowSkipDrawing() || this.textEntryIndex == -1) return;
+		if (this.textEntryIndex == -1) return;
 
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
@@ -306,7 +302,7 @@ export class Painter {
 	}
 
 	drawDebug(w: number, h = this.style.item.height) {
-		if (this.context.isWindowSkipDrawing() || !this.context.isDebugEnabled()) return;
+		if (!this.context.isDebugEnabled()) return;
 
 		this.setPosition(this.itemRect.pos.x, this.itemRect.pos.y);
 		this.setColor(this.style.getProperty<Color>('window', 'color'));
