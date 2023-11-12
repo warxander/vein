@@ -79,6 +79,9 @@ export class Context {
 	endWindow(): Rect {
 		const windowRect = this.painter.endWindow();
 
+		this.itemIdStack = [];
+		this.itemWidthStack = [];
+
 		this.nextWindowState = new WindowState();
 
 		return windowRect;
