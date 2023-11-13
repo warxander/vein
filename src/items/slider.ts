@@ -24,13 +24,13 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 	if (
 		(input.isKeyDown(InputKey.LeftMouseButton) || input.isKeyPressed(InputKey.LeftMouseButton)) &&
 		new Rect(
-			new Vector2(painter.getX() - sliderStyle.tickMarkSize.x / 2, painter.getY()),
+			new Vector2(painter.getPosition().x - sliderStyle.tickMarkSize.x / 2, painter.getPosition().y),
 			new Vector2(w + sliderStyle.tickMarkSize.x, h)
 		).contains(input.getMousePosition())
 	)
 		newValue = Math.min(
 			max,
-			Math.max(min, min + ((input.getMousePosition().x - painter.getX()) / w) * (max + min))
+			Math.max(min, min + ((input.getMousePosition().x - painter.getPosition().x) / w) * (max + min))
 		);
 
 	const sh = (h - sliderStyle.height) / 2;

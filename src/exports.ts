@@ -103,8 +103,8 @@ export function getContext(): IContext {
 				},
 
 				getPosition(): [number, number] {
-					const painter = context.getPainter();
-					return [painter.getX(), painter.getY()];
+					const position = context.getPainter().getPosition();
+					return [position.x, position.y];
 				},
 
 				setPosition(x: number, y: number) {

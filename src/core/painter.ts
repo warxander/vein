@@ -119,12 +119,8 @@ export class Painter {
 		this.setMouseCursor(MouseCursor.Grab);
 	}
 
-	getX(): number {
-		return this.position.x;
-	}
-
-	getY(): number {
-		return this.position.y;
+	getPosition(): Vector2 {
+		return this.position;
 	}
 
 	beginRow() {
