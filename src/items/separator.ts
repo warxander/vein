@@ -3,7 +3,7 @@ import { Color } from '../exports';
 
 export function separator(w: number) {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const h = style.item.height;
 

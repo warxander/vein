@@ -221,11 +221,11 @@ export function popItemWidth() {
 }
 
 export function setStyleSheet(styleSheet: string) {
-	context.getPainter().getStyle().setSheet(styleSheet);
+	context.getStyle().setSheet(styleSheet);
 }
 
 export function useDefaultStyle() {
-	context.getPainter().getStyle().useDefault();
+	context.getStyle().useDefault();
 }
 
 /** Used as a selector name */

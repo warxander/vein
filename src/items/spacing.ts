@@ -6,7 +6,7 @@ export function spacing(count = 1) {
 
 	const isRowMode = painter.isRowMode();
 
-	const windowSpacing = painter.getWindowSpacing();
+	const windowSpacing = context.getWindowSpacing();
 	const w = isRowMode ? windowSpacing.x * count : 0;
 	const h = isRowMode ? 0 : windowSpacing.y * count;
 

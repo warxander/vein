@@ -2,7 +2,7 @@ import { Color, context } from '../exports';
 
 export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const id = context.tryGetItemId() ?? 'collapsing-header';
 	const collapsingHeaderProperties = style.getProperties(id);

@@ -3,7 +3,7 @@ import { Color } from '../exports';
 
 export function checkBox(isChecked: boolean, text: string): boolean {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const id = context.tryGetItemId() ?? 'check-box';
 	const checkBoxProperties = style.getProperties(id);

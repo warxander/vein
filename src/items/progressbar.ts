@@ -4,7 +4,7 @@ import { Color } from '../exports';
 
 export function progressBar(min: number, value: number, max: number, w: number) {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	context.beginItem(w, style.item.height);
 

@@ -14,7 +14,7 @@ export async function textEdit(
 	isSecretMode: boolean
 ): Promise<ITextEditResult> {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE';
 

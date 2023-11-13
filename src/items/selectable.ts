@@ -3,7 +3,7 @@ import { Color } from '../exports';
 
 export function selectable(isSelected: boolean, text: string): boolean {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const id = context.tryGetItemId() ?? 'selectable';
 	const selectableProperties = style.getProperties(id);

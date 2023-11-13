@@ -3,7 +3,7 @@ import { Color } from '../exports';
 
 export function textArea(text: string, w: number) {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const properties = style.getProperties(context.tryGetItemId() ?? 'text-area');
 	const font = properties.get<number>('font-family');

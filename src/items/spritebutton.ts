@@ -3,7 +3,7 @@ import { Color } from '../exports';
 
 export function spriteButton(dict: string, name: string, text: string): boolean {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const id = context.tryGetItemId() ?? 'sprite-button';
 	const spriteButtonProperties = style.getProperties(id);

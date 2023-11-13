@@ -11,7 +11,7 @@ export interface ISliderResult {
 export function slider(min: number, value: number, max: number, w: number): ISliderResult {
 	const input = context.getInput();
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const h = style.item.height;
 

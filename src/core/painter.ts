@@ -25,7 +25,6 @@ export enum MouseCursor {
 }
 
 export class Painter {
-	private style = new Style();
 	private position = new Vector2();
 	private color: Color = [0, 0, 0, 255];
 	private mouseCursor: MouseCursor = MouseCursor.Normal;
@@ -34,7 +33,6 @@ export class Painter {
 	private rowState: RowState | null = null;
 	private windowRect = new Rect();
 	private windowDragPosition: Vector2 | null = null;
-	private windowSpacing = new Vector2();
 	private isFirstItem = true;
 	private itemRect = new Rect();
 
@@ -50,15 +48,11 @@ export class Painter {
 		this.windowRect.position = new Vector2(x, y);
 		this.setPosition(this.windowRect.position.x, this.windowRect.position.y);
 
-		const windowSpacing = this.context.getWindowSpacing();
-		this.windowSpacing.x = windowSpacing !== undefined ? windowSpacing.x : this.style.window.spacing.x;
-		this.windowSpacing.y = windowSpacing !== undefined ? windowSpacing.y : this.style.window.spacing.y;
-
 		if (!this.context.isWindowNoDrag()) this.beginWindowDrag();
 
 		if (!this.context.isWindowNoBackground())
 			this.drawItemBackground(
-				this.style.getProperties(this.context.getWindowId() ?? 'window'),
+				this.context.getStyle().getProperties(this.context.getWindowId() ?? 'window'),
 				this.windowRect.size.x,
 				this.windowRect.size.y
 			);
@@ -68,8 +62,8 @@ export class Painter {
 		if (!this.context.isWindowNoDrag()) this.endWindowDrag();
 
 		this.windowRect.size = new Vector2(
-			this.isFirstItem ? 0 : this.contentSize.x + this.style.window.margins.x * 2,
-			this.isFirstItem ? 0 : this.contentSize.y + this.style.window.margins.y * 2
+			this.isFirstItem ? 0 : this.contentSize.x + this.context.getStyle().window.margins.x * 2,
+			this.isFirstItem ? 0 : this.contentSize.y + this.context.getStyle().window.margins.y * 2
 		);
 
 		SetMouseCursorActiveThisFrame();
@@ -87,9 +81,10 @@ export class Painter {
 		const mousePosition = input.getMousePosition();
 
 		if (
-			!new Rect(this.position, new Vector2(this.windowRect.size.x, this.style.window.margins.y)).contains(
-				mousePosition
-			)
+			!new Rect(
+				this.position,
+				new Vector2(this.windowRect.size.x, this.context.getStyle().window.margins.y)
+			).contains(mousePosition)
 		)
 			return;
 
@@ -136,7 +131,7 @@ export class Painter {
 		);
 
 		this.setPosition(
-			this.windowRect.position.x + this.style.window.margins.x,
+			this.windowRect.position.x + this.context.getStyle().window.margins.x,
 			this.position.y + this.rowState.size.y
 		);
 
@@ -148,16 +143,17 @@ export class Painter {
 	}
 
 	beginItem(w: number, h: number) {
-		if (this.isFirstItem) this.move(this.style.window.margins.x, this.style.window.margins.y);
+		if (this.isFirstItem)
+			this.move(this.context.getStyle().window.margins.x, this.context.getStyle().window.margins.y);
 		else {
 			let ho = 0;
 			if (this.rowState && !this.rowState.isFirstItem) {
-				ho = this.windowSpacing.x;
+				ho = this.context.getWindowSpacing().x;
 				this.rowState.size.x += ho;
 			}
 
 			let vo = 0;
-			if (!this.rowState || this.rowState.isFirstItem) vo = this.windowSpacing.y;
+			if (!this.rowState || this.rowState.isFirstItem) vo = this.context.getWindowSpacing().y;
 
 			this.contentSize.x += ho;
 			this.contentSize.y += vo;
@@ -190,10 +186,6 @@ export class Painter {
 		return this.itemRect;
 	}
 
-	getWindowSpacing(): Vector2 {
-		return this.windowSpacing;
-	}
-
 	setPosition(x: number, y: number) {
 		this.position.x = x;
 		this.position.y = y;
@@ -202,10 +194,6 @@ export class Painter {
 	move(x: number, y: number) {
 		this.position.x += x;
 		this.position.y += y;
-	}
-
-	getStyle(): Style {
-		return this.style;
 	}
 
 	setColor(color: Color) {
@@ -288,11 +276,11 @@ export class Painter {
 		EndTextCommandDisplayText(this.position.x, this.position.y);
 	}
 
-	drawDebug(w: number, h = this.style.item.height) {
+	drawDebug(w: number, h = this.context.getStyle().item.height) {
 		if (!this.context.isDebugEnabled()) return;
 
 		this.setPosition(this.itemRect.position.x, this.itemRect.position.y);
-		this.setColor(this.style.getProperty<Color>('window', 'color'));
+		this.setColor(this.context.getStyle().getProperty<Color>('window', 'color'));
 		this.drawRect(w, h);
 	}
 

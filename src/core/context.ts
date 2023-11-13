@@ -1,6 +1,7 @@
 import { Rect, Vector2 } from '../exports';
 import { Input, InputKey } from './input';
 import { Painter } from './painter';
+import { Style } from './style';
 
 class ItemState {
 	constructor(public id: string | undefined = undefined, public width: number | undefined = undefined) {}
@@ -23,6 +24,7 @@ class WindowState {
 export class Context {
 	private input = new Input();
 	private painter = new Painter(this);
+	private style = new Style();
 	private nextWindowState = new WindowState();
 	private nextItemState = new ItemState();
 	private itemWidthStack: number[] = [];
@@ -67,8 +69,8 @@ export class Context {
 		return this.nextWindowState.id;
 	}
 
-	getWindowSpacing(): Vector2 | undefined {
-		return this.nextWindowState.spacing;
+	getWindowSpacing(): Vector2 {
+		return this.nextWindowState.spacing ?? this.style.window.spacing;
 	}
 
 	beginWindow(x: number, y: number) {
@@ -143,5 +145,9 @@ export class Context {
 
 	getPainter(): Painter {
 		return this.painter;
+	}
+
+	getStyle(): Style {
+		return this.style;
 	}
 }

@@ -3,7 +3,7 @@ import { Color } from '../exports';
 
 export function label(text: string) {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const properties = style.getProperties(context.tryGetItemId() ?? 'label');
 	const font = properties.get<number>('font-family');

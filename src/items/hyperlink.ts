@@ -4,7 +4,7 @@ import { Color } from '../exports';
 
 export function hyperlink(url: string, urlText: string | null) {
 	const painter = context.getPainter();
-	const style = painter.getStyle();
+	const style = context.getStyle();
 
 	const id = context.tryGetItemId() ?? 'hyperlink';
 	const hyperlinkProperties = style.getProperties(id);
