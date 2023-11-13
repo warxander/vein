@@ -8,7 +8,7 @@ class RowState {
 }
 
 class WindowDragState {
-	pos = new Vector2();
+	position = new Vector2();
 }
 
 export enum MouseCursor {
@@ -29,7 +29,7 @@ export enum MouseCursor {
 
 export class Painter {
 	private style = new Style();
-	private pos = new Vector2();
+	private position = new Vector2();
 	private color: Color = [0, 0, 0, 255];
 	private mouseCursor: MouseCursor = MouseCursor.Normal;
 	private contentSize = new Vector2();
@@ -50,8 +50,8 @@ export class Painter {
 		this.textEntryIndex = -1;
 		this.isFirstItem = true;
 
-		this.windowRect.pos = new Vector2(x, y);
-		this.setPosition(this.windowRect.pos.x, this.windowRect.pos.y);
+		this.windowRect.position = new Vector2(x, y);
+		this.setPosition(this.windowRect.position.x, this.windowRect.position.y);
 
 		const windowSpacing = this.context.getWindowSpacing();
 		this.windowSpacing.x = windowSpacing !== undefined ? windowSpacing.x : this.style.window.spacing.x;
@@ -78,7 +78,7 @@ export class Painter {
 		SetMouseCursorActiveThisFrame();
 		SetMouseCursorSprite(this.mouseCursor);
 
-		return new Rect(this.windowRect.pos, this.windowRect.size);
+		return new Rect(this.windowRect.position, this.windowRect.size);
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {
@@ -89,8 +89,8 @@ export class Painter {
 		const input = this.context.getInput();
 
 		if (
-			!new Rect(this.pos, new Vector2(this.windowRect.size.x, this.style.window.margins.y)).contains(
-				input.getMousePos()
+			!new Rect(this.position, new Vector2(this.windowRect.size.x, this.style.window.margins.y)).contains(
+				input.getMousePosition()
 			)
 		)
 			return;
@@ -101,8 +101,8 @@ export class Painter {
 
 		if (!this.windowDragState) this.windowDragState = new WindowDragState();
 
-		const mousePos = input.getMousePos();
-		this.windowDragState.pos = new Vector2(mousePos.x, mousePos.y);
+		const mousePosition = input.getMousePosition();
+		this.windowDragState.position = new Vector2(mousePosition.x, mousePosition.y);
 	}
 
 	private endWindowDrag() {
@@ -113,23 +113,23 @@ export class Painter {
 		const input = this.context.getInput();
 
 		if (input.getIsLmbDown()) {
-			const mousePos = input.getMousePos();
+			const mousePosition = input.getMousePosition();
 
-			this.windowRect.pos = new Vector2(
-				this.windowRect.pos.x + mousePos.x - this.windowDragState.pos.x,
-				this.windowRect.pos.y + mousePos.y - this.windowDragState.pos.y
+			this.windowRect.position = new Vector2(
+				this.windowRect.position.x + mousePosition.x - this.windowDragState.position.x,
+				this.windowRect.position.y + mousePosition.y - this.windowDragState.position.y
 			);
 
-			this.windowDragState.pos = new Vector2(mousePos.x, mousePos.y);
+			this.windowDragState.position = new Vector2(mousePosition.x, mousePosition.y);
 		} else this.windowDragState = null;
 	}
 
 	getX(): number {
-		return this.pos.x;
+		return this.position.x;
 	}
 
 	getY(): number {
-		return this.pos.y;
+		return this.position.y;
 	}
 
 	beginRow() {
@@ -144,7 +144,10 @@ export class Painter {
 			this.contentSize.y + this.rowState.size.y
 		);
 
-		this.setPosition(this.windowRect.pos.x + this.style.window.margins.x, this.pos.y + this.rowState.size.y);
+		this.setPosition(
+			this.windowRect.position.x + this.style.window.margins.x,
+			this.position.y + this.rowState.size.y
+		);
 
 		this.rowState = null;
 	}
@@ -171,7 +174,7 @@ export class Painter {
 			this.move(ho, vo);
 		}
 
-		this.itemRect = new Rect(new Vector2(this.pos.x, this.pos.y), new Vector2(w, h));
+		this.itemRect = new Rect(new Vector2(this.position.x, this.position.y), new Vector2(w, h));
 
 		if (this.rowState) this.rowState.isFirstItem = false;
 		this.isFirstItem = false;
@@ -185,10 +188,10 @@ export class Painter {
 
 		if (this.rowState) {
 			this.rowState.size = new Vector2(this.rowState.size.x + w, Math.max(this.rowState.size.y, h));
-			this.setPosition(this.itemRect.pos.x + w, this.itemRect.pos.y);
+			this.setPosition(this.itemRect.position.x + w, this.itemRect.position.y);
 		} else {
 			this.contentSize = new Vector2(Math.max(w, this.contentSize.x), this.contentSize.y + h);
-			this.setPosition(this.itemRect.pos.x, this.itemRect.pos.y + h);
+			this.setPosition(this.itemRect.position.x, this.itemRect.position.y + h);
 		}
 	}
 
@@ -201,13 +204,13 @@ export class Painter {
 	}
 
 	setPosition(x: number, y: number) {
-		this.pos.x = x;
-		this.pos.y = y;
+		this.position.x = x;
+		this.position.y = y;
 	}
 
 	move(x: number, y: number) {
-		this.pos.x += x;
-		this.pos.y += y;
+		this.position.x += x;
+		this.position.y += y;
 	}
 
 	getStyle(): Style {
@@ -232,8 +235,8 @@ export class Painter {
 
 	drawRect(w: number, h: number) {
 		DrawRect(
-			this.pos.x + w / 2,
-			this.pos.y + h / 2,
+			this.position.x + w / 2,
+			this.position.y + h / 2,
 			w,
 			h,
 			this.color[0],
@@ -247,8 +250,8 @@ export class Painter {
 		DrawSprite(
 			dict,
 			name,
-			this.pos.x + w / 2,
-			this.pos.y + h / 2,
+			this.position.x + w / 2,
+			this.position.y + h / 2,
 			w,
 			h,
 			heading ?? 0,
@@ -270,7 +273,7 @@ export class Painter {
 		if (this.textEntryIndex == -1) return 0;
 
 		BeginTextCommandLineCount(this.getTextEntry());
-		return EndTextCommandLineCount(this.pos.x, this.pos.y);
+		return EndTextCommandLineCount(this.position.x, this.position.y);
 	}
 
 	setText(font: number, scale: number, text: string) {
@@ -282,7 +285,7 @@ export class Painter {
 	}
 
 	setTextWidth(w: number) {
-		SetTextWrap(this.pos.x, this.pos.x + w);
+		SetTextWrap(this.position.x, this.position.x + w);
 	}
 
 	drawText() {
@@ -291,13 +294,13 @@ export class Painter {
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
 		BeginTextCommandDisplayText(this.getTextEntry());
-		EndTextCommandDisplayText(this.pos.x, this.pos.y);
+		EndTextCommandDisplayText(this.position.x, this.position.y);
 	}
 
 	drawDebug(w: number, h = this.style.item.height) {
 		if (!this.context.isDebugEnabled()) return;
 
-		this.setPosition(this.itemRect.pos.x, this.itemRect.pos.y);
+		this.setPosition(this.itemRect.position.x, this.itemRect.position.y);
 		this.setColor(this.style.getProperty<Color>('window', 'color'));
 		this.drawRect(w, h);
 	}

@@ -25,9 +25,9 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 		new Rect(
 			new Vector2(painter.getX() - sliderStyle.tickMarkSize.x / 2, painter.getY()),
 			new Vector2(w + sliderStyle.tickMarkSize.x, h)
-		).contains(input.getMousePos())
+		).contains(input.getMousePosition())
 	)
-		newValue = Math.min(max, Math.max(min, min + ((input.getMousePos().x - painter.getX()) / w) * (max + min)));
+		newValue = Math.min(max, Math.max(min, min + ((input.getMousePosition().x - painter.getX()) / w) * (max + min)));
 
 	const sh = (h - sliderStyle.height) / 2;
 

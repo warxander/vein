@@ -2,7 +2,7 @@ import { Vector2 } from '../exports';
 
 class State {
 	constructor(
-		public mousePos = new Vector2(),
+		public mousePosition = new Vector2(),
 		public isLmbPressed = false,
 		public isLmbReleased = false,
 		public isLmbDown = false
@@ -33,8 +33,8 @@ export class Input {
 		);
 	}
 
-	getMousePos(): Vector2 {
-		return this.state.mousePos;
+	getMousePosition(): Vector2 {
+		return this.state.mousePosition;
 	}
 
 	getIsLmbPressed(): boolean {
