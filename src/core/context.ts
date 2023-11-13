@@ -1,5 +1,5 @@
 import { Rect, Vector2 } from '../exports';
-import { Input } from './input';
+import { Input, InputKey } from './input';
 import { Painter } from './painter';
 
 class ItemState {
@@ -92,7 +92,7 @@ export class Context {
 	}
 
 	isItemClicked(): boolean {
-		return this.input.getIsLmbPressed() && this.isItemHovered();
+		return this.input.isKeyPressed(InputKey.LeftMouseButton) && this.isItemHovered();
 	}
 
 	beginItem(w: number, h: number) {

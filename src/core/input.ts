@@ -1,16 +1,11 @@
 import { Vector2 } from '../exports';
 
-class State {
-	constructor(
-		public mousePosition = new Vector2(),
-		public isLmbPressed = false,
-		public isLmbReleased = false,
-		public isLmbDown = false
-	) {}
+export enum InputKey {
+	LeftMouseButton = 237
 }
 
 export class Input {
-	private state = new State();
+	private mousePosition = new Vector2();
 
 	private static readonly DISABLED_CONTROLS = [
 		1, 2, 22, 24, 25, 36, 37, 44, 47, 53, 54, 68, 69, 70, 74, 81, 82, 83, 84, 85, 91, 92, 99, 100, 101, 102, 114,
@@ -25,27 +20,22 @@ export class Input {
 		if (IsPedInAnyVehicle(PlayerPedId(), false))
 			for (const control of Input.DISABLED_CONTROLS_IN_VEHICLE) DisableControlAction(0, control, true);
 
-		this.state = new State(
-			new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240)),
-			IsControlJustPressed(2, 237),
-			!this.state.isLmbPressed && IsControlJustReleased(2, 237),
-			!this.state.isLmbReleased && IsControlPressed(2, 237)
-		);
+		this.mousePosition = new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));
 	}
 
 	getMousePosition(): Vector2 {
-		return this.state.mousePosition;
+		return this.mousePosition;
 	}
 
-	getIsLmbPressed(): boolean {
-		return this.state.isLmbPressed;
+	isKeyPressed(key: InputKey): boolean {
+		return IsControlJustPressed(2, key);
 	}
 
-	getIsLmbReleased(): boolean {
-		return this.state.isLmbReleased;
+	isKeyReleased(key: InputKey): boolean {
+		return IsControlJustReleased(2, key);
 	}
 
-	getIsLmbDown(): boolean {
-		return this.state.isLmbDown;
+	isKeyDown(key: InputKey): boolean {
+		return IsControlPressed(2, key);
 	}
 }

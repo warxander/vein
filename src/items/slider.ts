@@ -1,6 +1,7 @@
 import { Rect, Vector2, context } from '../exports';
 import { numberEquals } from '../core/utils';
 import { Color } from '../exports';
+import { InputKey } from '../core/input';
 
 export interface ISliderResult {
 	isValueChanged: boolean;
@@ -21,13 +22,16 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 	let newValue = value;
 
 	if (
-		(input.getIsLmbDown() || input.getIsLmbPressed()) &&
+		(input.isKeyDown(InputKey.LeftMouseButton) || input.isKeyPressed(InputKey.LeftMouseButton)) &&
 		new Rect(
 			new Vector2(painter.getX() - sliderStyle.tickMarkSize.x / 2, painter.getY()),
 			new Vector2(w + sliderStyle.tickMarkSize.x, h)
 		).contains(input.getMousePosition())
 	)
-		newValue = Math.min(max, Math.max(min, min + ((input.getMousePosition().x - painter.getX()) / w) * (max + min)));
+		newValue = Math.min(
+			max,
+			Math.max(min, min + ((input.getMousePosition().x - painter.getX()) / w) * (max + min))
+		);
 
 	const sh = (h - sliderStyle.height) / 2;
 

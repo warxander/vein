@@ -1,14 +1,11 @@
 import { Color, Image, Rect, Vector2 } from '../exports';
 import { Context } from './context';
+import { InputKey } from './input';
 import { Style, StylePropertyValues } from './style';
 
 class RowState {
 	isFirstItem = true;
 	size = new Vector2();
-}
-
-class WindowDragState {
-	position = new Vector2();
 }
 
 export enum MouseCursor {
@@ -36,7 +33,7 @@ export class Painter {
 	private textEntryIndex = -1;
 	private rowState: RowState | null = null;
 	private windowRect = new Rect();
-	private windowDragState: WindowDragState | null = null;
+	private windowDragPosition: Vector2 | null = null;
 	private windowSpacing = new Vector2();
 	private isFirstItem = true;
 	private itemRect = new Rect();
@@ -87,41 +84,39 @@ export class Painter {
 
 	private beginWindowDrag() {
 		const input = this.context.getInput();
+		const mousePosition = input.getMousePosition();
 
 		if (
 			!new Rect(this.position, new Vector2(this.windowRect.size.x, this.style.window.margins.y)).contains(
-				input.getMousePosition()
+				mousePosition
 			)
 		)
 			return;
 
-		if (!this.windowDragState) this.setMouseCursor(MouseCursor.PreGrab);
+		if (!this.windowDragPosition) {
+			if (input.isKeyPressed(InputKey.LeftMouseButton)) {
+				this.windowDragPosition = new Vector2(mousePosition.x, mousePosition.y);
+			}
+		} else if (!input.isKeyDown(InputKey.LeftMouseButton)) {
+			this.windowDragPosition = null;
+		}
 
-		if (!input.getIsLmbPressed()) return;
-
-		if (!this.windowDragState) this.windowDragState = new WindowDragState();
-
-		const mousePosition = input.getMousePosition();
-		this.windowDragState.position = new Vector2(mousePosition.x, mousePosition.y);
+		if (!this.windowDragPosition) this.setMouseCursor(MouseCursor.PreGrab);
 	}
 
 	private endWindowDrag() {
-		if (!this.windowDragState) return;
+		if (!this.windowDragPosition) return;
+
+		const mousePosition = this.context.getInput().getMousePosition();
+
+		this.windowRect.position = new Vector2(
+			this.windowRect.position.x + mousePosition.x - this.windowDragPosition.x,
+			this.windowRect.position.y + mousePosition.y - this.windowDragPosition.y
+		);
+
+		this.windowDragPosition = new Vector2(mousePosition.x, mousePosition.y);
 
 		this.setMouseCursor(MouseCursor.Grab);
-
-		const input = this.context.getInput();
-
-		if (input.getIsLmbDown()) {
-			const mousePosition = input.getMousePosition();
-
-			this.windowRect.position = new Vector2(
-				this.windowRect.position.x + mousePosition.x - this.windowDragState.position.x,
-				this.windowRect.position.y + mousePosition.y - this.windowDragState.position.y
-			);
-
-			this.windowDragState.position = new Vector2(mousePosition.x, mousePosition.y);
-		} else this.windowDragState = null;
 	}
 
 	getX(): number {
