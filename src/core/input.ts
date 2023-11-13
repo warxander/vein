@@ -48,13 +48,4 @@ export class Input {
 	getIsLmbDown(): boolean {
 		return this.state.isLmbDown;
 	}
-
-	isRectHovered(x: number, y: number, w: number, h: number): boolean {
-		return !(
-			this.state.mousePos.x < x ||
-			this.state.mousePos.x > x + w ||
-			this.state.mousePos.y < y ||
-			this.state.mousePos.y > y + h
-		);
-	}
 }

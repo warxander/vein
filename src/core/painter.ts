@@ -88,7 +88,12 @@ export class Painter {
 	private beginWindowDrag() {
 		const input = this.context.getInput();
 
-		if (!input.isRectHovered(this.pos.x, this.pos.y, this.windowRect.size.x, this.style.window.margins.y)) return;
+		if (
+			!new Rect(this.pos, new Vector2(this.windowRect.size.x, this.style.window.margins.y)).contains(
+				input.getMousePos()
+			)
+		)
+			return;
 
 		if (!this.windowDragState) this.setMouseCursor(MouseCursor.PreGrab);
 
@@ -187,20 +192,8 @@ export class Painter {
 		}
 	}
 
-	getItemX(): number {
-		return this.itemRect.pos.x;
-	}
-
-	getItemY(): number {
-		return this.itemRect.pos.y;
-	}
-
-	getItemWidth(): number {
-		return this.itemRect.size.x;
-	}
-
-	getItemHeight(): number {
-		return this.itemRect.size.y;
+	getItemRect(): Rect {
+		return this.itemRect;
 	}
 
 	getWindowSpacing(): Vector2 {

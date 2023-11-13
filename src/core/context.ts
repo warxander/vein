@@ -88,12 +88,7 @@ export class Context {
 	}
 
 	isItemHovered(): boolean {
-		return this.input.isRectHovered(
-			this.painter.getItemX(),
-			this.painter.getItemY(),
-			this.painter.getItemWidth(),
-			this.painter.getItemHeight()
-		);
+		return this.painter.getItemRect().contains(this.input.getMousePos());
 	}
 
 	isItemClicked(): boolean {

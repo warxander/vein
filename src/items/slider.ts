@@ -1,4 +1,4 @@
-import { context } from '../exports';
+import { Rect, Vector2, context } from '../exports';
 import { numberEquals } from '../core/utils';
 import { Color } from '../exports';
 
@@ -20,14 +20,13 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 
 	let newValue = value;
 
-	const isHovered = input.isRectHovered(
-		painter.getX() - sliderStyle.tickMarkSize.x / 2,
-		painter.getY(),
-		w + sliderStyle.tickMarkSize.x,
-		h
-	);
-
-	if (isHovered && (input.getIsLmbDown() || input.getIsLmbPressed()))
+	if (
+		(input.getIsLmbDown() || input.getIsLmbPressed()) &&
+		new Rect(
+			new Vector2(painter.getX() - sliderStyle.tickMarkSize.x / 2, painter.getY()),
+			new Vector2(w + sliderStyle.tickMarkSize.x, h)
+		).contains(input.getMousePos())
+	)
 		newValue = Math.min(max, Math.max(min, min + ((input.getMousePos().x - painter.getX()) / w) * (max + min)));
 
 	const sh = (h - sliderStyle.height) / 2;
