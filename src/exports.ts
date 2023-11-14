@@ -51,6 +51,8 @@ export interface IUi {
 
 	isItemHovered(): boolean;
 	isItemClicked(): boolean;
+
+	getWindowRect(): IRect;
 }
 
 export interface IInput {
@@ -191,6 +193,10 @@ export function getUi(): IUi {
 
 		isItemClicked(): boolean {
 			return ui.isItemClicked();
+		},
+
+		getWindowRect(): IRect {
+			return toIRect(Ui.getWindowRect());
 		}
 	};
 }
