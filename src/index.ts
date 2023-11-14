@@ -1,6 +1,6 @@
 import * as Exports from './exports';
 
-globalThis.exports('getContext', Exports.getUi);
+globalThis.exports('getUi', Exports.getUi);
 
 globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 globalThis.exports('isDebugEnabled', Exports.isDebugEnabled);
