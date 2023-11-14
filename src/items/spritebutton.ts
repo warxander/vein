@@ -1,11 +1,13 @@
-import { context } from '../exports';
-import { Color } from '../exports';
+import { Ui, getUiChecked } from '../ui';
+import { Color } from '../core/types';
 
 export function spriteButton(dict: string, name: string, text: string): boolean {
-	const painter = context.getPainter();
-	const style = context.getStyle();
+	const ui = getUiChecked();
 
-	const id = context.tryGetItemId() ?? 'sprite-button';
+	const painter = ui.getPainter();
+	const style = Ui.getStyle();
+
+	const id = ui.tryGetItemId() ?? 'sprite-button';
 	const spriteButtonProperties = style.getProperties(id);
 	const font = spriteButtonProperties.get<number>('font-family');
 	const scale = spriteButtonProperties.get<number>('font-size');
@@ -16,12 +18,12 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	const sw = spriteButtonStyle.spriteWidth;
 
 	const w =
-		context.tryGetItemWidth() || painter.getTextWidth() + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
+		ui.tryGetItemWidth() || painter.getTextWidth() + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
 	const h = style.item.height;
 
-	context.beginItem(w, h);
+	ui.beginItem(w, h);
 
-	const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : spriteButtonProperties;
+	const properties = ui.isItemHovered() ? style.getProperties(`${id}:hover`) : spriteButtonProperties;
 
 	painter.drawItemBackground(properties, w, h);
 
@@ -39,7 +41,7 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	);
 	painter.drawText();
 
-	context.endItem();
+	ui.endItem();
 
-	return context.isItemClicked();
+	return ui.isItemClicked();
 }

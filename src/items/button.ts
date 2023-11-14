@@ -1,23 +1,25 @@
-import { context } from '../exports';
-import { Color } from '../exports';
+import { Ui, getUiChecked } from '../ui';
+import { Color } from '../core/types';
 
 export function button(text: string): boolean {
-	const painter = context.getPainter();
-	const style = context.getStyle();
+	const ui = getUiChecked();
 
-	const id = context.tryGetItemId() ?? 'button';
+	const painter = ui.getPainter();
+	const style = Ui.getStyle();
+
+	const id = ui.tryGetItemId() ?? 'button';
 	const buttonProperties = style.getProperties(id);
 	const font = buttonProperties.get<number>('font-family');
 	const scale = buttonProperties.get<number>('font-size');
 
 	painter.setText(font, scale, text);
 
-	const w = context.tryGetItemWidth() ?? painter.getTextWidth() + style.button.spacing * 2;
+	const w = ui.tryGetItemWidth() ?? painter.getTextWidth() + style.button.spacing * 2;
 	const h = style.item.height;
 
-	context.beginItem(w, h);
+	ui.beginItem(w, h);
 
-	const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : buttonProperties;
+	const properties = ui.isItemHovered() ? style.getProperties(`${id}:hover`) : buttonProperties;
 
 	painter.drawItemBackground(properties, w, h);
 
@@ -25,7 +27,7 @@ export function button(text: string): boolean {
 	painter.move(style.button.spacing, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText();
 
-	context.endItem();
+	ui.endItem();
 
-	return context.isItemClicked();
+	return ui.isItemClicked();
 }

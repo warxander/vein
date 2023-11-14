@@ -1,4 +1,13 @@
-import { Context } from './core/context';
+import { Ui, getUiChecked, setUi } from './ui';
+import { Rect, Vector2 } from './core/types';
+
+function toIRect(rect: Rect): IRect {
+	return { x: rect.position.x, y: rect.position.y, w: rect.size.x, h: rect.size.y };
+}
+
+function toIVector2(vector2: Vector2): IVector2 {
+	return { x: vector2.x, y: vector2.y };
+}
 
 export * from './items/button';
 export * from './items/checkbox';
@@ -17,36 +26,19 @@ export * from './items/spritebutton';
 export * from './items/textarea';
 export * from './items/textedit';
 
-/** @ignore */
-export type Color = [number, number, number, number];
-
-/** @ignore */
-export type FontSize = number;
-
-/** @ignore */
-export type Image = [string, string];
-
-export class Vector2 {
-	constructor(public x: number = 0, public y: number = 0) {}
+export interface IVector2 {
+	x: number;
+	y: number;
 }
 
-export class Rect {
-	constructor(public position: Vector2 = new Vector2(), public size: Vector2 = new Vector2()) {}
-
-	contains(point: Vector2): boolean {
-		return !(
-			point.x < this.position.x ||
-			point.x > this.position.x + this.size.x ||
-			point.y < this.position.y ||
-			point.y > this.position.y + this.size.y
-		);
-	}
+export interface IRect {
+	x: number;
+	y: number;
+	w: number;
+	h: number;
 }
 
-/** @ignore */
-export const context: Context = new Context();
-
-export interface IContext {
+export interface IUi {
 	beginItem(w: number, h: number): void;
 	endItem(): void;
 
@@ -62,7 +54,7 @@ export interface IContext {
 export interface IPainter {
 	move(x: number, y: number): void;
 
-	getPosition(): [number, number];
+	getPosition(): IVector2;
 	setPosition(x: number, y: number): void;
 
 	setColor(r: number, g: number, b: number, a: number): void;
@@ -78,166 +70,174 @@ export interface IPainter {
 	drawText(): void;
 }
 
-export function getContext(): IContext {
+export function getUi(): IUi {
+	const ui = getUiChecked();
+
 	return {
 		beginItem(w: number, h: number) {
-			context.beginItem(w, h);
+			ui.beginItem(w, h);
 		},
 
 		endItem() {
-			context.endItem();
+			ui.endItem();
 		},
 
 		tryGetItemWidth(): number | null {
-			return context.tryGetItemWidth() ?? null;
+			return ui.tryGetItemWidth() ?? null;
 		},
 
 		tryGetItemId(): string | null {
-			return context.tryGetItemId() ?? null;
+			return ui.tryGetItemId() ?? null;
 		},
 
 		getPainter(): IPainter {
 			return {
 				move(x: number, y: number) {
-					context.getPainter().move(x, y);
+					ui.getPainter().move(x, y);
 				},
 
-				getPosition(): [number, number] {
-					const position = context.getPainter().getPosition();
-					return [position.x, position.y];
+				getPosition(): IVector2 {
+					return toIVector2(ui.getPainter().getPosition());
 				},
 
 				setPosition(x: number, y: number) {
-					context.getPainter().setPosition(x, y);
+					ui.getPainter().setPosition(x, y);
 				},
 
 				setColor(r: number, g: number, b: number, a: number) {
-					context.getPainter().setColor([r, g, b, a]);
+					ui.getPainter().setColor([r, g, b, a]);
 				},
 
 				setMouseCursor(mouseCursor: number) {
-					context.getPainter().setMouseCursor(mouseCursor);
+					ui.setMouseCursor(mouseCursor);
 				},
 
 				drawRect(w: number, h: number) {
-					context.getPainter().drawRect(w, h);
+					ui.getPainter().drawRect(w, h);
 				},
 
 				drawSprite(dict: string, name: string, w: number, h: number) {
-					context.getPainter().drawSprite(dict, name, w, h);
+					ui.getPainter().drawSprite(dict, name, w, h);
 				},
 
 				setText(font: number, scale: number, text: string) {
-					context.getPainter().setText(font, scale, text);
+					ui.getPainter().setText(font, scale, text);
 				},
 
 				setTextWidth(w: number) {
-					context.getPainter().setTextWidth(w);
+					ui.getPainter().setTextWidth(w);
 				},
 
 				getTextWidth(): number {
-					return context.getPainter().getTextWidth();
+					return ui.getPainter().getTextWidth();
 				},
 
 				drawText() {
-					context.getPainter().drawText();
+					ui.getPainter().drawText();
 				}
 			};
 		},
 
 		isItemHovered(): boolean {
-			return context.isItemHovered();
+			return ui.isItemHovered();
 		},
 
 		isItemClicked(): boolean {
-			return context.isItemClicked();
+			return ui.isItemClicked();
 		}
 	};
 }
 
 export function setDebugEnabled(enabled: boolean) {
-	context.setDebugEnabled(enabled);
+	Ui.setDebugEnabled(enabled);
 }
 
 export function isDebugEnabled(): boolean {
-	return context.isDebugEnabled();
+	return Ui.isDebugEnabled();
 }
 
 /** `false` by default */
 export function setNextWindowNoDrag(isNoDrag: boolean) {
-	context.setNextWindowNoDrag(isNoDrag);
+	Ui.setNextWindowNoDrag(isNoDrag);
 }
 
 /** `false` by default */
 export function setNextWindowNoBackground(isNoBackground: boolean) {
-	context.setNextWindowNoBackground(isNoBackground);
+	Ui.setNextWindowNoBackground(isNoBackground);
 }
 
 /** Used as a selector name */
 export function setNextWindowId(id: string) {
-	context.setNextWindowId(id);
+	Ui.setNextWindowId(id);
 }
 
 export function setNextWindowSpacing(x: number, y: number) {
-	context.setNextWindowSpacing(x, y);
+	Ui.setNextWindowSpacing(x, y);
 }
 
 export function beginWindow(x: number | null, y: number | null) {
-	context.beginWindow(x !== null ? x : 0.33, y !== null ? y : 0.33);
+	setUi(new Ui(x !== null ? x : 0.33, y !== null ? y : 0.33));
 }
 
-export function endWindow(): Rect {
-	return context.endWindow();
+export function endWindow(): IRect {
+	const ui = getUiChecked();
+
+	ui.end();
+
+	const windowRect = Ui.getWindowRect();
+	setUi(null);
+
+	return toIRect(windowRect);
 }
 
 /** `true` if the last drawn item was hovered */
 export function isItemHovered(): boolean {
-	return context.isItemHovered();
+	return getUiChecked().isItemHovered();
 }
 
 /** `true` if the last drawn item was clicked */
 export function isItemClicked(): boolean {
-	return context.isItemClicked();
+	return getUiChecked().isItemClicked();
 }
 
 export function beginRow() {
-	context.getPainter().beginRow();
+	getUiChecked().getLayout().beginRow();
 }
 
 export function endRow() {
-	context.getPainter().endRow();
+	getUiChecked().getLayout().endRow();
 }
 
 export function setNextItemWidth(w: number) {
-	context.setNextItemWidth(w);
+	getUiChecked().setNextItemWidth(w);
 }
 
 export function pushItemWidth(w: number) {
-	context.pushItemWidth(w);
+	getUiChecked().pushItemWidth(w);
 }
 
 export function popItemWidth() {
-	context.popItemWidth();
+	getUiChecked().popItemWidth();
 }
 
 export function setStyleSheet(styleSheet: string) {
-	context.getStyle().setSheet(styleSheet);
+	Ui.getStyle().setSheet(styleSheet);
 }
 
 export function useDefaultStyle() {
-	context.getStyle().useDefault();
+	Ui.getStyle().useDefault();
 }
 
 /** Used as a selector name */
 export function setNextItemId(id: string) {
-	context.setNextItemId(id);
+	getUiChecked().setNextItemId(id);
 }
 
 /** Used as a selector name */
 export function pushItemId(id: string) {
-	context.pushItemId(id);
+	getUiChecked().pushItemId(id);
 }
 
 export function popItemId() {
-	context.popItemId();
+	getUiChecked().popItemId();
 }

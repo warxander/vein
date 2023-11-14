@@ -1,13 +1,15 @@
-import { context } from '../exports';
+import { getUiChecked } from '../ui';
 import { Style } from '../core/style';
 
 export function sprite(dict: string, name: string, w: number, h: number) {
-	const painter = context.getPainter();
+	const ui = getUiChecked();
 
-	context.beginItem(w, h);
+	const painter = ui.getPainter();
+
+	ui.beginItem(w, h);
 
 	painter.setColor(Style.SPRITE_COLOR);
 	painter.drawSprite(dict, name, w, h);
 
-	context.endItem();
+	ui.endItem();
 }

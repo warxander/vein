@@ -1,29 +1,30 @@
-import { MouseCursor } from '../core/painter';
-import { context } from '../exports';
-import { Color } from '../exports';
+import { Ui, MouseCursor, getUiChecked } from '../ui';
+import { Color } from '../core/types';
 
 export function hyperlink(url: string, urlText: string | null) {
-	const painter = context.getPainter();
-	const style = context.getStyle();
+	const ui = getUiChecked();
 
-	const id = context.tryGetItemId() ?? 'hyperlink';
+	const painter = ui.getPainter();
+	const style = Ui.getStyle();
+
+	const id = ui.tryGetItemId() ?? 'hyperlink';
 	const hyperlinkProperties = style.getProperties(id);
 	const font = hyperlinkProperties.get<number>('font-family');
 	const scale = hyperlinkProperties.get<number>('font-size');
 
 	painter.setText(font, scale, urlText ?? url);
 
-	const w = context.tryGetItemWidth() ?? painter.getTextWidth();
+	const w = ui.tryGetItemWidth() ?? painter.getTextWidth();
 	const h = style.item.height;
 
-	context.beginItem(w, h);
+	ui.beginItem(w, h);
 
-	const isHovered = context.isItemHovered();
+	const isHovered = ui.isItemHovered();
 
 	if (isHovered) {
-		painter.setMouseCursor(MouseCursor.MiddleFinger);
+		ui.setMouseCursor(MouseCursor.MiddleFinger);
 
-		if (context.isItemClicked()) SendNUIMessage({ openUrl: { url: url } });
+		if (ui.isItemClicked()) SendNUIMessage({ openUrl: { url: url } });
 	}
 
 	const properties = isHovered ? style.getProperties(`${id}:hover`) : hyperlinkProperties;
@@ -31,5 +32,5 @@ export function hyperlink(url: string, urlText: string | null) {
 	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText();
 
-	context.endItem();
+	ui.endItem();
 }

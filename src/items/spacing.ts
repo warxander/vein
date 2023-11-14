@@ -1,16 +1,16 @@
-import { context } from '../exports';
+import { Ui, getUiChecked } from '../ui';
 
 /** Horizontal if in row mode, vertical otherwise */
 export function spacing(count = 1) {
-	const painter = context.getPainter();
+	const ui = getUiChecked();
 
-	const isRowMode = painter.isRowMode();
+	const isInRowMode = ui.getLayout().isInRowMode();
 
-	const windowSpacing = context.getWindowSpacing();
-	const w = isRowMode ? windowSpacing.x * count : 0;
-	const h = isRowMode ? 0 : windowSpacing.y * count;
+	const windowSpacing = Ui.getWindowSpacing();
+	const w = isInRowMode ? windowSpacing.x * count : 0;
+	const h = isInRowMode ? 0 : windowSpacing.y * count;
 
-	context.beginItem(w, h);
+	ui.beginItem(w, h);
 
-	context.endItem();
+	ui.endItem();
 }

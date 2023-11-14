@@ -1,11 +1,13 @@
-import { context } from '../exports';
-import { Color } from '../exports';
+import { Ui, getUiChecked } from '../ui';
+import { Color } from '../core/types';
 
 export function checkBox(isChecked: boolean, text: string): boolean {
-	const painter = context.getPainter();
-	const style = context.getStyle();
+	const ui = getUiChecked();
 
-	const id = context.tryGetItemId() ?? 'check-box';
+	const painter = ui.getPainter();
+	const style = Ui.getStyle();
+
+	const id = ui.tryGetItemId() ?? 'check-box';
 	const checkBoxProperties = style.getProperties(id);
 	const font = checkBoxProperties.get<number>('font-family');
 	const scale = checkBoxProperties.get<number>('font-size');
@@ -16,16 +18,16 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	const checkboxStyle = style.checkbox;
 	let cw = checkboxStyle.height / aspectRatio;
 
-	const w = context.tryGetItemWidth() ?? cw + checkboxStyle.spacing + painter.getTextWidth();
+	const w = ui.tryGetItemWidth() ?? cw + checkboxStyle.spacing + painter.getTextWidth();
 	const h = style.item.height;
 
-	context.beginItem(w, h);
+	ui.beginItem(w, h);
 
-	if (context.isItemClicked()) isChecked = !isChecked;
+	if (ui.isItemClicked()) isChecked = !isChecked;
 
 	const vo = (h - checkboxStyle.height) / 2;
 
-	const properties = context.isItemHovered() ? style.getProperties(`${id}:hover`) : checkBoxProperties;
+	const properties = ui.isItemHovered() ? style.getProperties(`${id}:hover`) : checkBoxProperties;
 	const color = properties.get<Color>('color');
 	const backgroundColor = properties.get<Color>('background-color');
 
@@ -51,7 +53,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	);
 	painter.drawText();
 
-	context.endItem();
+	ui.endItem();
 
 	return isChecked;
 }

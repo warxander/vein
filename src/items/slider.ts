@@ -1,6 +1,6 @@
-import { Rect, Vector2, context } from '../exports';
+import { Ui, getUiChecked } from '../ui';
 import { numberEquals } from '../core/utils';
-import { Color } from '../exports';
+import { Color, Rect, Vector2 } from '../core/types';
 import { InputKey } from '../core/input';
 
 export interface ISliderResult {
@@ -9,13 +9,16 @@ export interface ISliderResult {
 }
 
 export function slider(min: number, value: number, max: number, w: number): ISliderResult {
-	const input = context.getInput();
-	const painter = context.getPainter();
-	const style = context.getStyle();
+	const ui = getUiChecked();
+
+	const input = ui.getInput();
+	const layout = ui.getLayout();
+	const painter = ui.getPainter();
+	const style = Ui.getStyle();
 
 	const h = style.item.height;
 
-	context.beginItem(w, h);
+	ui.beginItem(w, h);
 
 	const sliderStyle = style.slider;
 
@@ -24,19 +27,22 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 	if (
 		(input.isKeyDown(InputKey.LeftMouseButton) || input.isKeyPressed(InputKey.LeftMouseButton)) &&
 		new Rect(
-			new Vector2(painter.getPosition().x - sliderStyle.tickMarkSize.x / 2, painter.getPosition().y),
+			new Vector2(
+				layout.getItemRect().position.x - sliderStyle.tickMarkSize.x / 2,
+				layout.getItemRect().position.y
+			),
 			new Vector2(w + sliderStyle.tickMarkSize.x, h)
 		).contains(input.getMousePosition())
 	)
 		newValue = Math.min(
 			max,
-			Math.max(min, min + ((input.getMousePosition().x - painter.getPosition().x) / w) * (max + min))
+			Math.max(min, min + ((input.getMousePosition().x - layout.getItemRect().position.x) / w) * (max + min))
 		);
 
 	const sh = (h - sliderStyle.height) / 2;
 
-	const id = context.tryGetItemId() ?? 'slider';
-	const properties = style.getProperties(context.isItemHovered() ? `${id}:hover` : id);
+	const id = ui.tryGetItemId() ?? 'slider';
+	const properties = style.getProperties(ui.isItemHovered() ? `${id}:hover` : id);
 
 	painter.setColor(properties.get<Color>('background-color'));
 	painter.move(0, sh);
@@ -49,7 +55,7 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 	painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);
 	painter.drawRect(sliderStyle.tickMarkSize.x, sliderStyle.tickMarkSize.y);
 
-	context.endItem();
+	ui.endItem();
 
 	return { isValueChanged: !numberEquals(newValue, value), value: newValue };
 }

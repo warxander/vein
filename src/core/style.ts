@@ -1,5 +1,4 @@
-import { Color, Image, FontSize } from '../exports';
-
+import { Color, Image, FontSize } from './types';
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
 type StylePropertyValue = Color | Image | FontSize;

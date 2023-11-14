@@ -1,11 +1,11 @@
-import { Vector2 } from '../exports';
+import { Vector2 } from './types';
 
 export enum InputKey {
 	LeftMouseButton = 237
 }
 
 export class Input {
-	private mousePosition = new Vector2();
+	private mousePosition = new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));
 
 	private static readonly DISABLED_CONTROLS = [
 		1, 2, 22, 24, 25, 36, 37, 44, 47, 53, 54, 68, 69, 70, 74, 81, 82, 83, 84, 85, 91, 92, 99, 100, 101, 102, 114,
@@ -14,13 +14,11 @@ export class Input {
 
 	private static readonly DISABLED_CONTROLS_IN_VEHICLE = [80, 106, 122, 135, 282, 283, 284, 285];
 
-	beginWindow() {
+	constructor() {
 		for (const control of Input.DISABLED_CONTROLS) DisableControlAction(0, control, true);
 
 		if (IsPedInAnyVehicle(PlayerPedId(), false))
 			for (const control of Input.DISABLED_CONTROLS_IN_VEHICLE) DisableControlAction(0, control, true);
-
-		this.mousePosition = new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));
 	}
 
 	getMousePosition(): Vector2 {

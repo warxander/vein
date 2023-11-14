@@ -1,16 +1,18 @@
-import { context } from '../exports';
+import { Ui, getUiChecked } from '../ui';
 import { numberEquals } from '../core/utils';
-import { Color } from '../exports';
+import { Color } from '../core/types';
 
 export function progressBar(min: number, value: number, max: number, w: number) {
-	const painter = context.getPainter();
-	const style = context.getStyle();
+	const ui = getUiChecked();
 
-	context.beginItem(w, style.item.height);
+	const painter = ui.getPainter();
+	const style = Ui.getStyle();
+
+	ui.beginItem(w, style.item.height);
 
 	const h = style.progressBar.height;
 
-	const properties = style.getProperties(context.tryGetItemId() ?? 'progress-bar');
+	const properties = style.getProperties(ui.tryGetItemId() ?? 'progress-bar');
 
 	painter.setColor(properties.get<Color>('background-color'));
 	painter.move(0, (style.item.height - h) / 2);
@@ -23,5 +25,5 @@ export function progressBar(min: number, value: number, max: number, w: number) 
 		painter.drawRect(pw, h);
 	}
 
-	context.endItem();
+	ui.endItem();
 }

@@ -1,6 +1,8 @@
-import { context } from '../exports';
+import { getUiChecked } from '../ui';
 
 export function dummy(w: number, h: number) {
-	context.beginItem(w, h);
-	context.endItem();
+	const ui = getUiChecked();
+
+	ui.beginItem(w, h);
+	ui.endItem();
 }

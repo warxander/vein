@@ -1,6 +1,6 @@
 import * as Exports from './exports';
 
-globalThis.exports('getContext', Exports.getContext);
+globalThis.exports('getContext', Exports.getUi);
 
 globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 globalThis.exports('isDebugEnabled', Exports.isDebugEnabled);
@@ -11,10 +11,7 @@ globalThis.exports('setNextWindowId', Exports.setNextWindowId);
 globalThis.exports('setNextWindowSpacing', Exports.setNextWindowSpacing);
 
 globalThis.exports('beginWindow', Exports.beginWindow);
-globalThis.exports('endWindow', function (): any {
-	const windowRect = Exports.endWindow();
-	return { x: windowRect.position.x, y: windowRect.position.y, w: windowRect.size.x, h: windowRect.size.y };
-});
+globalThis.exports('endWindow', Exports.endWindow);
 
 globalThis.exports('isItemHovered', Exports.isItemHovered);
 globalThis.exports('isItemClicked', Exports.isItemClicked);
