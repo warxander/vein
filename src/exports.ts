@@ -45,10 +45,25 @@ export interface IUi {
 	tryGetItemWidth(): number | null;
 	tryGetItemId(): string | null;
 
+	getInput(): IInput;
+	getLayout(): ILayout;
 	getPainter(): IPainter;
 
 	isItemHovered(): boolean;
 	isItemClicked(): boolean;
+}
+
+export interface IInput {
+	getMousePosition(): IVector2;
+
+	isKeyPressed(key: number): boolean;
+	isKeyReleased(key: number): boolean;
+	isKeyDown(key: number): boolean;
+}
+
+export interface ILayout {
+	getContentRect(): IRect;
+	getItemRect(): IRect;
 }
 
 export interface IPainter {
@@ -88,6 +103,38 @@ export function getUi(): IUi {
 
 		tryGetItemId(): string | null {
 			return ui.tryGetItemId() ?? null;
+		},
+
+		getInput(): IInput {
+			return {
+				getMousePosition(): IVector2 {
+					return toIVector2(ui.getInput().getMousePosition());
+				},
+
+				isKeyPressed(key: number): boolean {
+					return ui.getInput().isKeyPressed(key);
+				},
+
+				isKeyReleased(key: number): boolean {
+					return ui.getInput().isKeyReleased(key);
+				},
+
+				isKeyDown(key: number): boolean {
+					return ui.getInput().isKeyDown(key);
+				}
+			};
+		},
+
+		getLayout(): ILayout {
+			return {
+				getContentRect(): IRect {
+					return toIRect(ui.getLayout().getContentRect());
+				},
+
+				getItemRect(): IRect {
+					return toIRect(ui.getLayout().getItemRect());
+				}
+			};
 		},
 
 		getPainter(): IPainter {
