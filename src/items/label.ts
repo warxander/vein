@@ -11,16 +11,14 @@ export function label(text: string) {
 	const font = properties.get<number>('font-family');
 	const scale = properties.get<number>('font-size');
 
-	painter.setText(font, scale, text);
-
-	const w = ui.tryGetItemWidth() ?? painter.getTextWidth();
+	const w = ui.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale);
 	const h = style.item.height;
 
 	ui.beginItem(w, h);
 
 	painter.setColor(properties.get<Color>('color'));
 	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
-	painter.drawText();
+	painter.drawText(text, font, scale);
 
 	ui.endItem();
 }

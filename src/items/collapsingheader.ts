@@ -12,11 +12,11 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 	const font = collapsingHeaderProperties.get<number>('font-family');
 	const scale = collapsingHeaderProperties.get<number>('font-size');
 
-	painter.setText(font, scale, text);
-
 	const w =
 		ui.tryGetItemWidth() ??
-		painter.getTextWidth() + style.collapsingHeader.spacing * 3 + style.collapsingHeader.spriteWidth;
+		painter.getTextWidth(text, font, scale) +
+			style.collapsingHeader.spacing * 3 +
+			style.collapsingHeader.spriteWidth;
 	const h = style.item.height;
 
 	ui.beginItem(w, h);
@@ -37,7 +37,7 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 		style.collapsingHeader.spriteWidth,
 		sh / 2 - GetRenderedCharacterHeight(scale, font) / 2 + style.item.textOffset
 	);
-	painter.drawText();
+	painter.drawText(text, font, scale);
 
 	ui.endItem();
 

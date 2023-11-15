@@ -12,13 +12,12 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	const font = spriteButtonProperties.get<number>('font-family');
 	const scale = spriteButtonProperties.get<number>('font-size');
 
-	painter.setText(font, scale, text);
-
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;
 
 	const w =
-		ui.tryGetItemWidth() || painter.getTextWidth() + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
+		ui.tryGetItemWidth() ||
+		painter.getTextWidth(text, font, scale) + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
 	const h = style.item.height;
 
 	ui.beginItem(w, h);
@@ -39,7 +38,7 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 		sw + spriteButtonStyle.spacing,
 		-so + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
 	);
-	painter.drawText();
+	painter.drawText(text, font, scale);
 
 	ui.endItem();
 

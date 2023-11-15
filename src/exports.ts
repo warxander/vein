@@ -81,10 +81,11 @@ export interface IPainter {
 
 	drawSprite(dict: string, name: string, w: number, h: number): void;
 
-	setText(font: number, scale: number, text: string): void;
-	setTextWidth(w: number): void;
-	getTextWidth(): number;
-	drawText(): void;
+	getTextWidth(text: string, font: number, scale: number): number;
+	getTextLineCount(text: string, font: number, scale: number, w: number): number;
+
+	drawText(text: string, font: number, scale: number): void;
+	drawMultilineText(text: string, font: number, scale: number, w: number): void;
 }
 
 export function getUi(): IUi {
@@ -169,20 +170,20 @@ export function getUi(): IUi {
 					ui.getPainter().drawSprite(dict, name, w, h);
 				},
 
-				setText(font: number, scale: number, text: string) {
-					ui.getPainter().setText(font, scale, text);
+				getTextWidth(text: string, font: number, scale: number): number {
+					return ui.getPainter().getTextWidth(text, font, scale);
 				},
 
-				setTextWidth(w: number) {
-					ui.getPainter().setTextWidth(w);
+				getTextLineCount(text: string, font: number, scale: number, w: number): number {
+					return ui.getPainter().getTextLineCount(text, font, scale, w);
 				},
 
-				getTextWidth(): number {
-					return ui.getPainter().getTextWidth();
+				drawText(text: string, font: number, scale: number) {
+					ui.getPainter().drawText(text, font, scale);
 				},
 
-				drawText() {
-					ui.getPainter().drawText();
+				drawMultilineText(text: string, font: number, scale: number, w: number) {
+					ui.getPainter().drawMultilineText(text, font, scale, w);
 				}
 			};
 		},

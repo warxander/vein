@@ -12,13 +12,11 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	const font = checkBoxProperties.get<number>('font-family');
 	const scale = checkBoxProperties.get<number>('font-size');
 
-	painter.setText(font, scale, text);
-
 	const aspectRatio = GetAspectRatio(false);
 	const checkboxStyle = style.checkbox;
 	let cw = checkboxStyle.height / aspectRatio;
 
-	const w = ui.tryGetItemWidth() ?? cw + checkboxStyle.spacing + painter.getTextWidth();
+	const w = ui.tryGetItemWidth() ?? cw + checkboxStyle.spacing + painter.getTextWidth(text, font, scale);
 	const h = style.item.height;
 
 	ui.beginItem(w, h);
@@ -51,7 +49,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 		checkboxStyle.height / aspectRatio + checkboxStyle.spacing * 2,
 		(h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
 	);
-	painter.drawText();
+	painter.drawText(text, font, scale);
 
 	ui.endItem();
 

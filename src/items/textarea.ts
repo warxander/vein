@@ -11,9 +11,7 @@ export function textArea(text: string, w: number) {
 	const font = properties.get<number>('font-family');
 	const scale = properties.get<number>('font-size');
 
-	painter.setTextWidth(w);
-	painter.setText(font, scale, text);
-	const lc = painter.getTextLineCount();
+	const lc = painter.getTextLineCount(text, font, scale, w);
 
 	const h = lc === 1 ? style.item.height : GetRenderedCharacterHeight(scale, font) * (lc + 1);
 
@@ -22,9 +20,7 @@ export function textArea(text: string, w: number) {
 	painter.setColor(properties.get<Color>('color'));
 	if (lc == 1) painter.move(0, style.item.textOffset);
 
-	painter.setTextWidth(w);
-	painter.setText(font, scale, text);
-	painter.drawText();
+	painter.drawMultilineText(text, font, scale, w);
 
 	ui.endItem();
 }

@@ -65,35 +65,30 @@ export class Painter {
 		);
 	}
 
-	getTextWidth(): number {
-		if (this.textEntryIndex == -1) return 0;
+	getTextWidth(text: string, font: number, scale: number): number {
+		this.setText(text, font, scale);
 
 		BeginTextCommandGetWidth(this.getTextEntry());
 		return EndTextCommandGetWidth(true);
 	}
 
-	getTextLineCount(): number {
-		if (this.textEntryIndex == -1) return 0;
+	getTextLineCount(text: string, font: number, scale: number, w: number): number {
+		this.setText(text, font, scale, w);
 
 		BeginTextCommandLineCount(this.getTextEntry());
 		return EndTextCommandLineCount(this.position.x, this.position.y);
 	}
 
-	setText(font: number, scale: number, text: string) {
-		SetTextFont(font);
-		SetTextScale(1, scale);
+	drawText(text: string, font: number, scale: number) {
+		this.setText(text, font, scale);
+		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
-		++this.textEntryIndex;
-		AddTextEntry(this.getTextEntry(), text);
+		BeginTextCommandDisplayText(this.getTextEntry());
+		EndTextCommandDisplayText(this.position.x, this.position.y);
 	}
 
-	setTextWidth(w: number) {
-		SetTextWrap(this.position.x, this.position.x + w);
-	}
-
-	drawText() {
-		if (this.textEntryIndex == -1) return;
-
+	drawMultilineText(text: string, font: number, scale: number, w: number) {
+		this.setText(text, font, scale, w);
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
 		BeginTextCommandDisplayText(this.getTextEntry());
@@ -102,5 +97,15 @@ export class Painter {
 
 	private getTextEntry(): string {
 		return `VEIN_TEXT_ENTRY_${this.textEntryIndex}`;
+	}
+
+	private setText(text: string, font: number, scale: number, w: number | null = null) {
+		++this.textEntryIndex;
+		AddTextEntry(this.getTextEntry(), text);
+
+		SetTextFont(font);
+		SetTextScale(1, scale);
+
+		if (w) SetTextWrap(this.position.x, this.position.x + w);
 	}
 }

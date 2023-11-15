@@ -12,9 +12,7 @@ export function selectable(isSelected: boolean, text: string): boolean {
 	const font = selectableProperties.get<number>('font-family');
 	const scale = selectableProperties.get<number>('font-size');
 
-	painter.setText(font, scale, text);
-
-	const w = ui.tryGetItemWidth() ?? painter.getTextWidth() + style.selectable.spacing * 2;
+	const w = ui.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale) + style.selectable.spacing * 2;
 	const h = style.item.height;
 
 	ui.beginItem(w, h);
@@ -31,7 +29,7 @@ export function selectable(isSelected: boolean, text: string): boolean {
 
 	painter.setColor(properties.get<Color>('color'));
 	painter.move(style.selectable.spacing, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
-	painter.drawText();
+	painter.drawText(text, font, scale);
 
 	ui.endItem();
 
