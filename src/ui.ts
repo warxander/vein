@@ -130,10 +130,8 @@ export class Ui {
 	}
 
 	end() {
-		if (!Ui.isWindowInputDisabled()) {
-			SetMouseCursorActiveThisFrame();
-			SetMouseCursorSprite(this.mouseCursor);
-		}
+		SetMouseCursorActiveThisFrame();
+		SetMouseCursorSprite(this.mouseCursor);
 
 		this.endWindowDrag();
 
