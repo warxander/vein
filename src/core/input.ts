@@ -4,8 +4,13 @@ export enum InputKey {
 	LeftMouseButton = 237
 }
 
+export enum InputFlags {
+	None,
+	DisableInput
+}
+
 export class Input {
-	private mousePosition = new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));
+	private mousePosition: Vector2;
 
 	private static readonly DISABLED_CONTROLS = [
 		1, 2, 22, 24, 25, 36, 37, 44, 47, 53, 54, 68, 69, 70, 74, 81, 82, 83, 84, 85, 91, 92, 99, 100, 101, 102, 114,
@@ -14,7 +19,13 @@ export class Input {
 
 	private static readonly DISABLED_CONTROLS_IN_VEHICLE = [80, 106, 122, 135, 282, 283, 284, 285];
 
-	constructor() {
+	constructor(private inputFlags: InputFlags) {
+		this.mousePosition = this.isDisabled()
+			? new Vector2(-Infinity, -Infinity)
+			: new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));
+
+		if (this.isDisabled()) return;
+
 		for (const control of Input.DISABLED_CONTROLS) DisableControlAction(0, control, true);
 
 		if (IsPedInAnyVehicle(PlayerPedId(), false))
@@ -26,14 +37,18 @@ export class Input {
 	}
 
 	isKeyPressed(key: InputKey): boolean {
-		return IsControlJustPressed(2, key);
+		return !this.isDisabled() && IsControlJustPressed(2, key);
 	}
 
 	isKeyReleased(key: InputKey): boolean {
-		return IsControlJustReleased(2, key);
+		return !this.isDisabled() && IsControlJustReleased(2, key);
 	}
 
 	isKeyDown(key: InputKey): boolean {
-		return IsControlPressed(2, key);
+		return !this.isDisabled() && IsControlPressed(2, key);
+	}
+
+	private isDisabled(): boolean {
+		return !!(this.inputFlags & InputFlags.DisableInput);
 	}
 }

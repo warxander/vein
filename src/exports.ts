@@ -229,6 +229,10 @@ export function setNextWindowSpacing(x: number, y: number) {
 	Ui.setNextWindowSpacing(x, y);
 }
 
+export function setNextWindowDisableInput() {
+	Ui.setNextWindowDisableInput();
+}
+
 export function beginWindow(x: number | null, y: number | null) {
 	setUi(new Ui(x !== null ? x : 0.33, y !== null ? y : 0.33));
 }

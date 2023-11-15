@@ -1,5 +1,5 @@
 import { Color, Rect, Vector2 } from './core/types';
-import { Input, InputKey } from './core/input';
+import { Input, InputFlags, InputKey } from './core/input';
 import { Layout } from './core/layout';
 import { Painter } from './core/painter';
 import { Style } from './core/style';
@@ -19,6 +19,7 @@ class WindowState {
 	id: string | undefined = undefined;
 	spacing: Vector2 | undefined = undefined;
 	windowFlags = WindowFlags.None;
+	inputFlags = InputFlags.None;
 }
 
 export enum MouseCursor {
@@ -44,7 +45,7 @@ export class Ui {
 	private static nextWindowState = new WindowState();
 	private static isDebugEnabled_ = false;
 
-	private input = new Input();
+	private input = new Input(Ui.nextWindowState.inputFlags);
 	private painter = new Painter();
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
@@ -79,6 +80,10 @@ export class Ui {
 		Ui.nextWindowState.spacing = new Vector2(x, y);
 	}
 
+	static setNextWindowDisableInput() {
+		Ui.nextWindowState.inputFlags |= InputFlags.DisableInput;
+	}
+
 	static getStyle(): Style {
 		return Ui.style;
 	}
@@ -103,6 +108,10 @@ export class Ui {
 		return !!(Ui.nextWindowState.windowFlags & WindowFlags.NoBackground);
 	}
 
+	static isWindowInputDisabled(): boolean {
+		return !!(Ui.nextWindowState.inputFlags & InputFlags.DisableInput);
+	}
+
 	constructor(x: number, y: number) {
 		Ui.windowRect.position = new Vector2(x, y);
 
@@ -121,8 +130,10 @@ export class Ui {
 	}
 
 	end() {
-		SetMouseCursorActiveThisFrame();
-		SetMouseCursorSprite(this.mouseCursor);
+		if (!Ui.isWindowInputDisabled()) {
+			SetMouseCursorActiveThisFrame();
+			SetMouseCursorSprite(this.mouseCursor);
+		}
 
 		this.endWindowDrag();
 
@@ -216,7 +227,7 @@ export class Ui {
 	}
 
 	private beginWindowDrag() {
-		if (Ui.isWindowNoDrag()) return;
+		if (Ui.isWindowNoDrag() || Ui.isWindowInputDisabled()) return;
 
 		const mousePosition = this.input.getMousePosition();
 

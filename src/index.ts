@@ -9,6 +9,7 @@ globalThis.exports('setNextWindowNoDrag', Exports.setNextWindowNoDrag);
 globalThis.exports('setNextWindowNoBackground', Exports.setNextWindowNoBackground);
 globalThis.exports('setNextWindowId', Exports.setNextWindowId);
 globalThis.exports('setNextWindowSpacing', Exports.setNextWindowSpacing);
+globalThis.exports('setNextWindowDisableInput', Exports.setNextWindowDisableInput);
 
 globalThis.exports('beginWindow', Exports.beginWindow);
 globalThis.exports('endWindow', Exports.endWindow);
