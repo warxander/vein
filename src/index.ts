@@ -2,8 +2,8 @@ import * as Exports from './exports';
 
 globalThis.exports('getUi', Exports.getUi);
 
-globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 globalThis.exports('isDebugEnabled', Exports.isDebugEnabled);
+globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 
 globalThis.exports('setNextWindowNoDrag', Exports.setNextWindowNoDrag);
 globalThis.exports('setNextWindowNoBackground', Exports.setNextWindowNoBackground);

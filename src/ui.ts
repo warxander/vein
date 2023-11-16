@@ -54,12 +54,12 @@ export class Ui {
 
 	private layout: Layout;
 
-	static setDebugEnabled(enabled: boolean) {
-		Ui.isDebugEnabled_ = enabled;
-	}
-
 	static isDebugEnabled(): boolean {
 		return Ui.isDebugEnabled_;
+	}
+
+	static setDebugEnabled(enabled: boolean) {
+		Ui.isDebugEnabled_ = enabled;
 	}
 
 	static setNextWindowNoDrag(isNoDrag: boolean) {
@@ -130,10 +130,14 @@ export class Ui {
 	}
 
 	end() {
-		SetMouseCursorActiveThisFrame();
-		SetMouseCursorSprite(this.mouseCursor);
-
 		this.endWindowDrag();
+
+		if (!Ui.isWindowInputDisabled()) {
+			SetMouseCursorActiveThisFrame();
+			SetMouseCursorSprite(this.mouseCursor);
+		}
+
+		this.mouseCursor = MouseCursor.Normal;
 
 		const contentRect = this.layout.getContentRect();
 		Ui.windowRect.size = new Vector2(

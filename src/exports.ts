@@ -45,6 +45,8 @@ export interface IUi {
 	tryGetItemWidth(): number | null;
 	tryGetItemId(): string | null;
 
+	setMouseCursor(mouseCursor: number): void;
+
 	getInput(): IInput;
 	getLayout(): ILayout;
 	getPainter(): IPainter;
@@ -75,7 +77,6 @@ export interface IPainter {
 	setPosition(x: number, y: number): void;
 
 	setColor(r: number, g: number, b: number, a: number): void;
-	setMouseCursor(mouseCursor: number): void;
 
 	drawRect(w: number, h: number): void;
 
@@ -108,82 +109,88 @@ export function getUi(): IUi {
 			return ui.tryGetItemId() ?? null;
 		},
 
+		setMouseCursor(mouseCursor: number) {
+			ui.setMouseCursor(mouseCursor);
+		},
+
 		getInput(): IInput {
+			const input = ui.getInput();
+
 			return {
 				getMousePosition(): IVector2 {
-					return toIVector2(ui.getInput().getMousePosition());
+					return toIVector2(input.getMousePosition());
 				},
 
 				isKeyPressed(key: number): boolean {
-					return ui.getInput().isKeyPressed(key);
+					return input.isKeyPressed(key);
 				},
 
 				isKeyReleased(key: number): boolean {
-					return ui.getInput().isKeyReleased(key);
+					return input.isKeyReleased(key);
 				},
 
 				isKeyDown(key: number): boolean {
-					return ui.getInput().isKeyDown(key);
+					return input.isKeyDown(key);
 				}
 			};
 		},
 
 		getLayout(): ILayout {
+			const layout = ui.getLayout();
+
 			return {
 				getContentRect(): IRect {
-					return toIRect(ui.getLayout().getContentRect());
+					return toIRect(layout.getContentRect());
 				},
 
 				getItemRect(): IRect {
-					return toIRect(ui.getLayout().getItemRect());
+					return toIRect(layout.getItemRect());
 				}
 			};
 		},
 
 		getPainter(): IPainter {
+			const painter = ui.getPainter();
+
 			return {
 				move(x: number, y: number) {
-					ui.getPainter().move(x, y);
+					painter.move(x, y);
 				},
 
 				getPosition(): IVector2 {
-					return toIVector2(ui.getPainter().getPosition());
+					return toIVector2(painter.getPosition());
 				},
 
 				setPosition(x: number, y: number) {
-					ui.getPainter().setPosition(x, y);
+					painter.setPosition(x, y);
 				},
 
 				setColor(r: number, g: number, b: number, a: number) {
-					ui.getPainter().setColor([r, g, b, a]);
-				},
-
-				setMouseCursor(mouseCursor: number) {
-					ui.setMouseCursor(mouseCursor);
+					painter.setColor([r, g, b, a]);
 				},
 
 				drawRect(w: number, h: number) {
-					ui.getPainter().drawRect(w, h);
+					painter.drawRect(w, h);
 				},
 
 				drawSprite(dict: string, name: string, w: number, h: number) {
-					ui.getPainter().drawSprite(dict, name, w, h);
+					painter.drawSprite(dict, name, w, h);
 				},
 
 				getTextWidth(text: string, font: number, scale: number): number {
-					return ui.getPainter().getTextWidth(text, font, scale);
+					return painter.getTextWidth(text, font, scale);
 				},
 
 				getTextLineCount(text: string, font: number, scale: number, w: number): number {
-					return ui.getPainter().getTextLineCount(text, font, scale, w);
+					return painter.getTextLineCount(text, font, scale, w);
 				},
 
 				drawText(text: string, font: number, scale: number) {
-					ui.getPainter().drawText(text, font, scale);
+					painter.drawText(text, font, scale);
 				},
 
 				drawMultilineText(text: string, font: number, scale: number, w: number) {
-					ui.getPainter().drawMultilineText(text, font, scale, w);
+					painter.drawMultilineText(text, font, scale, w);
 				}
 			};
 		},
@@ -202,12 +209,12 @@ export function getUi(): IUi {
 	};
 }
 
-export function setDebugEnabled(enabled: boolean) {
-	Ui.setDebugEnabled(enabled);
-}
-
 export function isDebugEnabled(): boolean {
 	return Ui.isDebugEnabled();
+}
+
+export function setDebugEnabled(enabled: boolean) {
+	Ui.setDebugEnabled(enabled);
 }
 
 /** `false` by default */
