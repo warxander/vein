@@ -8,20 +8,20 @@ export function progressBar(min: number, value: number, max: number, w: number) 
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
+	const selector = frame.buildStyleSelector('progress-bar');
+
 	frame.beginItem(w, style.item.height);
 
 	const h = style.progressBar.height;
 
-	const properties = style.getProperties(frame.tryGetItemId() ?? 'progress-bar');
-
-	painter.setColor(properties.get<Color>('background-color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.move(0, (style.item.height - h) / 2);
 	painter.drawRect(w, h);
 
 	if (!numberEquals(value, min)) {
 		const pw = numberEquals(value, max) ? w : ((value - min) / (max - min)) * w;
 
-		painter.setColor(properties.get<Color>('color'));
+		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 		painter.drawRect(pw, h);
 	}
 

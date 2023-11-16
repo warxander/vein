@@ -41,15 +41,14 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 
 	const sh = (h - sliderStyle.height) / 2;
 
-	const id = frame.tryGetItemId() ?? 'slider';
-	const properties = style.getProperties(frame.isItemHovered() ? `${id}:hover` : id);
+	const selector = frame.buildStyleSelector('slider', frame.isItemHovered() ? 'hover' : undefined);
 
-	painter.setColor(properties.get<Color>('background-color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.move(0, sh);
 	painter.drawRect(w, sliderStyle.height);
 
 	const sx = (w * value) / (max + min);
-	painter.setColor(properties.get<Color>('color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.drawRect(sx, sliderStyle.height);
 
 	painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);

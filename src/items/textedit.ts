@@ -44,17 +44,15 @@ export async function textEdit(
 		}
 	}
 
-	const id = frame.tryGetItemId() ?? 'text-edit';
-	const textEditProperties = style.getProperties(id);
-	const properties = frame.isItemHovered() ? style.getProperties(`${id}:hover`) : textEditProperties;
+	const selector = frame.buildStyleSelector('text-edit', frame.isItemHovered() ? 'hover' : undefined);
 
-	painter.setColor(properties.get<Color>('background-color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.drawRect(w, h);
 
-	painter.setColor(properties.get<Color>('color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 
-	const font = textEditProperties.get<number>('font-family');
-	const scale = textEditProperties.get<number>('font-size');
+	const font = style.getPropertyAs<number>(selector, 'font-family');
+	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	painter.move(style.textEdit.spacing, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText(isSecretMode ? text.replace(/./g, '*') : text, font, scale);

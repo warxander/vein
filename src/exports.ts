@@ -1,4 +1,5 @@
 import { Frame, getFrameChecked, setFrame } from './core/frame';
+import { StylePropertyType } from './core/style';
 import { Rect, Vector2 } from './core/types';
 
 function toIRect(rect: Rect): IRect {
@@ -39,22 +40,24 @@ export interface IRect {
 }
 
 export interface IFrame {
-	beginItem(w: number, h: number): void;
-	endItem(): void;
-
-	tryGetItemWidth(): number | null;
-	tryGetItemId(): string | null;
-
-	setMouseCursor(mouseCursor: number): void;
-
 	getInput(): IInput;
 	getLayout(): ILayout;
 	getPainter(): IPainter;
 
+	getRect(): IRect;
+
+	beginItem(w: number, h: number): void;
+	endItem(): void;
+
+	tryGetItemWidth(): number | null;
+
 	isItemHovered(): boolean;
 	isItemClicked(): boolean;
 
-	getRect(): IRect;
+	setMouseCursor(mouseCursor: number): void;
+
+	buildStyleSelector(class_: string, subClass: string | null): string;
+	getStyleProperty(selector: string, property: string): any;
 }
 
 export interface IInput {
@@ -93,26 +96,6 @@ export function getFrame(): IFrame {
 	const frame = getFrameChecked();
 
 	return {
-		beginItem(w: number, h: number) {
-			frame.beginItem(w, h);
-		},
-
-		endItem() {
-			frame.endItem();
-		},
-
-		tryGetItemWidth(): number | null {
-			return frame.tryGetItemWidth() ?? null;
-		},
-
-		tryGetItemId(): string | null {
-			return frame.tryGetItemId() ?? null;
-		},
-
-		setMouseCursor(mouseCursor: number) {
-			frame.setMouseCursor(mouseCursor);
-		},
-
 		getInput(): IInput {
 			const input = frame.getInput();
 
@@ -195,6 +178,22 @@ export function getFrame(): IFrame {
 			};
 		},
 
+		getRect(): IRect {
+			return toIRect(Frame.getRect());
+		},
+
+		beginItem(w: number, h: number) {
+			frame.beginItem(w, h);
+		},
+
+		endItem() {
+			frame.endItem();
+		},
+
+		tryGetItemWidth(): number | null {
+			return frame.tryGetItemWidth() ?? null;
+		},
+
 		isItemHovered(): boolean {
 			return frame.isItemHovered();
 		},
@@ -203,8 +202,16 @@ export function getFrame(): IFrame {
 			return frame.isItemClicked();
 		},
 
-		getRect(): IRect {
-			return toIRect(Frame.getRect());
+		setMouseCursor(mouseCursor: number) {
+			frame.setMouseCursor(mouseCursor);
+		},
+
+		buildStyleSelector(class_: string, subClass: string | null): string {
+			return frame.buildStyleSelector(class_, subClass ?? undefined);
+		},
+
+		getStyleProperty(selector: string, property: string): any {
+			return Frame.getStyleProperty(selector, property);
 		}
 	};
 }
@@ -283,12 +290,28 @@ export function popItemWidth() {
 	getFrameChecked().popItemWidth();
 }
 
-export function setStyleSheet(styleSheet: string) {
-	Frame.getStyle().setSheet(styleSheet);
+export function addStyleSheet(sheet: string) {
+	Frame.getStyle().addSheet(sheet);
 }
 
-export function useDefaultStyle() {
-	Frame.getStyle().useDefault();
+export function resetStyle() {
+	Frame.getStyle().reset();
+}
+
+export function registerStylePropertyAsColor(property: string) {
+	Frame.getStyle().registerProperty(property, StylePropertyType.Color);
+}
+
+export function registerStylePropertyAsFontSize(property: string) {
+	Frame.getStyle().registerProperty(property, StylePropertyType.FontSize);
+}
+
+export function registerStylePropertyAsImage(property: string) {
+	Frame.getStyle().registerProperty(property, StylePropertyType.Image);
+}
+
+export function registerStylePropertyAsInteger(property: string) {
+	Frame.getStyle().registerProperty(property, StylePropertyType.Integer);
 }
 
 /** Used as a selector name */

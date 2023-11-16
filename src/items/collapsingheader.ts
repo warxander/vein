@@ -7,10 +7,9 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const id = frame.tryGetItemId() ?? 'collapsing-header';
-	const collapsingHeaderProperties = style.getProperties(id);
-	const font = collapsingHeaderProperties.get<number>('font-family');
-	const scale = collapsingHeaderProperties.get<number>('font-size');
+	let selector = frame.buildStyleSelector('collapsing-header');
+	const font = style.getPropertyAs<number>(selector, 'font-family');
+	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	const w =
 		frame.tryGetItemWidth() ??
@@ -21,11 +20,12 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 
 	frame.beginItem(w, h);
 
-	if (frame.isItemClicked()) isCollapsed = !isCollapsed;
+	if (frame.isItemHovered()) {
+		selector = frame.buildStyleSelector('collapsing-header', 'hover');
+		if (frame.isItemClicked()) isCollapsed = !isCollapsed;
+	}
 
-	const properties = frame.isItemHovered() ? style.getProperties(`${id}:hover`) : collapsingHeaderProperties;
-
-	painter.setColor(properties.get<Color>('color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 
 	const sh = style.collapsingHeader.spriteWidth * GetAspectRatio(false);
 	painter.move(style.collapsingHeader.spacing, (h - sh) / 2);

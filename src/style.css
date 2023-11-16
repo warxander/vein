@@ -5,6 +5,10 @@ button, check-box, sprite-button, text-edit {
 	font-size: 0.325em;
 }
 
+button:hover, sprite-button:hover {
+	background-color: #F50551;
+}
+
 check-box:hover {
 	background-color: #242730;
 	color: #F50551;
@@ -20,9 +24,9 @@ collapsing-header:hover {
 	color: #F50551;
 }
 
-button:hover, sprite-button:hover {
-	background-color: #F50551;
-	color: #FFFFF0;
+frame {
+	background-color: #32353D;
+	color: rgba(105, 255, 89, 0.125);
 }
 
 heading {
@@ -77,9 +81,4 @@ slider {
 slider:hover, text-edit:hover {
 	background-color: #242730;
 	color: #F50551;
-}
-
-frame {
-	background-color: #32353D;
-	color: rgba(105, 255, 89, 0.125);
 }

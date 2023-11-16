@@ -24,8 +24,13 @@ globalThis.exports('setNextItemWidth', Exports.setNextItemWidth);
 globalThis.exports('pushItemWidth', Exports.pushItemWidth);
 globalThis.exports('popItemWidth', Exports.popItemWidth);
 
-globalThis.exports('setStyleSheet', Exports.setStyleSheet);
-globalThis.exports('useDefaultStyle', Exports.useDefaultStyle);
+globalThis.exports('addStyleSheet', Exports.addStyleSheet);
+globalThis.exports('resetStyle', Exports.resetStyle);
+
+globalThis.exports('registerStylePropertyAsColor', Exports.registerStylePropertyAsColor);
+globalThis.exports('registerStylePropertyAsFontSize', Exports.registerStylePropertyAsFontSize);
+globalThis.exports('registerStylePropertyAsImage', Exports.registerStylePropertyAsImage);
+globalThis.exports('registerStylePropertyAsInteger', Exports.registerStylePropertyAsInteger);
 
 globalThis.exports('setNextItemId', Exports.setNextItemId);
 globalThis.exports('pushItemId', Exports.pushItemId);

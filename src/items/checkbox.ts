@@ -7,10 +7,9 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const id = frame.tryGetItemId() ?? 'check-box';
-	const checkBoxProperties = style.getProperties(id);
-	const font = checkBoxProperties.get<number>('font-family');
-	const scale = checkBoxProperties.get<number>('font-size');
+	let selector = frame.buildStyleSelector('check-box');
+	const font = style.getPropertyAs<number>(selector, 'font-family');
+	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	const aspectRatio = GetAspectRatio(false);
 	const checkboxStyle = style.checkbox;
@@ -21,13 +20,15 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 
 	frame.beginItem(w, h);
 
-	if (frame.isItemClicked()) isChecked = !isChecked;
+	if (frame.isItemHovered()) {
+		selector = frame.buildStyleSelector('check-box', 'hover');
+		if (frame.isItemClicked()) isChecked = !isChecked;
+	}
 
 	const vo = (h - checkboxStyle.height) / 2;
 
-	const properties = frame.isItemHovered() ? style.getProperties(`${id}:hover`) : checkBoxProperties;
-	const color = properties.get<Color>('color');
-	const backgroundColor = properties.get<Color>('background-color');
+	const color = style.getPropertyAs<Color>(selector, 'color');
+	const backgroundColor = style.getPropertyAs<Color>(selector, 'background-color');
 
 	painter.setColor(backgroundColor);
 	painter.move(0, vo);

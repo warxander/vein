@@ -1,5 +1,4 @@
-import { Color, Image, Vector2 } from './types';
-import { Style, StylePropertyValues } from './style';
+import { Color, Vector2 } from './types';
 
 export class Painter {
 	private position = new Vector2();
@@ -22,18 +21,6 @@ export class Painter {
 
 	setColor(color: Color) {
 		this.color = color;
-	}
-
-	drawItemBackground(properties: StylePropertyValues, w: number, h: number) {
-		const backgroundImage = properties.tryGet<Image>('background-image');
-		if (backgroundImage !== undefined) {
-			const backgroundColor = properties.tryGet<Color>('background-color');
-			this.setColor(backgroundColor ?? Style.SPRITE_COLOR);
-			this.drawSprite(backgroundImage[0], backgroundImage[1], w, h);
-		} else {
-			this.setColor(properties.get<Color>('background-color'));
-			this.drawRect(w, h);
-		}
 	}
 
 	drawRect(w: number, h: number) {

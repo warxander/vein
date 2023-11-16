@@ -2,7 +2,8 @@ import { Color, Rect, Vector2 } from './types';
 import { Input, InputFlags, InputKey } from './input';
 import { Layout } from './layout';
 import { Painter } from './painter';
-import { Style } from './style';
+import { Style, StylePropertyValue } from './style';
+import { drawItemBackground } from './utils';
 
 class ItemState {
 	id: string | undefined = undefined;
@@ -110,6 +111,10 @@ export class Frame {
 		return !!(Frame.nextState.inputFlags & InputFlags.DisableInput);
 	}
 
+	static getStyleProperty(selector: string, property: string): StylePropertyValue {
+		return Frame.style.getProperty(selector, property);
+	}
+
 	constructor(x: number, y: number) {
 		Frame.rect.position = new Vector2(x, y);
 
@@ -120,11 +125,19 @@ export class Frame {
 		this.painter.setPosition(x, y);
 
 		if (!Frame.isBackgroundDisabled())
-			this.painter.drawItemBackground(
-				Frame.style.getProperties(Frame.nextState.id ?? 'frame'),
-				Frame.rect.size.x,
-				Frame.rect.size.y
-			);
+			drawItemBackground(this, Frame.nextState.id ?? 'frame', Frame.rect.size.x, Frame.rect.size.y);
+	}
+
+	getInput(): Input {
+		return this.input;
+	}
+
+	getPainter(): Painter {
+		return this.painter;
+	}
+
+	getLayout(): Layout {
+		return this.layout;
 	}
 
 	end() {
@@ -149,14 +162,6 @@ export class Frame {
 		Frame.nextState = new FrameState();
 	}
 
-	isItemHovered(): boolean {
-		return this.layout.getItemRect().contains(this.input.getMousePosition());
-	}
-
-	isItemClicked(): boolean {
-		return this.input.isKeyPressed(InputKey.LeftMouseButton) && this.isItemHovered();
-	}
-
 	beginItem(w: number, h: number) {
 		this.layout.beginItem(w, h);
 
@@ -169,7 +174,7 @@ export class Frame {
 			const itemRect = this.layout.getItemRect();
 
 			this.painter.setPosition(itemRect.position.x, itemRect.position.y);
-			this.painter.setColor(Frame.style.getProperty<Color>('frame', 'color'));
+			this.painter.setColor(Frame.style.getPropertyAs<Color>('frame', 'color'));
 			this.painter.drawRect(itemRect.size.x, itemRect.size.y);
 		}
 
@@ -206,24 +211,21 @@ export class Frame {
 		this.itemIdStack.pop();
 	}
 
-	tryGetItemId(): string | undefined {
-		return this.nextItemState.id ?? this.itemIdStack[this.itemIdStack.length - 1];
+	isItemHovered(): boolean {
+		return this.layout.getItemRect().contains(this.input.getMousePosition());
+	}
+
+	isItemClicked(): boolean {
+		return this.input.isKeyPressed(InputKey.LeftMouseButton) && this.isItemHovered();
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {
 		this.mouseCursor = mouseCursor;
 	}
 
-	getInput(): Input {
-		return this.input;
-	}
-
-	getPainter(): Painter {
-		return this.painter;
-	}
-
-	getLayout(): Layout {
-		return this.layout;
+	buildStyleSelector(class_: string, subClass: string | undefined = undefined): string {
+		const id = this.nextItemState.id ?? this.itemIdStack[this.itemIdStack.length - 1];
+		return Frame.style.buildSelector(class_, id, subClass);
 	}
 
 	private beginDrag() {

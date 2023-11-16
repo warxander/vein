@@ -1,5 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
+import { drawItemBackground } from '../core/utils';
 
 export function spriteButton(dict: string, name: string, text: string): boolean {
 	const frame = getFrameChecked();
@@ -7,10 +8,9 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const id = frame.tryGetItemId() ?? 'sprite-button';
-	const spriteButtonProperties = style.getProperties(id);
-	const font = spriteButtonProperties.get<number>('font-family');
-	const scale = spriteButtonProperties.get<number>('font-size');
+	let selector = frame.buildStyleSelector('sprite-button');
+	const font = style.getPropertyAs<number>(selector, 'font-family');
+	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;
@@ -22,14 +22,14 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 
 	frame.beginItem(w, h);
 
-	const properties = frame.isItemHovered() ? style.getProperties(`${id}:hover`) : spriteButtonProperties;
+	if (frame.isItemHovered()) selector = frame.buildStyleSelector('sprite-button', 'hover');
 
-	painter.drawItemBackground(properties, w, h);
+	drawItemBackground(frame, selector, w, h);
 
 	const sh = sw * GetAspectRatio(false);
 	const so = (h - sh) / 2;
 
-	painter.setColor(properties.get<Color>('color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 
 	painter.move(style.button.spacing, so);
 	painter.drawSprite(dict, name, sw, sh);

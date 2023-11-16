@@ -7,10 +7,9 @@ export function hyperlink(url: string, urlText: string | null) {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const id = frame.tryGetItemId() ?? 'hyperlink';
-	const hyperlinkProperties = style.getProperties(id);
-	const font = hyperlinkProperties.get<number>('font-family');
-	const scale = hyperlinkProperties.get<number>('font-size');
+	let selector = frame.buildStyleSelector('hyperlink');
+	const font = style.getPropertyAs<number>(selector, 'font-family');
+	const scale = style.getPropertyAs<number>(selector, 'font-size');
 	const text = urlText ?? url;
 
 	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale);
@@ -18,16 +17,14 @@ export function hyperlink(url: string, urlText: string | null) {
 
 	frame.beginItem(w, h);
 
-	const isHovered = frame.isItemHovered();
+	if (frame.isItemHovered()) {
+		selector = frame.buildStyleSelector('hyperlink', 'hover');
 
-	if (isHovered) {
 		frame.setMouseCursor(MouseCursor.MiddleFinger);
-
 		if (frame.isItemClicked()) SendNUIMessage({ openUrl: { url: url } });
 	}
 
-	const properties = isHovered ? style.getProperties(`${id}:hover`) : hyperlinkProperties;
-	painter.setColor(properties.get<Color>('color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText(text, font, scale);
 

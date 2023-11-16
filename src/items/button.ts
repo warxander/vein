@@ -1,5 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
+import { drawItemBackground } from '../core/utils';
 
 export function button(text: string): boolean {
 	const frame = getFrameChecked();
@@ -7,21 +8,21 @@ export function button(text: string): boolean {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const id = frame.tryGetItemId() ?? 'button';
-	const buttonProperties = style.getProperties(id);
-	const font = buttonProperties.get<number>('font-family');
-	const scale = buttonProperties.get<number>('font-size');
+	let selector = frame.buildStyleSelector('button');
+
+	const font = style.getPropertyAs<number>(selector, 'font-family');
+	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale) + style.button.spacing * 2;
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
 
-	const properties = frame.isItemHovered() ? style.getProperties(`${id}:hover`) : buttonProperties;
+	if (frame.isItemHovered()) selector = frame.buildStyleSelector('button', 'hover');
 
-	painter.drawItemBackground(properties, w, h);
+	drawItemBackground(frame, selector, w, h);
 
-	painter.setColor(properties.get<Color>('color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.move(style.button.spacing, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText(text, font, scale);
 

@@ -7,9 +7,9 @@ export function textArea(text: string, w: number) {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const properties = style.getProperties(frame.tryGetItemId() ?? 'text-area');
-	const font = properties.get<number>('font-family');
-	const scale = properties.get<number>('font-size');
+	const selector = frame.buildStyleSelector('text-area');
+	const font = style.getPropertyAs<number>(selector, 'font-family');
+	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	const lc = painter.getTextLineCount(text, font, scale, w);
 
@@ -17,7 +17,7 @@ export function textArea(text: string, w: number) {
 
 	frame.beginItem(w, h);
 
-	painter.setColor(properties.get<Color>('color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	if (lc == 1) painter.move(0, style.item.textOffset);
 
 	painter.drawMultilineText(text, font, scale, w);

@@ -1,98 +1,16 @@
 import { Color, Image, FontSize } from './types';
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
-type StylePropertyValue = Color | Image | FontSize;
 type StylePropertyValuesMap = Map<string, StylePropertyValue>;
-type StyleSelectorPropertyValuesMap = Map<string, StylePropertyValues>;
 
-enum StylePropertyValueType {
+export type StylePropertyValue = Color | Image | FontSize;
+
+export enum StylePropertyType {
 	Color,
 	FontSize,
 	Image,
 	Integer
 }
-
-export class StylePropertyValues {
-	constructor(
-		private properties: StylePropertyValuesMap,
-		private readonly defaultProperties?: StylePropertyValuesMap
-	) {}
-
-	getProperties(): StylePropertyValuesMap {
-		return this.properties;
-	}
-
-	get<T extends StylePropertyValue>(property: string): T {
-		let value = this.properties.get(property);
-
-		if (value === undefined && this.defaultProperties) {
-			value = this.defaultProperties.get(property);
-		}
-
-		if (value === undefined) throw new Error(`Failed to get style property: ${property}`);
-
-		return value as T;
-	}
-
-	tryGet<T extends StylePropertyValue>(property: string): T | undefined {
-		let value = this.properties.get(property);
-
-		if (value === undefined && this.defaultProperties) {
-			value = this.defaultProperties.get(property);
-		}
-
-		return value !== undefined ? (value as T) : undefined;
-	}
-
-	set(property: string, value: StylePropertyValue) {
-		this.properties.set(property, value);
-	}
-}
-
-const DEFAULT_SELECTORS = new Set<String>([
-	'button',
-	'button:hover',
-
-	'check-box',
-	'check-box:hover',
-
-	'collapsing-header',
-
-	'heading',
-
-	'hyperlink',
-
-	'label',
-
-	'progress-bar',
-
-	'selectable',
-	'selectable:hover',
-
-	'separator',
-
-	'slider',
-	'slider:hover',
-
-	'sprite-button',
-	'sprite-button:hover',
-
-	'text-area',
-
-	'text-edit',
-	'text-edit:hover',
-
-	'frame'
-]);
-
-const KNOWN_PROPERTIES = new Map<string, StylePropertyValueType>([
-	['accent-color', StylePropertyValueType.Color],
-	['background-color', StylePropertyValueType.Color],
-	['background-image', StylePropertyValueType.Image],
-	['color', StylePropertyValueType.Color],
-	['font-family', StylePropertyValueType.Integer],
-	['font-size', StylePropertyValueType.FontSize]
-]);
 
 function parseValueAsColor(value: string): Color {
 	if (value.match(/^#([0-9a-f]{6})$/i))
@@ -124,15 +42,15 @@ function parseValueAsFontSize(value: string): FontSize {
 	throw new Error(`Failed to parseValueAsFontSize() for style value: ${value}`);
 }
 
-function parseValue(value: string, propertyType: StylePropertyValueType): StylePropertyValue {
+function parseValue(value: string, propertyType: StylePropertyType): StylePropertyValue {
 	switch (propertyType) {
-		case StylePropertyValueType.Color:
+		case StylePropertyType.Color:
 			return parseValueAsColor(value);
-		case StylePropertyValueType.FontSize:
+		case StylePropertyType.FontSize:
 			return parseValueAsFontSize(value);
-		case StylePropertyValueType.Image:
+		case StylePropertyType.Image:
 			return parseValueAsImage(value);
-		case StylePropertyValueType.Integer:
+		case StylePropertyType.Integer:
 			return parseInt(value);
 		default:
 			throw new Error(`Failed to parseValue() of unsupported style type: ${propertyType}`);
@@ -142,9 +60,19 @@ function parseValue(value: string, propertyType: StylePropertyValueType): StyleP
 export class Style {
 	static readonly SPRITE_COLOR: Color = [254, 254, 254, 255];
 
-	private static defaultSelectorProperties?: StyleSelectorPropertyValuesMap;
+	private static defaultSheet = LoadResourceFile('vein', 'src/style.css');
 
-	private userSelectorProperties?: StyleSelectorPropertyValuesMap;
+	private static propertyTypes = new Map<string, StylePropertyType>([
+		['accent-color', StylePropertyType.Color],
+		['background-color', StylePropertyType.Color],
+		['background-image', StylePropertyType.Image],
+		['color', StylePropertyType.Color],
+		['font-family', StylePropertyType.Integer],
+		['font-size', StylePropertyType.FontSize]
+	]);
+
+	private selectorProperties = new Map<string, StylePropertyValuesMap>();
+	private idToSelectorsMap = new Map<string, string>();
 
 	readonly button;
 	readonly checkbox;
@@ -160,8 +88,7 @@ export class Style {
 	readonly frame;
 
 	constructor() {
-		if (Style.defaultSelectorProperties === undefined)
-			Style.defaultSelectorProperties = this.parseSheet(LoadResourceFile('vein', 'src/style.css'), false);
+		this.reset();
 
 		this.button = {
 			spacing: 0.005
@@ -220,41 +147,63 @@ export class Style {
 		};
 	}
 
-	getProperties(selector: string): StylePropertyValues {
-		let selectorProperties = this.userSelectorProperties?.get(selector);
-		if (selectorProperties) return selectorProperties;
-
-		selectorProperties = Style.defaultSelectorProperties?.get(selector);
-		if (selectorProperties === undefined)
-			throw new Error(`Failed to getProperties() for style selector: ${selector}`);
-
-		return selectorProperties;
+	buildSelector(class_: string, id: string | undefined, subClass: string | undefined): string {
+		let selector = id !== undefined ? `${id}.${class_}` : class_;
+		if (subClass !== undefined) selector = selector.concat(':', subClass);
+		return selector;
 	}
 
-	getProperty<T extends StylePropertyValue>(selectorName: string, propertyName: string): T {
-		return this.getProperties(selectorName).get<T>(propertyName);
+	getPropertyAs<T extends StylePropertyValue>(selector: string, property: string): T {
+		const value = this.tryGetPropertyAs<T>(selector, property);
+		if (value === undefined) throw new Error(`Failed to find property ${property} for selector ${selector}`);
+		return value;
 	}
 
-	tryGetProperty<T extends StylePropertyValue>(selectorName: string, propertyName: string): T | undefined {
-		return this.getProperties(selectorName).tryGet<T>(propertyName);
+	tryGetPropertyAs<T extends StylePropertyValue>(selector: string, property: string): T | undefined {
+		let value: any = undefined;
+
+		let properties = this.selectorProperties.get(selector);
+		if (properties !== undefined) value = properties.get(property);
+
+		if (properties === undefined || value === undefined) {
+			const subClassSeparatorIndex = selector.indexOf(':');
+
+			if (subClassSeparatorIndex !== -1) {
+				properties = this.selectorProperties.get(selector.substring(0, subClassSeparatorIndex));
+			} else {
+				const fromIdSelector = this.idToSelectorsMap.get(selector);
+				if (fromIdSelector !== undefined) return this.tryGetPropertyAs<T>(fromIdSelector, property);
+			}
+
+			if (properties !== undefined) value = properties.get(property);
+		}
+
+		return value !== undefined ? (value as T) : value;
 	}
 
-	setSheet(styleSheet: string) {
+	getProperty(selector: string, property: string): StylePropertyValue {
+		return this.getPropertyAs<StylePropertyValue>(selector, property);
+	}
+
+	registerProperty(property: string, type: StylePropertyType) {
+		if (!Style.propertyTypes.has(property)) Style.propertyTypes.set(property, type);
+	}
+
+	addSheet(sheet: string) {
 		try {
-			this.userSelectorProperties = this.parseSheet(styleSheet, true);
+			this.addSheetImpl(sheet);
 		} catch (e: any) {
-			console.log(`Failed to set style sheet: ${e}`);
+			console.log(`Failed to add style sheet: ${e}`);
 		}
 	}
 
-	useDefault() {
-		this.userSelectorProperties = undefined;
+	reset() {
+		this.selectorProperties.clear();
+		this.addSheet(Style.defaultSheet);
 	}
 
-	private parseSheet(styleSheet: string, useDefaultProperties: boolean): StyleSelectorPropertyValuesMap {
-		let selectorProperties = new Map<string, StylePropertyValues>();
-
-		const styleSheetAst = parse(styleSheet);
+	private addSheetImpl(sheet: string) {
+		const styleSheetAst = parse(sheet);
 
 		for (const rule of styleSheetAst.stylesheet.rules) {
 			if (rule.type != CssTypes.rule) continue;
@@ -266,42 +215,31 @@ export class Style {
 
 				const astDeclaration = declaration as CssDeclarationAST;
 
-				const propertyType = KNOWN_PROPERTIES.get(astDeclaration.property);
-				if (propertyType === undefined) continue;
+				const type = Style.propertyTypes.get(astDeclaration.property);
+				if (type === undefined) continue;
 
-				properties.set(astDeclaration.property, parseValue(astDeclaration.value, propertyType));
+				properties.set(astDeclaration.property, parseValue(astDeclaration.value, type));
 			}
 
 			if (properties.size === 0) continue;
 
-			for (const selector of (rule as CssRuleAST).selectors) {
-				let propertySelector = selector;
-				let defaultSelector = selector;
-
+			for (let selector of (rule as CssRuleAST).selectors) {
 				if (selector.startsWith('#')) {
 					const match = selector.match(/^#(\S+)\.(\S+)$/);
-					if (!match) throw new Error(`Failed to parse selector name: ${selector}`);
-					propertySelector = match[1];
-					defaultSelector = match[2];
+					if (!match) throw new Error(`Failed to parse selector ${selector}`);
+					this.idToSelectorsMap.set(match[1], match[2]);
+					selector = match[1];
 				}
 
-				let defaultProperties: StylePropertyValues | undefined = undefined;
-				if (useDefaultProperties && DEFAULT_SELECTORS.has(defaultSelector)) {
-					defaultProperties = Style.defaultSelectorProperties?.get(defaultSelector);
-					if (defaultProperties === undefined)
-						throw new Error(`Failed to get default properties for style selector: ${defaultSelector}`);
+				let selectorProperties = this.selectorProperties.get(selector);
+
+				if (selectorProperties === undefined) {
+					selectorProperties = new Map<string, StylePropertyValue>();
+					this.selectorProperties.set(selector, selectorProperties);
 				}
 
-				let existingProperties = selectorProperties.get(propertySelector);
-				if (existingProperties === undefined)
-					selectorProperties.set(
-						propertySelector,
-						new StylePropertyValues(properties, defaultProperties?.getProperties())
-					);
-				else for (const [key, value] of properties.entries()) existingProperties.set(key, value);
+				for (const [property, value] of properties.entries()) selectorProperties.set(property, value);
 			}
 		}
-
-		return selectorProperties;
 	}
 }
