@@ -13,12 +13,12 @@ Vein provides a decent built-in item library, which you can [customize](src/styl
 ```js
 const vein = exports.vein;
 
-vein.beginWindow();
+vein.beginFrame();
 
 if (vein.button('Click Me'))
     console.log('Hello World!');
 
-vein.endWindow();
+vein.endFrame();
 ```
 ## Documentation
 Visit [Vein website](https://warxander.github.io/vein/) for documentation.
