@@ -1,4 +1,4 @@
-import { Ui, getUiChecked } from '../ui';
+import { Frame, getFrameChecked } from '../core/frame';
 import { wait } from '../core/utils';
 import { Color } from '../core/types';
 
@@ -13,21 +13,21 @@ export async function textEdit(
 	maxTextLength: number,
 	isSecretMode: boolean
 ): Promise<ITextEditResult> {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const painter = ui.getPainter();
-	const style = Ui.getStyle();
+	const painter = frame.getPainter();
+	const style = Frame.getStyle();
 
 	const _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE';
 
-	const w = ui.tryGetItemWidth() ?? maxTextLength * style.textEdit.symbolWidth;
+	const w = frame.tryGetItemWidth() ?? maxTextLength * style.textEdit.symbolWidth;
 	const h = style.item.height;
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
 	let newText = text;
 
-	if (ui.isItemClicked()) {
+	if (frame.isItemClicked()) {
 		AddTextEntry(_keyboardTitleEntry, keyboardTitle);
 		DisplayOnscreenKeyboard(1, _keyboardTitleEntry, '', text, '', '', '', maxTextLength);
 
@@ -44,9 +44,9 @@ export async function textEdit(
 		}
 	}
 
-	const id = ui.tryGetItemId() ?? 'text-edit';
+	const id = frame.tryGetItemId() ?? 'text-edit';
 	const textEditProperties = style.getProperties(id);
-	const properties = ui.isItemHovered() ? style.getProperties(`${id}:hover`) : textEditProperties;
+	const properties = frame.isItemHovered() ? style.getProperties(`${id}:hover`) : textEditProperties;
 
 	painter.setColor(properties.get<Color>('background-color'));
 	painter.drawRect(w, h);
@@ -59,7 +59,7 @@ export async function textEdit(
 	painter.move(style.textEdit.spacing, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText(isSecretMode ? text.replace(/./g, '*') : text, font, scale);
 
-	ui.endItem();
+	frame.endItem();
 
 	return { isTextChanged: newText != text, text: newText };
 }

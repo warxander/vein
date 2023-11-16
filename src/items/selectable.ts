@@ -1,25 +1,25 @@
-import { Ui, getUiChecked } from '../ui';
+import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
 export function selectable(isSelected: boolean, text: string): boolean {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const painter = ui.getPainter();
-	const style = Ui.getStyle();
+	const painter = frame.getPainter();
+	const style = Frame.getStyle();
 
-	const id = ui.tryGetItemId() ?? 'selectable';
+	const id = frame.tryGetItemId() ?? 'selectable';
 	const selectableProperties = style.getProperties(id);
 	const font = selectableProperties.get<number>('font-family');
 	const scale = selectableProperties.get<number>('font-size');
 
-	const w = ui.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale) + style.selectable.spacing * 2;
+	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale) + style.selectable.spacing * 2;
 	const h = style.item.height;
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
-	if (ui.isItemClicked()) isSelected = !isSelected;
+	if (frame.isItemClicked()) isSelected = !isSelected;
 
-	const isHovered = ui.isItemHovered();
+	const isHovered = frame.isItemHovered();
 	const properties = isHovered ? style.getProperties(`${id}:hover`) : selectableProperties;
 
 	painter.setColor(
@@ -31,7 +31,7 @@ export function selectable(isSelected: boolean, text: string): boolean {
 	painter.move(style.selectable.spacing, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText(text, font, scale);
 
-	ui.endItem();
+	frame.endItem();
 
 	return isSelected;
 }

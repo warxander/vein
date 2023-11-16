@@ -82,7 +82,7 @@ const DEFAULT_SELECTORS = new Set<String>([
 	'text-edit',
 	'text-edit:hover',
 
-	'window'
+	'frame'
 ]);
 
 const KNOWN_PROPERTIES = new Map<string, StylePropertyValueType>([
@@ -157,7 +157,7 @@ export class Style {
 	readonly spriteButton;
 	readonly textEdit;
 	readonly item;
-	readonly window;
+	readonly frame;
 
 	constructor() {
 		if (Style.defaultSelectorProperties === undefined)
@@ -214,7 +214,7 @@ export class Style {
 			textOffset: -0.0035
 		};
 
-		this.window = {
+		this.frame = {
 			margins: { x: 0.01, y: 0.018 },
 			spacing: { x: 0.005, y: 0.01 }
 		};

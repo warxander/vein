@@ -1,15 +1,15 @@
-import { getUiChecked } from '../ui';
+import { getFrameChecked } from '../core/frame';
 import { Style } from '../core/style';
 
 export function sprite(dict: string, name: string, w: number, h: number) {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const painter = ui.getPainter();
+	const painter = frame.getPainter();
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
 	painter.setColor(Style.SPRITE_COLOR);
 	painter.drawSprite(dict, name, w, h);
 
-	ui.endItem();
+	frame.endItem();
 }

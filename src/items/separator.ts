@@ -1,19 +1,19 @@
-import { Ui, getUiChecked } from '../ui';
+import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
 export function separator(w: number) {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const painter = ui.getPainter();
-	const style = Ui.getStyle();
+	const painter = frame.getPainter();
+	const style = Frame.getStyle();
 
 	const h = style.item.height;
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
-	painter.setColor(style.getProperty<Color>(ui.tryGetItemId() ?? 'separator', 'color'));
+	painter.setColor(style.getProperty<Color>(frame.tryGetItemId() ?? 'separator', 'color'));
 	painter.move(0, (style.item.height - style.separator.height) / 2);
 	painter.drawRect(w, style.separator.height);
 
-	ui.endItem();
+	frame.endItem();
 }

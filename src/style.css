@@ -79,7 +79,7 @@ slider:hover, text-edit:hover {
 	color: #F50551;
 }
 
-window {
+frame {
 	background-color: #32353D;
 	color: rgba(105, 255, 89, 0.125);
 }

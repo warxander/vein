@@ -1,29 +1,29 @@
-import { Ui, getUiChecked } from '../ui';
+import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
 export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const painter = ui.getPainter();
-	const style = Ui.getStyle();
+	const painter = frame.getPainter();
+	const style = Frame.getStyle();
 
-	const id = ui.tryGetItemId() ?? 'collapsing-header';
+	const id = frame.tryGetItemId() ?? 'collapsing-header';
 	const collapsingHeaderProperties = style.getProperties(id);
 	const font = collapsingHeaderProperties.get<number>('font-family');
 	const scale = collapsingHeaderProperties.get<number>('font-size');
 
 	const w =
-		ui.tryGetItemWidth() ??
+		frame.tryGetItemWidth() ??
 		painter.getTextWidth(text, font, scale) +
 			style.collapsingHeader.spacing * 3 +
 			style.collapsingHeader.spriteWidth;
 	const h = style.item.height;
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
-	if (ui.isItemClicked()) isCollapsed = !isCollapsed;
+	if (frame.isItemClicked()) isCollapsed = !isCollapsed;
 
-	const properties = ui.isItemHovered() ? style.getProperties(`${id}:hover`) : collapsingHeaderProperties;
+	const properties = frame.isItemHovered() ? style.getProperties(`${id}:hover`) : collapsingHeaderProperties;
 
 	painter.setColor(properties.get<Color>('color'));
 
@@ -39,7 +39,7 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 	);
 	painter.drawText(text, font, scale);
 
-	ui.endItem();
+	frame.endItem();
 
 	return isCollapsed;
 }

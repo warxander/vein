@@ -1,8 +1,8 @@
-import { getUiChecked } from '../ui';
+import { getFrameChecked } from '../core/frame';
 
 export function dummy(w: number, h: number) {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	ui.beginItem(w, h);
-	ui.endItem();
+	frame.beginItem(w, h);
+	frame.endItem();
 }

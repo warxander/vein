@@ -1,4 +1,4 @@
-import { Ui, getUiChecked } from '../ui';
+import { Frame, getFrameChecked } from '../core/frame';
 import { numberEquals } from '../core/utils';
 import { Color, Rect, Vector2 } from '../core/types';
 import { InputKey } from '../core/input';
@@ -9,16 +9,16 @@ export interface ISliderResult {
 }
 
 export function slider(min: number, value: number, max: number, w: number): ISliderResult {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const input = ui.getInput();
-	const layout = ui.getLayout();
-	const painter = ui.getPainter();
-	const style = Ui.getStyle();
+	const input = frame.getInput();
+	const layout = frame.getLayout();
+	const painter = frame.getPainter();
+	const style = Frame.getStyle();
 
 	const h = style.item.height;
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
 	const sliderStyle = style.slider;
 
@@ -41,8 +41,8 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 
 	const sh = (h - sliderStyle.height) / 2;
 
-	const id = ui.tryGetItemId() ?? 'slider';
-	const properties = style.getProperties(ui.isItemHovered() ? `${id}:hover` : id);
+	const id = frame.tryGetItemId() ?? 'slider';
+	const properties = style.getProperties(frame.isItemHovered() ? `${id}:hover` : id);
 
 	painter.setColor(properties.get<Color>('background-color'));
 	painter.move(0, sh);
@@ -55,7 +55,7 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 	painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);
 	painter.drawRect(sliderStyle.tickMarkSize.x, sliderStyle.tickMarkSize.y);
 
-	ui.endItem();
+	frame.endItem();
 
 	return { isValueChanged: !numberEquals(newValue, value), value: newValue };
 }

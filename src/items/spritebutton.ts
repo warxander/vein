@@ -1,13 +1,13 @@
-import { Ui, getUiChecked } from '../ui';
+import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
 export function spriteButton(dict: string, name: string, text: string): boolean {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const painter = ui.getPainter();
-	const style = Ui.getStyle();
+	const painter = frame.getPainter();
+	const style = Frame.getStyle();
 
-	const id = ui.tryGetItemId() ?? 'sprite-button';
+	const id = frame.tryGetItemId() ?? 'sprite-button';
 	const spriteButtonProperties = style.getProperties(id);
 	const font = spriteButtonProperties.get<number>('font-family');
 	const scale = spriteButtonProperties.get<number>('font-size');
@@ -16,13 +16,13 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	const sw = spriteButtonStyle.spriteWidth;
 
 	const w =
-		ui.tryGetItemWidth() ||
+		frame.tryGetItemWidth() ||
 		painter.getTextWidth(text, font, scale) + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
 	const h = style.item.height;
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
-	const properties = ui.isItemHovered() ? style.getProperties(`${id}:hover`) : spriteButtonProperties;
+	const properties = frame.isItemHovered() ? style.getProperties(`${id}:hover`) : spriteButtonProperties;
 
 	painter.drawItemBackground(properties, w, h);
 
@@ -40,7 +40,7 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	);
 	painter.drawText(text, font, scale);
 
-	ui.endItem();
+	frame.endItem();
 
-	return ui.isItemClicked();
+	return frame.isItemClicked();
 }

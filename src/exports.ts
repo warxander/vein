@@ -1,4 +1,4 @@
-import { Ui, getUiChecked, setUi } from './ui';
+import { Frame, getFrameChecked, setFrame } from './core/frame';
 import { Rect, Vector2 } from './core/types';
 
 function toIRect(rect: Rect): IRect {
@@ -38,7 +38,7 @@ export interface IRect {
 	h: number;
 }
 
-export interface IUi {
+export interface IFrame {
 	beginItem(w: number, h: number): void;
 	endItem(): void;
 
@@ -54,7 +54,7 @@ export interface IUi {
 	isItemHovered(): boolean;
 	isItemClicked(): boolean;
 
-	getWindowRect(): IRect;
+	getRect(): IRect;
 }
 
 export interface IInput {
@@ -89,32 +89,32 @@ export interface IPainter {
 	drawMultilineText(text: string, font: number, scale: number, w: number): void;
 }
 
-export function getUi(): IUi {
-	const ui = getUiChecked();
+export function getFrame(): IFrame {
+	const frame = getFrameChecked();
 
 	return {
 		beginItem(w: number, h: number) {
-			ui.beginItem(w, h);
+			frame.beginItem(w, h);
 		},
 
 		endItem() {
-			ui.endItem();
+			frame.endItem();
 		},
 
 		tryGetItemWidth(): number | null {
-			return ui.tryGetItemWidth() ?? null;
+			return frame.tryGetItemWidth() ?? null;
 		},
 
 		tryGetItemId(): string | null {
-			return ui.tryGetItemId() ?? null;
+			return frame.tryGetItemId() ?? null;
 		},
 
 		setMouseCursor(mouseCursor: number) {
-			ui.setMouseCursor(mouseCursor);
+			frame.setMouseCursor(mouseCursor);
 		},
 
 		getInput(): IInput {
-			const input = ui.getInput();
+			const input = frame.getInput();
 
 			return {
 				getMousePosition(): IVector2 {
@@ -136,7 +136,7 @@ export function getUi(): IUi {
 		},
 
 		getLayout(): ILayout {
-			const layout = ui.getLayout();
+			const layout = frame.getLayout();
 
 			return {
 				getContentRect(): IRect {
@@ -150,7 +150,7 @@ export function getUi(): IUi {
 		},
 
 		getPainter(): IPainter {
-			const painter = ui.getPainter();
+			const painter = frame.getPainter();
 
 			return {
 				move(x: number, y: number) {
@@ -196,111 +196,111 @@ export function getUi(): IUi {
 		},
 
 		isItemHovered(): boolean {
-			return ui.isItemHovered();
+			return frame.isItemHovered();
 		},
 
 		isItemClicked(): boolean {
-			return ui.isItemClicked();
+			return frame.isItemClicked();
 		},
 
-		getWindowRect(): IRect {
-			return toIRect(Ui.getWindowRect());
+		getRect(): IRect {
+			return toIRect(Frame.getRect());
 		}
 	};
 }
 
 export function isDebugEnabled(): boolean {
-	return Ui.isDebugEnabled();
+	return Frame.isDebugEnabled();
 }
 
 export function setDebugEnabled(enabled: boolean) {
-	Ui.setDebugEnabled(enabled);
+	Frame.setDebugEnabled(enabled);
 }
 
-export function setNextWindowPositionFixed() {
-	Ui.setNextWindowPositionFixed();
+export function setNextFramePositionFixed() {
+	Frame.setNextFramePositionFixed();
 }
 
-export function setNextWindowDisableBackground() {
-	Ui.setNextWindowDisableBackground();
+export function setNextFrameDisableBackground() {
+	Frame.setNextFrameDisableBackground();
 }
 
 /** Used as a selector name */
-export function setNextWindowId(id: string) {
-	Ui.setNextWindowId(id);
+export function setNextFrameId(id: string) {
+	Frame.setNextFrameId(id);
 }
 
-export function setNextWindowSpacing(x: number, y: number) {
-	Ui.setNextWindowSpacing(x, y);
+export function setNextFrameSpacing(x: number, y: number) {
+	Frame.setNextFrameSpacing(x, y);
 }
 
-export function setNextWindowDisableInput() {
-	Ui.setNextWindowDisableInput();
+export function setNextFrameDisableInput() {
+	Frame.setNextFrameDisableInput();
 }
 
-export function beginWindow(x: number | null, y: number | null) {
-	setUi(new Ui(x !== null ? x : 0.33, y !== null ? y : 0.33));
+export function beginFrame(x: number | null, y: number | null) {
+	setFrame(new Frame(x !== null ? x : 0.33, y !== null ? y : 0.33));
 }
 
-export function endWindow(): IRect {
-	const ui = getUiChecked();
+export function endFrame(): IRect {
+	const frame = getFrameChecked();
 
-	ui.end();
+	frame.end();
 
-	const windowRect = Ui.getWindowRect();
-	setUi(null);
+	const frameRect = Frame.getRect();
+	setFrame(null);
 
-	return toIRect(windowRect);
+	return toIRect(frameRect);
 }
 
 /** `true` if the last drawn item was hovered */
 export function isItemHovered(): boolean {
-	return getUiChecked().isItemHovered();
+	return getFrameChecked().isItemHovered();
 }
 
 /** `true` if the last drawn item was clicked */
 export function isItemClicked(): boolean {
-	return getUiChecked().isItemClicked();
+	return getFrameChecked().isItemClicked();
 }
 
 export function beginRow() {
-	getUiChecked().getLayout().beginRow();
+	getFrameChecked().getLayout().beginRow();
 }
 
 export function endRow() {
-	getUiChecked().getLayout().endRow();
+	getFrameChecked().getLayout().endRow();
 }
 
 export function setNextItemWidth(w: number) {
-	getUiChecked().setNextItemWidth(w);
+	getFrameChecked().setNextItemWidth(w);
 }
 
 export function pushItemWidth(w: number) {
-	getUiChecked().pushItemWidth(w);
+	getFrameChecked().pushItemWidth(w);
 }
 
 export function popItemWidth() {
-	getUiChecked().popItemWidth();
+	getFrameChecked().popItemWidth();
 }
 
 export function setStyleSheet(styleSheet: string) {
-	Ui.getStyle().setSheet(styleSheet);
+	Frame.getStyle().setSheet(styleSheet);
 }
 
 export function useDefaultStyle() {
-	Ui.getStyle().useDefault();
+	Frame.getStyle().useDefault();
 }
 
 /** Used as a selector name */
 export function setNextItemId(id: string) {
-	getUiChecked().setNextItemId(id);
+	getFrameChecked().setNextItemId(id);
 }
 
 /** Used as a selector name */
 export function pushItemId(id: string) {
-	getUiChecked().pushItemId(id);
+	getFrameChecked().pushItemId(id);
 }
 
 export function popItemId() {
-	getUiChecked().popItemId();
+	getFrameChecked().popItemId();
 }

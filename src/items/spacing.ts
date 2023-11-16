@@ -1,16 +1,16 @@
-import { Ui, getUiChecked } from '../ui';
+import { Frame, getFrameChecked } from '../core/frame';
 
 /** Horizontal if in row mode, vertical otherwise */
 export function spacing(count = 1) {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const isInRowMode = ui.getLayout().isInRowMode();
+	const isInRowMode = frame.getLayout().isInRowMode();
 
-	const windowSpacing = Ui.getWindowSpacing();
-	const w = isInRowMode ? windowSpacing.x * count : 0;
-	const h = isInRowMode ? 0 : windowSpacing.y * count;
+	const frameSpacing = Frame.getSpacing();
+	const w = isInRowMode ? frameSpacing.x * count : 0;
+	const h = isInRowMode ? 0 : frameSpacing.y * count;
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
-	ui.endItem();
+	frame.endItem();
 }

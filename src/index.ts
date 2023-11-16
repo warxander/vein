@@ -1,18 +1,18 @@
 import * as Exports from './exports';
 
-globalThis.exports('getUi', Exports.getUi);
+globalThis.exports('getFrame', Exports.getFrame);
 
 globalThis.exports('isDebugEnabled', Exports.isDebugEnabled);
 globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 
-globalThis.exports('setNextWindowPositionFixed', Exports.setNextWindowPositionFixed);
-globalThis.exports('setNextWindowDisableBackground', Exports.setNextWindowDisableBackground);
-globalThis.exports('setNextWindowId', Exports.setNextWindowId);
-globalThis.exports('setNextWindowSpacing', Exports.setNextWindowSpacing);
-globalThis.exports('setNextWindowDisableInput', Exports.setNextWindowDisableInput);
+globalThis.exports('setNextFramePositionFixed', Exports.setNextFramePositionFixed);
+globalThis.exports('setNextFrameDisableBackground', Exports.setNextFrameDisableBackground);
+globalThis.exports('setNextFrameId', Exports.setNextFrameId);
+globalThis.exports('setNextFrameSpacing', Exports.setNextFrameSpacing);
+globalThis.exports('setNextFrameDisableInput', Exports.setNextFrameDisableInput);
 
-globalThis.exports('beginWindow', Exports.beginWindow);
-globalThis.exports('endWindow', Exports.endWindow);
+globalThis.exports('beginFrame', Exports.beginFrame);
+globalThis.exports('endFrame', Exports.endFrame);
 
 globalThis.exports('isItemHovered', Exports.isItemHovered);
 globalThis.exports('isItemClicked', Exports.isItemClicked);

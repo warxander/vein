@@ -1,24 +1,24 @@
-import { Ui, getUiChecked } from '../ui';
+import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
 export function heading(text: string) {
-	const ui = getUiChecked();
+	const frame = getFrameChecked();
 
-	const painter = ui.getPainter();
-	const style = Ui.getStyle();
+	const painter = frame.getPainter();
+	const style = Frame.getStyle();
 
-	const properties = style.getProperties(ui.tryGetItemId() ?? 'heading');
+	const properties = style.getProperties(frame.tryGetItemId() ?? 'heading');
 	const font = properties.get<number>('font-family');
 	const scale = properties.get<number>('font-size');
 
-	const w = ui.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale);
+	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale);
 	const h = style.item.height;
 
-	ui.beginItem(w, h);
+	frame.beginItem(w, h);
 
 	painter.setColor(properties.get<Color>('color'));
 	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
 	painter.drawText(text, font, scale);
 
-	ui.endItem();
+	frame.endItem();
 }
