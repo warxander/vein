@@ -6,7 +6,7 @@ globalThis.exports('isDebugEnabled', Exports.isDebugEnabled);
 globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 
 globalThis.exports('setNextWindowPositionFixed', Exports.setNextWindowPositionFixed);
-globalThis.exports('setNextWindowNoBackground', Exports.setNextWindowNoBackground);
+globalThis.exports('setNextWindowDisableBackground', Exports.setNextWindowDisableBackground);
 globalThis.exports('setNextWindowId', Exports.setNextWindowId);
 globalThis.exports('setNextWindowSpacing', Exports.setNextWindowSpacing);
 globalThis.exports('setNextWindowDisableInput', Exports.setNextWindowDisableInput);

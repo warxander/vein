@@ -12,7 +12,7 @@ class ItemState {
 enum WindowFlags {
 	None,
 	FixedPosition = 1 << 1,
-	NoBackground = 1 << 2
+	BackgroundDisabled = 1 << 2
 }
 
 class WindowState {
@@ -66,9 +66,8 @@ export class Ui {
 		Ui.nextWindowState.windowFlags |= WindowFlags.FixedPosition;
 	}
 
-	static setNextWindowNoBackground(isNoBackground: boolean) {
-		if (isNoBackground) Ui.nextWindowState.windowFlags |= WindowFlags.NoBackground;
-		else Ui.nextWindowState.windowFlags &= ~WindowFlags.NoBackground;
+	static setNextWindowDisableBackground() {
+		Ui.nextWindowState.windowFlags |= WindowFlags.BackgroundDisabled;
 	}
 
 	static setNextWindowId(id: string) {
@@ -103,8 +102,8 @@ export class Ui {
 		return !!(Ui.nextWindowState.windowFlags & WindowFlags.FixedPosition);
 	}
 
-	static isWindowNoBackground(): boolean {
-		return !!(Ui.nextWindowState.windowFlags & WindowFlags.NoBackground);
+	static isWindowBackgroundDisabled(): boolean {
+		return !!(Ui.nextWindowState.windowFlags & WindowFlags.BackgroundDisabled);
 	}
 
 	static isWindowInputDisabled(): boolean {
@@ -120,7 +119,7 @@ export class Ui {
 
 		this.painter.setPosition(x, y);
 
-		if (!Ui.isWindowNoBackground())
+		if (!Ui.isWindowBackgroundDisabled())
 			this.painter.drawItemBackground(
 				Ui.style.getProperties(Ui.nextWindowState.id ?? 'window'),
 				Ui.windowRect.size.x,

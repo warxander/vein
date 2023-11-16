@@ -221,9 +221,8 @@ export function setNextWindowPositionFixed() {
 	Ui.setNextWindowPositionFixed();
 }
 
-/** `false` by default */
-export function setNextWindowNoBackground(isNoBackground: boolean) {
-	Ui.setNextWindowNoBackground(isNoBackground);
+export function setNextWindowDisableBackground() {
+	Ui.setNextWindowDisableBackground();
 }
 
 /** Used as a selector name */
