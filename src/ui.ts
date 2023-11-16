@@ -11,7 +11,7 @@ class ItemState {
 
 enum WindowFlags {
 	None,
-	NoDrag = 1 << 1,
+	FixedPosition = 1 << 1,
 	NoBackground = 1 << 2
 }
 
@@ -62,9 +62,8 @@ export class Ui {
 		Ui.isDebugEnabled_ = enabled;
 	}
 
-	static setNextWindowNoDrag(isNoDrag: boolean) {
-		if (isNoDrag) Ui.nextWindowState.windowFlags |= WindowFlags.NoDrag;
-		else Ui.nextWindowState.windowFlags &= ~WindowFlags.NoDrag;
+	static setNextWindowPositionFixed() {
+		Ui.nextWindowState.windowFlags |= WindowFlags.FixedPosition;
 	}
 
 	static setNextWindowNoBackground(isNoBackground: boolean) {
@@ -100,8 +99,8 @@ export class Ui {
 		return Ui.nextWindowState.spacing ?? Ui.style.window.spacing;
 	}
 
-	static isWindowNoDrag(): boolean {
-		return !!(Ui.nextWindowState.windowFlags & WindowFlags.NoDrag);
+	static isWindowPositionFixed(): boolean {
+		return !!(Ui.nextWindowState.windowFlags & WindowFlags.FixedPosition);
 	}
 
 	static isWindowNoBackground(): boolean {
@@ -229,7 +228,7 @@ export class Ui {
 	}
 
 	private beginWindowDrag() {
-		if (Ui.isWindowNoDrag() || Ui.isWindowInputDisabled()) return;
+		if (Ui.isWindowPositionFixed() || Ui.isWindowInputDisabled()) return;
 
 		const mousePosition = this.input.getMousePosition();
 

@@ -217,9 +217,8 @@ export function setDebugEnabled(enabled: boolean) {
 	Ui.setDebugEnabled(enabled);
 }
 
-/** `false` by default */
-export function setNextWindowNoDrag(isNoDrag: boolean) {
-	Ui.setNextWindowNoDrag(isNoDrag);
+export function setNextWindowPositionFixed() {
+	Ui.setNextWindowPositionFixed();
 }
 
 /** `false` by default */
