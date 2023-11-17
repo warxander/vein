@@ -3,12 +3,12 @@ import { numberEquals } from '../core/utils';
 import { Color, Rect, Vector2 } from '../core/types';
 import { InputKey } from '../core/input';
 
-export interface ISliderResult {
+export interface ISliderResponse {
 	isValueChanged: boolean;
 	value: number;
 }
 
-export function slider(min: number, value: number, max: number, w: number): ISliderResult {
+export function slider(min: number, value: number, max: number, w: number): ISliderResponse {
 	const frame = getFrameChecked();
 
 	const input = frame.getInput();

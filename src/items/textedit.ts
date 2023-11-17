@@ -2,7 +2,7 @@ import { Frame, getFrameChecked } from '../core/frame';
 import { wait } from '../core/utils';
 import { Color } from '../core/types';
 
-export interface ITextEditResult {
+export interface ITextEditResponse {
 	isTextChanged: boolean;
 	text: string;
 }
@@ -12,7 +12,7 @@ export async function textEdit(
 	keyboardTitle: string,
 	maxTextLength: number,
 	isSecretMode: boolean
-): Promise<ITextEditResult> {
+): Promise<ITextEditResponse> {
 	const frame = getFrameChecked();
 
 	const painter = frame.getPainter();
