@@ -1,4 +1,4 @@
-import { Color, Image, FontSize } from './types';
+import { Color, Image, FontSize, Vector2 } from './types';
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
 type StylePropertyValuesMap = Map<string, StylePropertyValue>;
@@ -123,7 +123,7 @@ export class Style {
 
 		this.slider = {
 			height: 0.004,
-			tickMarkSize: { x: 0.002, y: 0.016 }
+			tickMarkSize: new Vector2(0.002, 0.016)
 		};
 
 		this.spriteButton = {
@@ -142,8 +142,8 @@ export class Style {
 		};
 
 		this.frame = {
-			margins: { x: 0.01, y: 0.018 },
-			spacing: { x: 0.005, y: 0.01 }
+			margins: new Vector2(0.01, 0.018),
+			spacing: new Vector2(0.005, 0.01)
 		};
 	}
 
