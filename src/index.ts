@@ -7,7 +7,7 @@ globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 
 globalThis.exports('setNextFramePositionFixed', Exports.setNextFramePositionFixed);
 globalThis.exports('setNextFrameDisableBackground', Exports.setNextFrameDisableBackground);
-globalThis.exports('setNextFrameId', Exports.setNextFrameId);
+globalThis.exports('setNextFrameStyleId', Exports.setNextFrameStyleId);
 globalThis.exports('setNextFrameSpacing', Exports.setNextFrameSpacing);
 globalThis.exports('setNextFrameDisableInput', Exports.setNextFrameDisableInput);
 
@@ -32,9 +32,9 @@ globalThis.exports('registerStylePropertyAsFontSize', Exports.registerStylePrope
 globalThis.exports('registerStylePropertyAsImage', Exports.registerStylePropertyAsImage);
 globalThis.exports('registerStylePropertyAsInteger', Exports.registerStylePropertyAsInteger);
 
-globalThis.exports('setNextItemId', Exports.setNextItemId);
-globalThis.exports('pushItemId', Exports.pushItemId);
-globalThis.exports('popItemId', Exports.popItemId);
+globalThis.exports('setNextItemStyleId', Exports.setNextItemStyleId);
+globalThis.exports('pushItemStyleId', Exports.pushItemStyleId);
+globalThis.exports('popItemStyleId', Exports.popItemStyleId);
 
 globalThis.exports('button', Exports.button);
 globalThis.exports('checkBox', Exports.checkBox);

@@ -6,7 +6,7 @@ import { Style, StylePropertyValue } from './style';
 import { drawItemBackground } from './utils';
 
 class ItemState {
-	id: string | undefined = undefined;
+	styleId: string | undefined = undefined;
 	width: number | undefined = undefined;
 }
 
@@ -17,7 +17,7 @@ enum FrameFlags {
 }
 
 class FrameState {
-	id: string | undefined = undefined;
+	styleId: string | undefined = undefined;
 	spacing: Vector2 | undefined = undefined;
 	flags = FrameFlags.None;
 	inputFlags = InputFlags.None;
@@ -51,7 +51,7 @@ export class Frame {
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
 	private itemWidthStack: number[] = [];
-	private itemIdStack: string[] = [];
+	private itemStyleIdStack: string[] = [];
 
 	private layout: Layout;
 
@@ -71,8 +71,8 @@ export class Frame {
 		Frame.nextState.flags |= FrameFlags.BackgroundDisabled;
 	}
 
-	static setNextFrameId(id: string) {
-		Frame.nextState.id = id;
+	static setNextFrameStyleId(id: string) {
+		Frame.nextState.styleId = id;
 	}
 
 	static setNextFrameSpacing(x: number, y: number) {
@@ -91,8 +91,8 @@ export class Frame {
 		return Frame.rect;
 	}
 
-	static getId(): string | undefined {
-		return Frame.nextState.id;
+	static getStyleId(): string | undefined {
+		return Frame.nextState.styleId;
 	}
 
 	static getSpacing(): Vector2 {
@@ -125,7 +125,7 @@ export class Frame {
 		this.painter.setPosition(x, y);
 
 		if (!Frame.isBackgroundDisabled())
-			drawItemBackground(this, Frame.nextState.id ?? 'frame', Frame.rect.size.x, Frame.rect.size.y);
+			drawItemBackground(this, Frame.nextState.styleId ?? 'frame', Frame.rect.size.x, Frame.rect.size.y);
 	}
 
 	getInput(): Input {
@@ -156,7 +156,7 @@ export class Frame {
 			contentRect.size.y + Frame.style.frame.margins.y * 2
 		);
 
-		this.itemIdStack = [];
+		this.itemStyleIdStack = [];
 		this.itemWidthStack = [];
 
 		Frame.nextState = new FrameState();
@@ -199,16 +199,16 @@ export class Frame {
 		return this.nextItemState.width ?? this.itemWidthStack[this.itemWidthStack.length - 1];
 	}
 
-	setNextItemId(id: string) {
-		this.nextItemState.id = id;
+	setNextItemStyleId(id: string) {
+		this.nextItemState.styleId = id;
 	}
 
-	pushItemId(id: string) {
-		this.itemIdStack.push(id);
+	pushItemStyleId(id: string) {
+		this.itemStyleIdStack.push(id);
 	}
 
-	popItemId() {
-		this.itemIdStack.pop();
+	popItemStyleId() {
+		this.itemStyleIdStack.pop();
 	}
 
 	isItemHovered(): boolean {
@@ -224,8 +224,8 @@ export class Frame {
 	}
 
 	buildStyleSelector(class_: string, subClass: string | undefined = undefined): string {
-		const id = this.nextItemState.id ?? this.itemIdStack[this.itemIdStack.length - 1];
-		return Frame.style.buildSelector(class_, id, subClass);
+		const styleId = this.nextItemState.styleId ?? this.itemStyleIdStack[this.itemStyleIdStack.length - 1];
+		return Frame.style.buildSelector(class_, styleId, subClass);
 	}
 
 	private beginDrag() {

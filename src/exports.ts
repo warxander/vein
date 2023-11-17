@@ -232,9 +232,8 @@ export function setNextFrameDisableBackground() {
 	Frame.setNextFrameDisableBackground();
 }
 
-/** Used as a selector name */
-export function setNextFrameId(id: string) {
-	Frame.setNextFrameId(id);
+export function setNextFrameStyleId(id: string) {
+	Frame.setNextFrameStyleId(id);
 }
 
 export function setNextFrameSpacing(x: number, y: number) {
@@ -314,16 +313,14 @@ export function registerStylePropertyAsInteger(property: string) {
 	Frame.getStyle().registerProperty(property, StylePropertyType.Integer);
 }
 
-/** Used as a selector name */
-export function setNextItemId(id: string) {
-	getFrameChecked().setNextItemId(id);
+export function setNextItemStyleId(id: string) {
+	getFrameChecked().setNextItemStyleId(id);
 }
 
-/** Used as a selector name */
-export function pushItemId(id: string) {
-	getFrameChecked().pushItemId(id);
+export function pushItemStyleId(id: string) {
+	getFrameChecked().pushItemStyleId(id);
 }
 
-export function popItemId() {
-	getFrameChecked().popItemId();
+export function popItemStyleId() {
+	getFrameChecked().popItemStyleId();
 }
