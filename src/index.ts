@@ -5,11 +5,12 @@ globalThis.exports('getFrame', Exports.getFrame);
 globalThis.exports('isDebugEnabled', Exports.isDebugEnabled);
 globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 
-globalThis.exports('setNextFramePositionFixed', Exports.setNextFramePositionFixed);
-globalThis.exports('setNextFrameDisableBackground', Exports.setNextFrameDisableBackground);
-globalThis.exports('setNextFrameStyleId', Exports.setNextFrameStyleId);
+globalThis.exports('setNextFramePosition', Exports.setNextFramePosition);
 globalThis.exports('setNextFrameSpacing', Exports.setNextFrameSpacing);
+globalThis.exports('setNextFrameStyleId', Exports.setNextFrameStyleId);
+globalThis.exports('setNextFrameDisableBackground', Exports.setNextFrameDisableBackground);
 globalThis.exports('setNextFrameDisableInput', Exports.setNextFrameDisableInput);
+globalThis.exports('setNextFrameDisableMove', Exports.setNextFrameDisableMove);
 
 globalThis.exports('beginFrame', Exports.beginFrame);
 globalThis.exports('endFrame', Exports.endFrame);

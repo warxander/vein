@@ -12,15 +12,21 @@ class ItemState {
 
 enum FrameFlags {
 	None,
-	FixedPosition = 1 << 1,
+	DisableMove = 1 << 1,
 	BackgroundDisabled = 1 << 2
 }
 
 class FrameState {
+	position: Vector2 | undefined = undefined;
 	styleId: string | undefined = undefined;
 	spacing: Vector2 | undefined = undefined;
 	flags = FrameFlags.None;
 	inputFlags = InputFlags.None;
+}
+
+class FrameMemory {
+	rect = new Rect(new Vector2(0.33, 0.33));
+	movePosition: Vector2 | null = null;
 }
 
 export enum MouseCursor {
@@ -40,14 +46,16 @@ export enum MouseCursor {
 }
 
 export class Frame {
+	private static readonly DEFAULT_ID = 'DEFAULT';
+
+	private static frameMemory = new Map<string, FrameMemory>();
 	private static style = new Style();
-	private static rect = new Rect();
-	private static dragPosition: Vector2 | null = null;
 	private static nextState = new FrameState();
 	private static isDebugEnabled_ = false;
 
+	private memory: FrameMemory;
 	private input = new Input(Frame.nextState.inputFlags);
-	private painter = new Painter();
+	private painter: Painter;
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
 	private itemWidthStack: number[] = [];
@@ -63,32 +71,32 @@ export class Frame {
 		Frame.isDebugEnabled_ = enabled;
 	}
 
-	static setNextFramePositionFixed() {
-		Frame.nextState.flags |= FrameFlags.FixedPosition;
-	}
-
-	static setNextFrameDisableBackground() {
-		Frame.nextState.flags |= FrameFlags.BackgroundDisabled;
-	}
-
-	static setNextFrameStyleId(id: string) {
-		Frame.nextState.styleId = id;
+	static setNextFramePosition(x: number, y: number) {
+		Frame.nextState.position = new Vector2(x, y);
 	}
 
 	static setNextFrameSpacing(x: number, y: number) {
 		Frame.nextState.spacing = new Vector2(x, y);
 	}
 
+	static setNextFrameStyleId(id: string) {
+		Frame.nextState.styleId = id;
+	}
+
+	static setNextFrameDisableBackground() {
+		Frame.nextState.flags |= FrameFlags.BackgroundDisabled;
+	}
+
 	static setNextFrameDisableInput() {
 		Frame.nextState.inputFlags |= InputFlags.DisableInput;
 	}
 
-	static getStyle(): Style {
-		return Frame.style;
+	static setNextFrameDisableMove() {
+		Frame.nextState.flags |= FrameFlags.DisableMove;
 	}
 
-	static getRect(): Rect {
-		return Frame.rect;
+	static getStyle(): Style {
+		return Frame.style;
 	}
 
 	static getStyleId(): string | undefined {
@@ -99,8 +107,8 @@ export class Frame {
 		return Frame.nextState.spacing ?? Frame.style.frame.spacing;
 	}
 
-	static isPositionFixed(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.FixedPosition);
+	static isMoveDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
 	}
 
 	static isBackgroundDisabled(): boolean {
@@ -115,17 +123,37 @@ export class Frame {
 		return Frame.style.getProperty(selector, property);
 	}
 
-	constructor(x: number, y: number) {
-		Frame.rect.position = new Vector2(x, y);
+	constructor(id: string | undefined) {
+		if (id === undefined) id = Frame.DEFAULT_ID;
 
-		this.beginDrag();
+		let memory = Frame.frameMemory.get(id);
+		if (memory === undefined) {
+			memory = new FrameMemory();
+			Frame.frameMemory.set(id, memory);
+		}
 
-		this.layout = new Layout(x + Frame.style.frame.margins.x, y + Frame.style.frame.margins.y, Frame.getSpacing());
+		this.memory = memory;
 
-		this.painter.setPosition(x, y);
+		if (Frame.nextState.position !== undefined) {
+			this.memory.rect.position.x = Frame.nextState.position.x;
+			this.memory.rect.position.y = Frame.nextState.position.y;
+		}
+
+		this.beginMove();
+
+		const rect = this.getRect();
+
+		this.layout = new Layout(
+			rect.position.x + Frame.style.frame.margins.x,
+			rect.position.y + Frame.style.frame.margins.y,
+			Frame.getSpacing()
+		);
+
+		this.painter = new Painter(`VEIN_${id}`);
+		this.painter.setPosition(rect.position.x, rect.position.y);
 
 		if (!Frame.isBackgroundDisabled())
-			drawItemBackground(this, Frame.nextState.styleId ?? 'frame', Frame.rect.size.x, Frame.rect.size.y);
+			drawItemBackground(this, Frame.nextState.styleId ?? 'frame', rect.size.x, rect.size.y);
 	}
 
 	getInput(): Input {
@@ -140,8 +168,12 @@ export class Frame {
 		return this.layout;
 	}
 
+	getRect(): Rect {
+		return this.memory.rect;
+	}
+
 	end() {
-		this.endDrag();
+		this.endMove();
 
 		if (!Frame.isInputDisabled()) {
 			SetMouseCursorActiveThisFrame();
@@ -151,7 +183,7 @@ export class Frame {
 		this.mouseCursor = MouseCursor.Normal;
 
 		const contentRect = this.layout.getContentRect();
-		Frame.rect.size = new Vector2(
+		this.memory.rect.size = new Vector2(
 			contentRect.size.x + Frame.style.frame.margins.x * 2,
 			contentRect.size.y + Frame.style.frame.margins.y * 2
 		);
@@ -228,38 +260,39 @@ export class Frame {
 		return Frame.style.buildSelector(class_, styleId, subClass);
 	}
 
-	private beginDrag() {
-		if (Frame.isPositionFixed() || Frame.isInputDisabled()) return;
+	private beginMove() {
+		if (Frame.isMoveDisabled() || Frame.isInputDisabled()) return;
 
 		const mousePosition = this.input.getMousePosition();
 
 		if (
-			!new Rect(Frame.rect.position, new Vector2(Frame.rect.size.x, Frame.style.frame.margins.y)).contains(
-				mousePosition
-			)
+			!new Rect(
+				this.memory.rect.position,
+				new Vector2(this.memory.rect.size.x, Frame.style.frame.margins.y)
+			).contains(mousePosition)
 		)
 			return;
 
-		if (!Frame.dragPosition) {
+		if (!this.memory.movePosition) {
 			if (this.input.isKeyPressed(InputKey.LeftMouseButton)) {
-				Frame.dragPosition = new Vector2(mousePosition.x, mousePosition.y);
+				this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
 			}
 		} else if (!this.input.isKeyDown(InputKey.LeftMouseButton)) {
-			Frame.dragPosition = null;
+			this.memory.movePosition = null;
 		}
 
-		if (!Frame.dragPosition) this.mouseCursor = MouseCursor.PreGrab;
+		if (!this.memory.movePosition) this.mouseCursor = MouseCursor.PreGrab;
 	}
 
-	private endDrag() {
-		if (!Frame.dragPosition) return;
+	private endMove() {
+		if (!this.memory.movePosition) return;
 
 		const mousePosition = this.input.getMousePosition();
 
-		Frame.rect.position.x += mousePosition.x - Frame.dragPosition.x;
-		Frame.rect.position.y += mousePosition.y - Frame.dragPosition.y;
+		this.memory.rect.position.x += mousePosition.x - this.memory.movePosition.x;
+		this.memory.rect.position.y += mousePosition.y - this.memory.movePosition.y;
 
-		Frame.dragPosition = new Vector2(mousePosition.x, mousePosition.y);
+		this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
 
 		this.mouseCursor = MouseCursor.Grab;
 	}

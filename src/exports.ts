@@ -39,6 +39,10 @@ export interface IRect {
 	h: number;
 }
 
+export interface IFrameResponse {
+	rect: IRect;
+}
+
 export interface IFrame {
 	getInput(): IInput;
 	getLayout(): ILayout;
@@ -179,7 +183,7 @@ export function getFrame(): IFrame {
 		},
 
 		getRect(): IRect {
-			return toIRect(Frame.getRect());
+			return toIRect(frame.getRect());
 		},
 
 		beginItem(w: number, h: number) {
@@ -224,39 +228,44 @@ export function setDebugEnabled(enabled: boolean) {
 	Frame.setDebugEnabled(enabled);
 }
 
-export function setNextFramePositionFixed() {
-	Frame.setNextFramePositionFixed();
-}
-
-export function setNextFrameDisableBackground() {
-	Frame.setNextFrameDisableBackground();
-}
-
-export function setNextFrameStyleId(id: string) {
-	Frame.setNextFrameStyleId(id);
+export function setNextFramePosition(x: number, y: number) {
+	Frame.setNextFramePosition(x, y);
 }
 
 export function setNextFrameSpacing(x: number, y: number) {
 	Frame.setNextFrameSpacing(x, y);
 }
 
+export function setNextFrameStyleId(id: string) {
+	Frame.setNextFrameStyleId(id);
+}
+
+export function setNextFrameDisableBackground() {
+	Frame.setNextFrameDisableBackground();
+}
+
 export function setNextFrameDisableInput() {
 	Frame.setNextFrameDisableInput();
 }
 
-export function beginFrame(x: number | null, y: number | null) {
-	setFrame(new Frame(x !== null ? x : 0.33, y !== null ? y : 0.33));
+export function setNextFrameDisableMove() {
+	Frame.setNextFrameDisableMove();
 }
 
-export function endFrame(): IRect {
+export function beginFrame(id: string | null) {
+	setFrame(new Frame(id ?? undefined));
+}
+
+export function endFrame(): IFrameResponse {
 	const frame = getFrameChecked();
 
 	frame.end();
 
-	const frameRect = Frame.getRect();
+	const rect = frame.getRect();
+
 	setFrame(null);
 
-	return toIRect(frameRect);
+	return { rect: toIRect(rect) };
 }
 
 /** `true` if the last drawn item was hovered */

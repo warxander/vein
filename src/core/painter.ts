@@ -5,6 +5,8 @@ export class Painter {
 	private color: Color = [0, 0, 0, 255];
 	private textEntryIndex = -1;
 
+	constructor(private textEntryPrefix: string) {}
+
 	getPosition(): Vector2 {
 		return this.position;
 	}
@@ -83,7 +85,7 @@ export class Painter {
 	}
 
 	private getTextEntry(): string {
-		return `VEIN_TEXT_ENTRY_${this.textEntryIndex}`;
+		return `${this.textEntryPrefix}_${this.textEntryIndex}`;
 	}
 
 	private setText(text: string, font: number, scale: number, w: number | null = null) {
