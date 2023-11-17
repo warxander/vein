@@ -29,10 +29,10 @@ export class Layout {
 			}
 
 			let vo = 0;
-			if (!this.rowState || this.rowState.isFirstItem) vo = this.itemSpacing.y;
-
-			this.contentRect.size.x += ho;
-			this.contentRect.size.y += vo;
+			if (!this.rowState || this.rowState.isFirstItem) {
+				vo = this.itemSpacing.y;
+				this.contentRect.size.y += vo;
+			}
 
 			this.move(ho, vo);
 		}
