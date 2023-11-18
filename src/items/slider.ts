@@ -26,13 +26,15 @@ export function slider(min: number, value: number, max: number, w: number): ISli
 
 	if (
 		(input.isKeyDown(InputKey.LeftMouseButton) || input.isKeyPressed(InputKey.LeftMouseButton)) &&
-		new Rect(
-			new Vector2(
-				layout.getItemRect().position.x - sliderStyle.tickMarkSize.x / 2,
-				layout.getItemRect().position.y
-			),
-			new Vector2(w + sliderStyle.tickMarkSize.x, h)
-		).contains(input.getMousePosition())
+		frame.isAreaHovered(
+			new Rect(
+				new Vector2(
+					layout.getItemRect().position.x - sliderStyle.tickMarkSize.x / 2,
+					layout.getItemRect().position.y
+				),
+				new Vector2(w + sliderStyle.tickMarkSize.x, h)
+			)
+		)
 	)
 		newValue = Math.min(
 			max,

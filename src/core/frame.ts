@@ -243,8 +243,12 @@ export class Frame {
 		this.itemStyleIdStack.pop();
 	}
 
+	isAreaHovered(rect: Rect): boolean {
+		return rect.contains(this.input.getMousePosition());
+	}
+
 	isItemHovered(): boolean {
-		return this.layout.getItemRect().contains(this.input.getMousePosition());
+		return this.isAreaHovered(this.layout.getItemRect());
 	}
 
 	isItemClicked(): boolean {
@@ -263,18 +267,16 @@ export class Frame {
 	private beginMove() {
 		if (Frame.isMoveDisabled() || Frame.isInputDisabled()) return;
 
-		const mousePosition = this.input.getMousePosition();
-
 		if (
-			!new Rect(
-				this.memory.rect.position,
-				new Vector2(this.memory.rect.size.x, Frame.style.frame.margins.y)
-			).contains(mousePosition)
+			!this.isAreaHovered(
+				new Rect(this.memory.rect.position, new Vector2(this.memory.rect.size.x, Frame.style.frame.margins.y))
+			)
 		)
 			return;
 
 		if (!this.memory.movePosition) {
 			if (this.input.isKeyPressed(InputKey.LeftMouseButton)) {
+				const mousePosition = this.input.getMousePosition();
 				this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
 			}
 		} else if (!this.input.isKeyDown(InputKey.LeftMouseButton)) {
