@@ -122,8 +122,8 @@ export class Style {
 		};
 
 		this.slider = {
-			height: 0.004,
-			tickMarkSize: new Vector2(0.002, 0.016)
+			height: 0.002,
+			tickMarkSize: new Vector2(0.004, 0.02)
 		};
 
 		this.spriteButton = {
