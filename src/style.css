@@ -6,12 +6,11 @@ button, check-box, sprite-button, text-edit {
 }
 
 button:hover, sprite-button:hover {
-	background-color: #F50551;
+	background-color: #F21951;
 }
 
 check-box:hover {
-	background-color: #242730;
-	color: #F50551;
+	color: #F21951;
 }
 
 collapsing-header {
@@ -21,7 +20,7 @@ collapsing-header {
 }
 
 collapsing-header:hover {
-	color: #F50551;
+	color: #F21951;
 }
 
 frame {
@@ -36,13 +35,13 @@ heading {
 }
 
 hyperlink {
-	color: #009B67;
+	color: #00829B;
 	font-family: 0;
 	font-size: 0.325em;
 }
 
 hyperlink:hover {
-	color: #00E296;
+	color: #00ADCE;
 }
 
 label, text-area {
@@ -53,11 +52,11 @@ label, text-area {
 
 progress-bar {
 	background-color: #242730;
-	color: #009B67;
+	color: #099C76;
 }
 
 selectable {
-	accent-color: #009B67;
+	accent-color: #099C76;
 	background-color: #32353D;
 	color: #FFFFF0;
 	font-family: 0;
@@ -66,7 +65,6 @@ selectable {
 
 selectable:hover {
 	background-color: #242730;
-	color: #FFFFF0;
 }
 
 separator {
@@ -81,7 +79,10 @@ slider {
 	font-size: 0.325em;
 }
 
-slider:hover, text-edit:hover {
-	accent-color: #F50551;
-	background-color: #242730;
+slider:hover {
+	accent-color: #F21951;
+}
+
+text-edit:hover {
+	color: #F21951;
 }
