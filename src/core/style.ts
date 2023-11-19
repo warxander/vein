@@ -160,7 +160,11 @@ export class Style {
 		return value;
 	}
 
-	tryGetPropertyAs<T extends StylePropertyValue>(selector: string, property: string): T | undefined {
+	tryGetPropertyAs<T extends StylePropertyValue>(
+		selector: string,
+		property: string,
+		allowId: boolean = true
+	): T | undefined {
 		let value: any = undefined;
 
 		let properties = this.selectorProperties.get(selector);
@@ -171,9 +175,9 @@ export class Style {
 
 			if (subClassSeparatorIndex !== -1) {
 				properties = this.selectorProperties.get(selector.substring(0, subClassSeparatorIndex));
-			} else {
+			} else if (allowId) {
 				const fromIdSelector = this.idToSelectorsMap.get(selector);
-				if (fromIdSelector !== undefined) return this.tryGetPropertyAs<T>(fromIdSelector, property);
+				if (fromIdSelector !== undefined) return this.tryGetPropertyAs<T>(fromIdSelector, property, false);
 			}
 
 			if (properties !== undefined) value = properties.get(property);
