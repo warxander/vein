@@ -55,6 +55,8 @@ export class Painter {
 	}
 
 	getTextWidth(text: string, font: number, scale: number): number {
+		if (text.length === 0) return 0;
+
 		this.setText(text, font, scale);
 
 		BeginTextCommandGetWidth(this.getTextEntry());
@@ -62,6 +64,8 @@ export class Painter {
 	}
 
 	getTextLineCount(text: string, font: number, scale: number, w: number): number {
+		if (text.length === 0) return 0;
+
 		this.setText(text, font, scale, w);
 
 		BeginTextCommandLineCount(this.getTextEntry());
@@ -69,6 +73,8 @@ export class Painter {
 	}
 
 	drawText(text: string, font: number, scale: number) {
+		if (text.length === 0) return;
+
 		this.setText(text, font, scale);
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
@@ -77,6 +83,8 @@ export class Painter {
 	}
 
 	drawMultilineText(text: string, font: number, scale: number, w: number) {
+		if (text.length === 0) return;
+
 		this.setText(text, font, scale, w);
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
