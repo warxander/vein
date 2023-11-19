@@ -240,7 +240,7 @@ export function getFrame(): IFrame {
 			frame.setMouseCursor(mouseCursor);
 		},
 
-		buildStyleSelector(class_: string, subClass: string | null): string {
+		buildStyleSelector(class_: string, subClass: string | null = null): string {
 			return frame.buildStyleSelector(class_, subClass ?? undefined);
 		},
 
@@ -282,7 +282,7 @@ export function setNextFrameDisableMove() {
 	Frame.setNextFrameDisableMove();
 }
 
-export function beginFrame(id: string | null) {
+export function beginFrame(id: string | null = null) {
 	setFrame(new Frame(id ?? undefined));
 }
 

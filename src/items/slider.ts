@@ -8,7 +8,7 @@ export interface ISliderResponse {
 	value: number;
 }
 
-export function slider(value: number, min: number, max: number, w: number, text: string | null): ISliderResponse {
+export function slider(value: number, min: number, max: number, w: number, text: string | null = null): ISliderResponse {
 	const frame = getFrameChecked();
 
 	const input = frame.getInput();

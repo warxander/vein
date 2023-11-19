@@ -1,7 +1,7 @@
 import { Frame, MouseCursor, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
-export function hyperlink(url: string, urlText: string | null) {
+export function hyperlink(url: string, urlText: string | null = null) {
 	const frame = getFrameChecked();
 
 	const painter = frame.getPainter();
