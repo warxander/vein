@@ -15,7 +15,15 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	const checkboxStyle = style.checkbox;
 	let cw = checkboxStyle.height / aspectRatio;
 
-	const w = frame.tryGetItemWidth() ?? cw + checkboxStyle.spacing + painter.getTextWidth(text, font, scale);
+	const iw = frame.tryGetItemWidth();
+
+	let w = 0;
+	if (iw !== undefined) w = iw;
+	else {
+		w += cw;
+		const tw = painter.getTextWidth(text, font, scale);
+		if (tw !== 0) w += checkboxStyle.spacing + tw;
+	}
 	const h = style.item.height;
 
 	frame.beginItem(w, h);

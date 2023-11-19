@@ -14,10 +14,16 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;
+	const iw = frame.tryGetItemWidth();
 
-	const w =
-		frame.tryGetItemWidth() ||
-		painter.getTextWidth(text, font, scale) + style.button.spacing * 2 + spriteButtonStyle.spacing + sw;
+	let w = 0;
+	if (iw !== undefined) w = iw;
+	else {
+		w += sw + style.button.spacing * 2;
+		const tw = painter.getTextWidth(text, font, scale);
+		if (tw !== 0) w += tw + spriteButtonStyle.spacing;
+	}
+
 	const h = style.item.height;
 
 	frame.beginItem(w, h);

@@ -11,11 +11,16 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 	const font = style.getPropertyAs<number>(selector, 'font-family');
 	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
-	const w =
-		frame.tryGetItemWidth() ??
-		painter.getTextWidth(text, font, scale) +
-			style.collapsingHeader.spacing * 3 +
-			style.collapsingHeader.spriteWidth;
+	const iw = frame.tryGetItemWidth();
+
+	let w = 0;
+	if (iw !== undefined) w = iw;
+	else {
+		w += style.collapsingHeader.spriteWidth;
+		const tw = painter.getTextWidth(text, font, scale);
+		if (tw !== 0) w += tw + style.collapsingHeader.spacing * 3;
+	}
+
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
