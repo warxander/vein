@@ -34,6 +34,7 @@ export * from './items/heading';
 export * from './items/hyperlink';
 export * from './items/label';
 export * from './items/progressbar';
+export * from './items/rect';
 export * from './items/selectable';
 export * from './items/separator';
 export * from './items/slider';

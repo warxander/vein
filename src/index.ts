@@ -45,6 +45,7 @@ globalThis.exports('heading', Exports.heading);
 globalThis.exports('hyperlink', Exports.hyperlink);
 globalThis.exports('label', Exports.label);
 globalThis.exports('progressBar', Exports.progressBar);
+globalThis.exports('rect', Exports.rect);
 globalThis.exports('selectable', Exports.selectable);
 globalThis.exports('separator', Exports.separator);
 globalThis.exports('slider', Exports.slider);
