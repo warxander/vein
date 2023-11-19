@@ -252,7 +252,7 @@ export class Frame {
 	}
 
 	isItemClicked(): boolean {
-		return this.input.isKeyPressed(InputKey.LeftMouseButton) && this.isItemHovered();
+		return this.input.isKeyPressed(InputKey.MouseLeftButton) && this.isItemHovered();
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {
@@ -275,11 +275,11 @@ export class Frame {
 			return;
 
 		if (!this.memory.movePosition) {
-			if (this.input.isKeyPressed(InputKey.LeftMouseButton)) {
+			if (this.input.isKeyPressed(InputKey.MouseLeftButton)) {
 				const mousePosition = this.input.getMousePosition();
 				this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
 			}
-		} else if (!this.input.isKeyDown(InputKey.LeftMouseButton)) {
+		} else if (!this.input.isKeyDown(InputKey.MouseLeftButton)) {
 			this.memory.movePosition = null;
 		}
 

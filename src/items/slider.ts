@@ -34,7 +34,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 	let newValue = value;
 
 	if (
-		(input.isKeyDown(InputKey.LeftMouseButton) || input.isKeyPressed(InputKey.LeftMouseButton)) &&
+		(input.isKeyDown(InputKey.MouseLeftButton) || input.isKeyPressed(InputKey.MouseLeftButton)) &&
 		frame.isAreaHovered(
 			new Rect(
 				new Vector2(

@@ -1,7 +1,10 @@
 import { Vector2 } from './types';
 
 export enum InputKey {
-	LeftMouseButton = 237
+	MouseLeftButton = 237,
+	MouseRightButton = 238,
+	MouseScrollWheelUp = 241,
+	MouseScrollWheelDown = 242
 }
 
 export enum InputFlags {
