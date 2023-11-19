@@ -1,6 +1,6 @@
 import { Vector2 } from './types';
 
-export enum InputKey {
+export enum InputControl {
 	MouseLeftButton = 237,
 	MouseRightButton = 238,
 	MouseScrollWheelUp = 241,
@@ -39,16 +39,16 @@ export class Input {
 		return this.mousePosition;
 	}
 
-	isKeyPressed(key: InputKey): boolean {
-		return !this.isDisabled() && IsControlJustPressed(2, key);
+	isControlPressed(control: InputControl): boolean {
+		return !this.isDisabled() && IsControlJustPressed(2, control);
 	}
 
-	isKeyReleased(key: InputKey): boolean {
-		return !this.isDisabled() && IsControlJustReleased(2, key);
+	isControlReleased(control: InputControl): boolean {
+		return !this.isDisabled() && IsControlJustReleased(2, control);
 	}
 
-	isKeyDown(key: InputKey): boolean {
-		return !this.isDisabled() && IsControlPressed(2, key);
+	isControlDown(control: InputControl): boolean {
+		return !this.isDisabled() && IsControlPressed(2, control);
 	}
 
 	private isDisabled(): boolean {

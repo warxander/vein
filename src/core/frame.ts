@@ -1,5 +1,5 @@
 import { Color, Rect, Vector2 } from './types';
-import { Input, InputFlags, InputKey } from './input';
+import { Input, InputFlags, InputControl } from './input';
 import { Layout } from './layout';
 import { Painter } from './painter';
 import { Style, StylePropertyValue } from './style';
@@ -252,7 +252,7 @@ export class Frame {
 	}
 
 	isItemClicked(): boolean {
-		return this.input.isKeyPressed(InputKey.MouseLeftButton) && this.isItemHovered();
+		return this.input.isControlPressed(InputControl.MouseLeftButton) && this.isItemHovered();
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {
@@ -275,11 +275,11 @@ export class Frame {
 			return;
 
 		if (!this.memory.movePosition) {
-			if (this.input.isKeyPressed(InputKey.MouseLeftButton)) {
+			if (this.input.isControlPressed(InputControl.MouseLeftButton)) {
 				const mousePosition = this.input.getMousePosition();
 				this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
 			}
-		} else if (!this.input.isKeyDown(InputKey.MouseLeftButton)) {
+		} else if (!this.input.isControlDown(InputControl.MouseLeftButton)) {
 			this.memory.movePosition = null;
 		}
 

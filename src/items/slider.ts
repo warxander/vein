@@ -1,7 +1,7 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { numberEquals } from '../core/utils';
 import { Color, Rect, Vector2 } from '../core/types';
-import { InputKey } from '../core/input';
+import { InputControl } from '../core/input';
 
 export interface ISliderResponse {
 	isValueChanged: boolean;
@@ -34,7 +34,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 	let newValue = value;
 
 	if (
-		(input.isKeyDown(InputKey.MouseLeftButton) || input.isKeyPressed(InputKey.MouseLeftButton)) &&
+		(input.isControlDown(InputControl.MouseLeftButton) || input.isControlPressed(InputControl.MouseLeftButton)) &&
 		frame.isAreaHovered(
 			new Rect(
 				new Vector2(

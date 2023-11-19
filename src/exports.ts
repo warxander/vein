@@ -1,4 +1,5 @@
 import { Frame, getFrameChecked, setFrame } from './core/frame';
+import { InputControl } from './core/input';
 import { StylePropertyType } from './core/style';
 import { Rect, Vector2 } from './core/types';
 
@@ -8,6 +9,21 @@ function toIRect(rect: Rect): IRect {
 
 function toIVector2(vector2: Vector2): IVector2 {
 	return { x: vector2.x, y: vector2.y };
+}
+
+function toInputMouseControl(control: number): InputControl {
+	switch (control) {
+		case 0:
+			return InputControl.MouseLeftButton;
+		case 1:
+			return InputControl.MouseRightButton;
+		case 2:
+			return InputControl.MouseScrollWheelUp;
+		case 3:
+			return InputControl.MouseScrollWheelDown;
+		default:
+			throw new Error(`Unsupported mouse control ${control}`);
+	}
 }
 
 export * from './items/button';
@@ -67,9 +83,23 @@ export interface IFrame {
 export interface IInput {
 	getMousePosition(): IVector2;
 
-	isKeyPressed(key: number): boolean;
-	isKeyReleased(key: number): boolean;
-	isKeyDown(key: number): boolean;
+	/**
+	 *
+	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
+	 */
+	isMouseControlPressed(control: number): boolean;
+
+	/**
+	 *
+	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
+	 */
+	isMouseControlReleased(control: number): boolean;
+
+	/**
+	 *
+	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
+	 */
+	isMouseControlDown(control: number): boolean;
 }
 
 export interface ILayout {
@@ -108,16 +138,16 @@ export function getFrame(): IFrame {
 					return toIVector2(input.getMousePosition());
 				},
 
-				isKeyPressed(key: number): boolean {
-					return input.isKeyPressed(key);
+				isMouseControlPressed(control: number): boolean {
+					return input.isControlPressed(toInputMouseControl(control));
 				},
 
-				isKeyReleased(key: number): boolean {
-					return input.isKeyReleased(key);
+				isMouseControlReleased(control: number): boolean {
+					return input.isControlReleased(toInputMouseControl(control));
 				},
 
-				isKeyDown(key: number): boolean {
-					return input.isKeyDown(key);
+				isMouseControlDown(control: number): boolean {
+					return input.isControlDown(toInputMouseControl(control));
 				}
 			};
 		},
