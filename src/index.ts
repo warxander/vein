@@ -9,6 +9,7 @@ globalThis.exports('setNextFramePosition', Exports.setNextFramePosition);
 globalThis.exports('setNextFrameSpacing', Exports.setNextFrameSpacing);
 globalThis.exports('setNextFrameStyleId', Exports.setNextFrameStyleId);
 globalThis.exports('setNextFrameDisableBackground', Exports.setNextFrameDisableBackground);
+globalThis.exports('setNextFrameDisableBorder', Exports.setNextFrameDisableBorder);
 globalThis.exports('setNextFrameDisableInput', Exports.setNextFrameDisableInput);
 globalThis.exports('setNextFrameDisableMove', Exports.setNextFrameDisableMove);
 

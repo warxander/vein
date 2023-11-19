@@ -275,6 +275,10 @@ export function setNextFrameDisableBackground() {
 	Frame.setNextFrameDisableBackground();
 }
 
+export function setNextFrameDisableBorder() {
+	Frame.setNextFrameDisableBorder();
+}
+
 export function setNextFrameDisableInput() {
 	Frame.setNextFrameDisableInput();
 }

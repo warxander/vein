@@ -66,6 +66,7 @@ export class Style {
 		['accent-color', StylePropertyType.Color],
 		['background-color', StylePropertyType.Color],
 		['background-image', StylePropertyType.Image],
+		['border-color', StylePropertyType.Color],
 		['color', StylePropertyType.Color],
 		['font-family', StylePropertyType.Integer],
 		['font-size', StylePropertyType.FontSize]
@@ -143,6 +144,7 @@ export class Style {
 		};
 
 		this.frame = {
+			borderWidth: 0.00104,
 			margins: new Vector2(0.01, 0.018),
 			spacing: new Vector2(0.005, 0.01)
 		};

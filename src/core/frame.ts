@@ -12,8 +12,9 @@ class ItemState {
 
 enum FrameFlags {
 	None,
-	DisableMove = 1 << 1,
-	BackgroundDisabled = 1 << 2
+	DisableBackground = 1 << 1,
+	DisableBorder = 1 << 2,
+	DisableMove = 1 << 3
 }
 
 class FrameState {
@@ -84,7 +85,11 @@ export class Frame {
 	}
 
 	static setNextFrameDisableBackground() {
-		Frame.nextState.flags |= FrameFlags.BackgroundDisabled;
+		Frame.nextState.flags |= FrameFlags.DisableBackground;
+	}
+
+	static setNextFrameDisableBorder() {
+		Frame.nextState.flags |= FrameFlags.DisableBorder;
 	}
 
 	static setNextFrameDisableInput() {
@@ -107,16 +112,20 @@ export class Frame {
 		return Frame.nextState.spacing ?? Frame.style.frame.spacing;
 	}
 
-	static isMoveDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
+	static isBackgroundDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableBackground);
 	}
 
-	static isBackgroundDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.BackgroundDisabled);
+	static isBorderDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableBorder);
 	}
 
 	static isInputDisabled(): boolean {
 		return !!(Frame.nextState.inputFlags & InputFlags.DisableInput);
+	}
+
+	static isMoveDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
 	}
 
 	static getStyleProperty(selector: string, property: string): StylePropertyValue {
@@ -127,6 +136,8 @@ export class Frame {
 		if (id === undefined) id = Frame.DEFAULT_ID;
 
 		let memory = Frame.frameMemory.get(id);
+		const isNewFrame = memory === undefined;
+
 		if (memory === undefined) {
 			memory = new FrameMemory();
 			Frame.frameMemory.set(id, memory);
@@ -152,8 +163,14 @@ export class Frame {
 		this.painter = new Painter(`VEIN_${id}`);
 		this.painter.setPosition(rect.position.x, rect.position.y);
 
-		if (!Frame.isBackgroundDisabled())
-			drawItemBackground(this, Frame.nextState.styleId ?? 'frame', rect.size.x, rect.size.y);
+		const selector = this.buildStyleSelector('frame');
+
+		if (!Frame.isBackgroundDisabled()) drawItemBackground(this, selector, rect.size.x, rect.size.y);
+
+		if (isNewFrame || Frame.isBorderDisabled()) return;
+
+		this.drawBorder(selector);
+		this.painter.setPosition(rect.position.x, rect.position.y);
 	}
 
 	getInput(): Input {
@@ -297,6 +314,18 @@ export class Frame {
 		this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
 
 		this.mouseCursor = MouseCursor.Grab;
+	}
+
+	private drawBorder(selector: string) {
+		const rect = this.memory.rect;
+		const bw = Frame.style.frame.borderWidth;
+		const bh = bw * GetAspectRatio(false) + 0.00049;
+
+		this.painter.setColor(Frame.style.getPropertyAs<Color>(selector, 'border-color'));
+		this.painter.setPosition(rect.position.x + bw, rect.position.y + rect.size.y);
+		this.painter.drawRect(rect.size.x - bw, bh); // bottom
+		this.painter.setPosition(rect.position.x + rect.size.x, rect.position.y + bh);
+		this.painter.drawRect(bw, rect.size.y); // right
 	}
 }
 
