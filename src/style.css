@@ -74,11 +74,14 @@ separator {
 }
 
 slider {
+	accent-color: #C4C4BD;
 	background-color: #242730;
-	color: #C4C4BD;
+	color: #FFFFF0;
+	font-family: 0;
+	font-size: 0.325em;
 }
 
 slider:hover, text-edit:hover {
+	accent-color: #F50551;
 	background-color: #242730;
-	color: #F50551;
 }

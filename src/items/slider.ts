@@ -8,7 +8,7 @@ export interface ISliderResponse {
 	value: number;
 }
 
-export function slider(value: number, min: number, max: number, w: number): ISliderResponse {
+export function slider(value: number, min: number, max: number, w: number, text: string | null): ISliderResponse {
 	const frame = getFrameChecked();
 
 	const input = frame.getInput();
@@ -22,6 +22,15 @@ export function slider(value: number, min: number, max: number, w: number): ISli
 
 	const sliderStyle = style.slider;
 
+	const selector = frame.buildStyleSelector('slider', frame.isItemHovered() ? 'hover' : undefined);
+
+	const font = style.getPropertyAs<number>(selector, 'font-family');
+	const scale = style.getPropertyAs<number>(selector, 'font-size');
+	const sliderText = text ?? value.toFixed(2);
+
+	const tw = painter.getTextWidth(sliderText, font, scale);
+	const sw = tw !== 0 ? w - tw - style.slider.spacing : w;
+
 	let newValue = value;
 
 	if (
@@ -32,25 +41,34 @@ export function slider(value: number, min: number, max: number, w: number): ISli
 					layout.getItemRect().position.x - sliderStyle.tickMarkSize.x / 2,
 					layout.getItemRect().position.y
 				),
-				new Vector2(w + sliderStyle.tickMarkSize.x, h)
+				new Vector2(sw + sliderStyle.tickMarkSize.x, h)
 			)
 		)
 	)
 		newValue = Math.min(
 			max,
-			Math.max(min, min + ((input.getMousePosition().x - layout.getItemRect().position.x) / w) * (max + min))
+			Math.max(min, min + ((input.getMousePosition().x - layout.getItemRect().position.x) / sw) * (max + min))
 		);
 
 	const sh = (h - sliderStyle.height) / 2;
 
-	const selector = frame.buildStyleSelector('slider', frame.isItemHovered() ? 'hover' : undefined);
-
 	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.move(0, sh);
-	painter.drawRect(w, sliderStyle.height);
+	painter.drawRect(sw, sliderStyle.height);
 
-	const sx = (w * value) / (max + min);
-	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
+	if (tw !== 0) {
+		const tho = sw + style.slider.spacing;
+		const tvo = -sh + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset;
+
+		painter.move(tho, tvo);
+		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
+		painter.drawText(sliderText, font, scale);
+		painter.move(-tho, -tvo);
+	}
+
+	const sx = (sw * value) / (max + min);
+
+	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
 	painter.drawRect(sx, sliderStyle.height);
 
 	painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);
