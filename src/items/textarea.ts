@@ -1,6 +1,9 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
+/**
+ * @category Items
+ */
 export function textArea(text: string, w: number) {
 	const frame = getFrameChecked();
 

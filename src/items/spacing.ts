@@ -1,6 +1,9 @@
 import { Frame, getFrameChecked } from '../core/frame';
 
-/** Horizontal if in row mode, vertical otherwise */
+/**
+ * Horizontal if in row mode, vertical otherwise
+ * @category Items
+ */
 export function spacing(count = 1) {
 	const frame = getFrameChecked();
 

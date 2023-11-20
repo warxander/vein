@@ -1,5 +1,8 @@
 import { getFrameChecked } from '../core/frame';
 
+/**
+ * @category Items
+ */
 export function rect(w: number, h: number, r: number, g: number, b: number, a: number) {
 	const frame = getFrameChecked();
 	const painter = frame.getPainter();

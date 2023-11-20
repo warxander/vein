@@ -1,6 +1,9 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
+/**
+ * @category Items
+ */
 export function separator(w: number) {
 	const frame = getFrameChecked();
 

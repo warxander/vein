@@ -1,6 +1,9 @@
 import { getFrameChecked } from '../core/frame';
 import { Style } from '../core/style';
 
+/**
+ * @category Items
+ */
 export function sprite(dict: string, name: string, w: number, h: number) {
 	const frame = getFrameChecked();
 

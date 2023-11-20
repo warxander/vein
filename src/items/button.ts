@@ -2,6 +2,9 @@ import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 import { drawItemBackground } from '../core/utils';
 
+/**
+ * @category Items
+ */
 export function button(text: string): boolean {
 	const frame = getFrameChecked();
 

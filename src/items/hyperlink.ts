@@ -1,6 +1,9 @@
 import { Frame, MouseCursor, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 
+/**
+ * @category Items
+ */
 export function hyperlink(url: string, urlText: string | null = null) {
 	const frame = getFrameChecked();
 

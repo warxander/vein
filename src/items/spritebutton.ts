@@ -2,6 +2,9 @@ import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
 import { drawItemBackground } from '../core/utils';
 
+/**
+ * @category Items
+ */
 export function spriteButton(dict: string, name: string, text: string): boolean {
 	const frame = getFrameChecked();
 

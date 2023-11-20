@@ -3,11 +3,17 @@ import { numberEquals } from '../core/utils';
 import { Color, Rect, Vector2 } from '../core/types';
 import { InputControl } from '../core/input';
 
+/**
+ * @category Items
+ */
 export interface ISliderResponse {
 	isValueChanged: boolean;
 	value: number;
 }
 
+/**
+ * @category Items
+ */
 export function slider(value: number, min: number, max: number, w: number, text: string | null = null): ISliderResponse {
 	const frame = getFrameChecked();
 

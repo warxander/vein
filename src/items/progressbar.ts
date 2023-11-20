@@ -2,6 +2,9 @@ import { Frame, getFrameChecked } from '../core/frame';
 import { numberEquals } from '../core/utils';
 import { Color } from '../core/types';
 
+/**
+ * @category Items
+ */
 export function progressBar(value: number, min: number, max: number, w: number) {
 	const frame = getFrameChecked();
 

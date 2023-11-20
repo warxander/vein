@@ -44,11 +44,17 @@ export * from './items/spritebutton';
 export * from './items/textarea';
 export * from './items/textedit';
 
+/**
+ * @category Types
+ */
 export interface IVector2 {
 	x: number;
 	y: number;
 }
 
+/**
+ * @category Types
+ */
 export interface IRect {
 	x: number;
 	y: number;
@@ -56,10 +62,16 @@ export interface IRect {
 	h: number;
 }
 
+/**
+ * @category Frame
+ */
 export interface IFrameResponse {
 	rect: IRect;
 }
 
+/**
+ * @category Custom Items
+ */
 export interface IFrame {
 	getInput(): IInput;
 	getLayout(): ILayout;
@@ -81,6 +93,9 @@ export interface IFrame {
 	getStyleProperty(selector: string, property: string): any;
 }
 
+/**
+ * @category Custom Items
+ */
 export interface IInput {
 	getMousePosition(): IVector2;
 
@@ -103,11 +118,17 @@ export interface IInput {
 	isMouseControlDown(control: number): boolean;
 }
 
+/**
+ * @category Custom Items
+ */
 export interface ILayout {
 	getContentRect(): IRect;
 	getItemRect(): IRect;
 }
 
+/**
+ * @category Custom Items
+ */
 export interface IPainter {
 	move(x: number, y: number): void;
 
@@ -127,6 +148,9 @@ export interface IPainter {
 	drawMultilineText(text: string, font: number, scale: number, w: number): void;
 }
 
+/**
+ * @category Custom Items
+ */
 export function getFrame(): IFrame {
 	const frame = getFrameChecked();
 
@@ -251,46 +275,72 @@ export function getFrame(): IFrame {
 	};
 }
 
+/**
+ * @category General
+ */
 export function isDebugEnabled(): boolean {
 	return Frame.isDebugEnabled();
 }
 
+/**
+ * @category General
+ */
 export function setDebugEnabled(enabled: boolean) {
 	Frame.setDebugEnabled(enabled);
 }
 
+/**
+ * @category Frame
+ */
 export function setNextFramePosition(x: number, y: number) {
 	Frame.setNextFramePosition(x, y);
 }
 
+/**
+ * @category Frame
+ */
 export function setNextFrameSpacing(x: number, y: number) {
 	Frame.setNextFrameSpacing(x, y);
 }
 
-export function setNextFrameStyleId(id: string) {
-	Frame.setNextFrameStyleId(id);
-}
-
+/**
+ * @category Frame
+ */
 export function setNextFrameDisableBackground() {
 	Frame.setNextFrameDisableBackground();
 }
 
+/**
+ * @category Frame
+ */
 export function setNextFrameDisableBorder() {
 	Frame.setNextFrameDisableBorder();
 }
 
+/**
+ * @category Frame
+ */
 export function setNextFrameDisableInput() {
 	Frame.setNextFrameDisableInput();
 }
 
+/**
+ * @category Frame
+ */
 export function setNextFrameDisableMove() {
 	Frame.setNextFrameDisableMove();
 }
 
+/**
+ * @category Frame
+ */
 export function beginFrame(id: string | null = null) {
 	setFrame(new Frame(id ?? undefined));
 }
 
+/**
+ * @category Frame
+ */
 export function endFrame(): IFrameResponse {
 	const frame = getFrameChecked();
 
@@ -303,68 +353,121 @@ export function endFrame(): IFrameResponse {
 	return { rect: toIRect(rect) };
 }
 
-/** `true` if the last drawn item was hovered */
+/**
+ * @category Frame
+ */
 export function isItemHovered(): boolean {
 	return getFrameChecked().isItemHovered();
 }
 
-/** `true` if the last drawn item was clicked */
+/**
+ * @category Frame
+ */
 export function isItemClicked(): boolean {
 	return getFrameChecked().isItemClicked();
 }
 
+/**
+ * @category Frame
+ */
 export function beginRow() {
 	getFrameChecked().getLayout().beginRow();
 }
 
+/**
+ * @category Frame
+ */
 export function endRow() {
 	getFrameChecked().getLayout().endRow();
 }
 
+/**
+ * @category Frame
+ */
 export function setNextItemWidth(w: number) {
 	getFrameChecked().setNextItemWidth(w);
 }
 
+/**
+ * @category Frame
+ */
 export function pushItemWidth(w: number) {
 	getFrameChecked().pushItemWidth(w);
 }
 
+/**
+ * @category Frame
+ */
 export function popItemWidth() {
 	getFrameChecked().popItemWidth();
 }
 
+/**
+ * @category Style
+ */
 export function addStyleSheet(sheet: string) {
 	Frame.getStyle().addSheet(sheet);
 }
 
+/**
+ * @category Style
+ */
 export function resetStyle() {
 	Frame.getStyle().reset();
 }
 
+/**
+ * @category Style
+ */
 export function registerStylePropertyAsColor(property: string) {
 	Frame.getStyle().registerProperty(property, StylePropertyType.Color);
 }
 
+/**
+ * @category Style
+ */
 export function registerStylePropertyAsFontSize(property: string) {
 	Frame.getStyle().registerProperty(property, StylePropertyType.FontSize);
 }
 
+/**
+ * @category Style
+ */
 export function registerStylePropertyAsImage(property: string) {
 	Frame.getStyle().registerProperty(property, StylePropertyType.Image);
 }
 
+/**
+ * @category Style
+ */
 export function registerStylePropertyAsInteger(property: string) {
 	Frame.getStyle().registerProperty(property, StylePropertyType.Integer);
 }
 
+/**
+ * @category Style
+ */
+export function setNextFrameStyleId(id: string) {
+	Frame.setNextFrameStyleId(id);
+}
+
+/**
+ * @category Style
+ */
 export function setNextItemStyleId(id: string) {
 	getFrameChecked().setNextItemStyleId(id);
 }
 
+/**
+ * @category Style
+ */
 export function pushItemStyleId(id: string) {
 	getFrameChecked().pushItemStyleId(id);
 }
 
+/**
+ * @category Style
+ */
 export function popItemStyleId() {
 	getFrameChecked().popItemStyleId();
 }

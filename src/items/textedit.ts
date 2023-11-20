@@ -2,11 +2,17 @@ import { Frame, getFrameChecked } from '../core/frame';
 import { wait } from '../core/utils';
 import { Color } from '../core/types';
 
+/**
+ * @category Items
+ */
 export interface ITextEditResponse {
 	isTextChanged: boolean;
 	text: string;
 }
 
+/**
+ * @category Items
+ */
 export async function textEdit(
 	text: string,
 	keyboardTitle: string,
