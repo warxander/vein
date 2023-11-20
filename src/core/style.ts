@@ -150,9 +150,9 @@ export class Style {
 		};
 	}
 
-	buildSelector(class_: string, id: string | undefined, subClass: string | undefined): string {
-		let selector = id !== undefined ? `${id}.${class_}` : class_;
-		if (subClass !== undefined) selector = selector.concat(':', subClass);
+	buildSelector(name: string, id: string | undefined, state: string | undefined): string {
+		let selector = id !== undefined ? `${name}#${id}` : name;
+		if (state !== undefined) selector = selector.concat(':', state);
 		return selector;
 	}
 
@@ -173,10 +173,10 @@ export class Style {
 		if (properties !== undefined) value = properties.get(property);
 
 		if (properties === undefined || value === undefined) {
-			const subClassSeparatorIndex = selector.indexOf(':');
+			const stateSeparatorIndex = selector.indexOf(':');
 
-			if (subClassSeparatorIndex !== -1) {
-				properties = this.selectorProperties.get(selector.substring(0, subClassSeparatorIndex));
+			if (stateSeparatorIndex !== -1) {
+				properties = this.selectorProperties.get(selector.substring(0, stateSeparatorIndex));
 			} else if (allowId) {
 				const fromIdSelector = this.idToSelectorsMap.get(selector);
 				if (fromIdSelector !== undefined) return this.tryGetPropertyAs<T>(fromIdSelector, property, false);
@@ -231,11 +231,10 @@ export class Style {
 			if (properties.size === 0) continue;
 
 			for (let selector of (rule as CssRuleAST).selectors) {
-				if (selector.startsWith('#')) {
-					const match = selector.match(/^#(\S+)\.(\S+)$/);
-					if (!match) throw new Error(`Failed to parse selector ${selector}`);
-					this.idToSelectorsMap.set(match[1], match[2]);
-					selector = match[1];
+				const idMatch = selector.match(/^(\S+)#(\S+)$/);
+				if (idMatch !== null) {
+					this.idToSelectorsMap.set(idMatch[2], idMatch[1]);
+					selector = idMatch[2];
 				}
 
 				let selectorProperties = this.selectorProperties.get(selector);

@@ -89,7 +89,7 @@ export interface IFrame {
 
 	setMouseCursor(mouseCursor: number): void;
 
-	buildStyleSelector(class_: string, subClass: string | null): string;
+	buildStyleSelector(name: string, state: string | null): string;
 	getStyleProperty(selector: string, property: string): any;
 }
 
@@ -265,8 +265,8 @@ export function getFrame(): IFrame {
 			frame.setMouseCursor(mouseCursor);
 		},
 
-		buildStyleSelector(class_: string, subClass: string | null = null): string {
-			return frame.buildStyleSelector(class_, subClass ?? undefined);
+		buildStyleSelector(name: string, state: string | null = null): string {
+			return frame.buildStyleSelector(name, state ?? undefined);
 		},
 
 		getStyleProperty(selector: string, property: string): any {

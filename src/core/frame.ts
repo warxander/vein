@@ -276,9 +276,9 @@ export class Frame {
 		this.mouseCursor = mouseCursor;
 	}
 
-	buildStyleSelector(class_: string, subClass: string | undefined = undefined): string {
-		const styleId = this.nextItemState.styleId ?? this.itemStyleIdStack[this.itemStyleIdStack.length - 1];
-		return Frame.style.buildSelector(class_, styleId, subClass);
+	buildStyleSelector(name: string, state: string | undefined = undefined): string {
+		const id = this.nextItemState.styleId ?? this.itemStyleIdStack[this.itemStyleIdStack.length - 1];
+		return Frame.style.buildSelector(name, id, state);
 	}
 
 	private beginMove() {
