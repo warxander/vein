@@ -32,9 +32,12 @@ export function slider(
 
 	frame.beginItem(w, h);
 
-	const sliderStyle = style.slider;
+	const selector = frame.buildStyleSelector(
+		'slider',
+		frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined
+	);
 
-	const selector = frame.buildStyleSelector('slider', frame.isItemHovered() ? 'hover' : undefined);
+	const sliderStyle = style.slider;
 
 	const font = style.getPropertyAs<number>(selector, 'font-family');
 	const scale = style.getPropertyAs<number>(selector, 'font-size');
@@ -80,10 +83,8 @@ export function slider(
 
 	const sx = (sw * value) / (max + min);
 
-	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
-	painter.drawRect(sx, sliderStyle.height);
-
 	painter.move(sx - sliderStyle.thumbSize.x / 2, (sliderStyle.height - sliderStyle.thumbSize.y) / 2);
+	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
 	painter.drawRect(sliderStyle.thumbSize.x, sliderStyle.thumbSize.y);
 
 	frame.endItem();

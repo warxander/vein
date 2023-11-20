@@ -21,7 +21,8 @@ export function button(text: string): boolean {
 
 	frame.beginItem(w, h);
 
-	if (frame.isItemHovered()) selector = frame.buildStyleSelector('button', 'hover');
+	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	if (state !== undefined) selector = frame.buildStyleSelector('button', state);
 
 	drawItemBackground(frame, selector, w, h);
 

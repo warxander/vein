@@ -31,6 +31,11 @@ export async function textEdit(
 
 	frame.beginItem(w, h);
 
+	const selector = frame.buildStyleSelector(
+		'text-edit',
+		frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined
+	);
+
 	let newText = text;
 
 	if (frame.isItemClicked()) {
@@ -49,8 +54,6 @@ export async function textEdit(
 			} else if (status === 2) break;
 		}
 	}
-
-	const selector = frame.buildStyleSelector('text-edit', frame.isItemHovered() ? 'hover' : undefined);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.drawRect(w, h);

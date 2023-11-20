@@ -28,16 +28,15 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 
 	frame.beginItem(w, h);
 
-	if (frame.isItemHovered()) {
-		selector = frame.buildStyleSelector('collapsing-header', 'hover');
-		if (frame.isItemClicked()) isCollapsed = !isCollapsed;
-	}
+	if (frame.isItemClicked()) isCollapsed = !isCollapsed;
 
-	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
+	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	if (state !== undefined) selector = frame.buildStyleSelector('collapsing-header', state);
 
 	const sh = style.collapsingHeader.spriteWidth * GetAspectRatio(false);
 	painter.move(style.collapsingHeader.spacing, (h - sh) / 2);
 
+	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
 	RequestStreamedTextureDict('commonmenu', false);
 	painter.drawSprite('commonmenu', 'arrowright', style.collapsingHeader.spriteWidth, sh, isCollapsed ? 0 : 90);
 
@@ -45,6 +44,7 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 		style.collapsingHeader.spriteWidth,
 		sh / 2 - GetRenderedCharacterHeight(scale, font) / 2 + style.item.textOffset
 	);
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.drawText(text, font, scale);
 
 	frame.endItem();

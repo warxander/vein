@@ -20,9 +20,10 @@ export function hyperlink(url: string, urlText: string | null = null) {
 
 	frame.beginItem(w, h);
 
-	if (frame.isItemHovered()) {
-		selector = frame.buildStyleSelector('hyperlink', 'hover');
+	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	if (state !== undefined) selector = frame.buildStyleSelector('hyperlink', state);
 
+	if (frame.isItemHovered()) {
 		frame.setMouseCursor(MouseCursor.MiddleFinger);
 		if (frame.isItemClicked()) SendNUIMessage({ openUrl: { url: url } });
 	}

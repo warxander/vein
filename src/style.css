@@ -5,22 +5,31 @@ button, check-box, sprite-button, text-edit {
 	font-size: 0.325em;
 }
 
+button:active, sprite-button:active {
+	background-color: #893240;
+}
+
 button:hover, sprite-button:hover {
 	background-color: #F21951;
 }
 
-check-box:hover {
-	color: #F21951;
+check-box {
+	accent-color: #FFFFF0;
+}
+
+check-box:active, collapsing-header:active, slider:active {
+	accent-color: #893240;
+}
+
+check-box:hover, collapsing-header:hover, slider:hover {
+	accent-color: #F21951;
 }
 
 collapsing-header {
+	accent-color: #FFFFF0;
 	color: #FFFFF0;
 	font-family: 0;
 	font-size: 0.325em;
-}
-
-collapsing-header:hover {
-	color: #F21951;
 }
 
 frame {
@@ -39,6 +48,10 @@ hyperlink {
 	color: #00829B;
 	font-family: 0;
 	font-size: 0.325em;
+}
+
+hyperlink:active {
+	color: #275363;
 }
 
 hyperlink:hover {
@@ -64,6 +77,11 @@ selectable {
 	font-size: 0.325em;
 }
 
+selectable:active {
+	accent-color: #295F52;
+	background-color: #15171C;
+}
+
 selectable:hover {
 	background-color: #242730;
 }
@@ -80,8 +98,8 @@ slider {
 	font-size: 0.325em;
 }
 
-slider:hover {
-	accent-color: #F21951;
+text-edit:active {
+	color: #893240;
 }
 
 text-edit:hover {

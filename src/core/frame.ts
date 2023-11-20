@@ -264,12 +264,16 @@ export class Frame {
 		return rect.contains(this.input.getMousePosition());
 	}
 
+	isItemClicked(): boolean {
+		return this.input.isControlReleased(InputControl.MouseLeftButton) && this.isItemHovered();
+	}
+
 	isItemHovered(): boolean {
 		return this.isAreaHovered(this.layout.getItemRect());
 	}
 
-	isItemClicked(): boolean {
-		return this.input.isControlReleased(InputControl.MouseLeftButton) && this.isItemHovered();
+	isItemPressed(): boolean {
+		return this.input.isControlDown(InputControl.MouseLeftButton) && this.isItemHovered();
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {

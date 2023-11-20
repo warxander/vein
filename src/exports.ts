@@ -84,8 +84,9 @@ export interface IFrame {
 
 	tryGetItemWidth(): number | null;
 
-	isItemHovered(): boolean;
 	isItemClicked(): boolean;
+	isItemHovered(): boolean;
+	isItemPressed(): boolean;
 
 	setMouseCursor(mouseCursor: number): void;
 
@@ -253,12 +254,16 @@ export function getFrame(): IFrame {
 			return frame.tryGetItemWidth() ?? null;
 		},
 
+		isItemClicked(): boolean {
+			return frame.isItemClicked();
+		},
+
 		isItemHovered(): boolean {
 			return frame.isItemHovered();
 		},
 
-		isItemClicked(): boolean {
-			return frame.isItemClicked();
+		isItemPressed(): boolean {
+			return frame.isItemPressed();
 		},
 
 		setMouseCursor(mouseCursor: number) {
