@@ -269,7 +269,7 @@ export class Frame {
 	}
 
 	isItemClicked(): boolean {
-		return this.input.isControlPressed(InputControl.MouseLeftButton) && this.isItemHovered();
+		return this.input.isControlReleased(InputControl.MouseLeftButton) && this.isItemHovered();
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {
