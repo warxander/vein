@@ -124,7 +124,7 @@ export class Style {
 
 		this.slider = {
 			height: 0.002,
-			tickMarkSize: new Vector2(0.004, 0.02),
+			thumbSize: new Vector2(0.004, 0.02),
 			spacing: 0.005
 		};
 

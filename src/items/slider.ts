@@ -14,7 +14,13 @@ export interface ISliderResponse {
 /**
  * @category Items
  */
-export function slider(value: number, min: number, max: number, w: number, text: string | null = null): ISliderResponse {
+export function slider(
+	value: number,
+	min: number,
+	max: number,
+	w: number,
+	text: string | null = null
+): ISliderResponse {
 	const frame = getFrameChecked();
 
 	const input = frame.getInput();
@@ -44,10 +50,10 @@ export function slider(value: number, min: number, max: number, w: number, text:
 		frame.isAreaHovered(
 			new Rect(
 				new Vector2(
-					layout.getItemRect().position.x - sliderStyle.tickMarkSize.x / 2,
+					layout.getItemRect().position.x - sliderStyle.thumbSize.x / 2,
 					layout.getItemRect().position.y
 				),
-				new Vector2(sw + sliderStyle.tickMarkSize.x, h)
+				new Vector2(sw + sliderStyle.thumbSize.x, h)
 			)
 		)
 	)
@@ -77,8 +83,8 @@ export function slider(value: number, min: number, max: number, w: number, text:
 	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
 	painter.drawRect(sx, sliderStyle.height);
 
-	painter.move(sx - sliderStyle.tickMarkSize.x / 2, (sliderStyle.height - sliderStyle.tickMarkSize.y) / 2);
-	painter.drawRect(sliderStyle.tickMarkSize.x, sliderStyle.tickMarkSize.y);
+	painter.move(sx - sliderStyle.thumbSize.x / 2, (sliderStyle.height - sliderStyle.thumbSize.y) / 2);
+	painter.drawRect(sliderStyle.thumbSize.x, sliderStyle.thumbSize.y);
 
 	frame.endItem();
 
