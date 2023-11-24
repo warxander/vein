@@ -2,6 +2,8 @@ import { Frame, getFrameChecked } from '../core/frame';
 import { wait } from '../core/utils';
 import { Color } from '../core/types';
 
+const KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
+
 /**
  * @category Items
  */
@@ -24,14 +26,21 @@ export async function textEdit(
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const _keyboardTitleEntry = 'VEIN_EDIT_KEYBOARD_TITLE';
+	let selector = frame.buildStyleSelector('text-edit');
 
-	const w = frame.tryGetItemWidth() ?? maxTextLength * style.textEdit.symbolWidth;
+	const w =
+		frame.tryGetItemWidth() ??
+		painter.getTextWidth(
+			'M'.repeat(maxTextLength),
+			style.getPropertyAs<number>(selector, 'font-family'),
+			style.getPropertyAs<number>(selector, 'font-size')
+		) +
+			style.textEdit.padding * 2;
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
 
-	const selector = frame.buildStyleSelector(
+	selector = frame.buildStyleSelector(
 		'text-edit',
 		frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined
 	);
@@ -39,8 +48,8 @@ export async function textEdit(
 	let newText = text;
 
 	if (frame.isItemClicked()) {
-		AddTextEntry(_keyboardTitleEntry, keyboardTitle);
-		DisplayOnscreenKeyboard(1, _keyboardTitleEntry, '', text, '', '', '', maxTextLength);
+		AddTextEntry(KEYBOARD_TITLE_ENTRY, keyboardTitle);
+		DisplayOnscreenKeyboard(1, KEYBOARD_TITLE_ENTRY, '', text, '', '', '', maxTextLength);
 
 		while (true) {
 			await wait(0);

@@ -134,7 +134,6 @@ export class Style {
 		};
 
 		this.textEdit = {
-			symbolWidth: 0.01,
 			padding: 0.002
 		};
 
