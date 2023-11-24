@@ -21,7 +21,7 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 	else {
 		w += style.collapsingHeader.spriteWidth;
 		const tw = painter.getTextWidth(text, font, scale);
-		if (tw !== 0) w += tw + style.collapsingHeader.spacing * 3;
+		if (tw !== 0) w += tw + style.collapsingHeader.padding * 3;
 	}
 
 	const h = style.item.height;
@@ -34,7 +34,7 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 	if (state !== undefined) selector = frame.buildStyleSelector('collapsing-header', state);
 
 	const sh = style.collapsingHeader.spriteWidth * GetAspectRatio(false);
-	painter.move(style.collapsingHeader.spacing, (h - sh) / 2);
+	painter.move(style.collapsingHeader.padding, (h - sh) / 2);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
 	RequestStreamedTextureDict('commonmenu', false);

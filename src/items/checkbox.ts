@@ -25,7 +25,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	else {
 		w += cw;
 		const tw = painter.getTextWidth(text, font, scale);
-		if (tw !== 0) w += checkboxStyle.spacing + tw;
+		if (tw !== 0) w += checkboxStyle.padding + tw;
 	}
 	const h = style.item.height;
 
@@ -52,7 +52,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	painter.move(0, -vo);
 
 	painter.move(
-		checkboxStyle.height / aspectRatio + checkboxStyle.spacing * 2,
+		checkboxStyle.height / aspectRatio + checkboxStyle.padding * 2,
 		(h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
 	);
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));

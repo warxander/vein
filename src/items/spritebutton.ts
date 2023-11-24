@@ -22,9 +22,9 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	let w = 0;
 	if (iw !== undefined) w = iw;
 	else {
-		w += sw + style.button.spacing * 2;
+		w += sw + style.button.padding * 2;
 		const tw = painter.getTextWidth(text, font, scale);
-		if (tw !== 0) w += tw + spriteButtonStyle.spacing;
+		if (tw !== 0) w += tw + spriteButtonStyle.padding;
 	}
 
 	const h = style.item.height;
@@ -41,11 +41,11 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 
-	painter.move(style.button.spacing, so);
+	painter.move(style.button.padding, so);
 	painter.drawSprite(dict, name, sw, sh);
 
 	painter.move(
-		sw + spriteButtonStyle.spacing,
+		sw + spriteButtonStyle.padding,
 		-so + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
 	);
 	painter.drawText(text, font, scale);

@@ -44,7 +44,7 @@ export function slider(
 	const sliderText = text ?? value.toFixed(2);
 
 	const tw = painter.getTextWidth(sliderText, font, scale);
-	const sw = tw !== 0 ? w - tw - style.slider.spacing : w;
+	const sw = tw !== 0 ? w - tw - style.slider.padding : w;
 
 	let newValue = value;
 
@@ -72,7 +72,7 @@ export function slider(
 	painter.drawRect(sw, sliderStyle.height);
 
 	if (tw !== 0) {
-		const tho = sw + style.slider.spacing;
+		const tho = sw + style.slider.padding;
 		const tvo = -sh + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset;
 
 		painter.move(tho, tvo);

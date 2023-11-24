@@ -109,7 +109,7 @@ export class Frame {
 	}
 
 	static getSpacing(): Vector2 {
-		return Frame.nextState.spacing ?? Frame.style.frame.spacing;
+		return Frame.nextState.spacing ?? Frame.style.frame.itemSpacing;
 	}
 
 	static isBackgroundDisabled(): boolean {
@@ -155,8 +155,8 @@ export class Frame {
 		const rect = this.getRect();
 
 		this.layout = new Layout(
-			rect.position.x + Frame.style.frame.margins.x,
-			rect.position.y + Frame.style.frame.margins.y,
+			rect.position.x + Frame.style.frame.padding.x,
+			rect.position.y + Frame.style.frame.padding.y,
 			Frame.getSpacing()
 		);
 
@@ -201,8 +201,8 @@ export class Frame {
 
 		const contentRect = this.layout.getContentRect();
 		this.memory.rect.size = new Vector2(
-			contentRect.size.x + Frame.style.frame.margins.x * 2,
-			contentRect.size.y + Frame.style.frame.margins.y * 2
+			contentRect.size.x + Frame.style.frame.padding.x * 2,
+			contentRect.size.y + Frame.style.frame.padding.y * 2
 		);
 
 		this.itemStyleIdStack = [];
@@ -290,7 +290,7 @@ export class Frame {
 
 		if (
 			!this.isAreaHovered(
-				new Rect(this.memory.rect.position, new Vector2(this.memory.rect.size.x, Frame.style.frame.margins.y))
+				new Rect(this.memory.rect.position, new Vector2(this.memory.rect.size.x, Frame.style.frame.padding.y))
 			)
 		)
 			return;

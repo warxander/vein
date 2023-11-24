@@ -92,18 +92,18 @@ export class Style {
 		this.reset();
 
 		this.button = {
-			spacing: 0.005
+			padding: 0.005
 		};
 
 		this.checkbox = {
 			height: 0.02,
-			spacing: 0.0025,
+			padding: 0.0025,
 			inlineHeight: 0.0035
 		};
 
 		this.collapsingHeader = {
 			spriteWidth: 0.0125,
-			spacing: 0.0025
+			padding: 0.0025
 		};
 
 		this.label = {
@@ -115,7 +115,7 @@ export class Style {
 		};
 
 		this.selectable = {
-			spacing: 0.005
+			padding: 0.005
 		};
 
 		this.separator = {
@@ -125,17 +125,17 @@ export class Style {
 		this.slider = {
 			height: 0.002,
 			thumbSize: new Vector2(0.004, 0.02),
-			spacing: 0.005
+			padding: 0.005
 		};
 
 		this.spriteButton = {
 			spriteWidth: 0.016,
-			spacing: 0.001
+			padding: 0.001
 		};
 
 		this.textEdit = {
 			symbolWidth: 0.01,
-			spacing: 0.002
+			padding: 0.002
 		};
 
 		this.item = {
@@ -145,8 +145,8 @@ export class Style {
 
 		this.frame = {
 			borderWidth: 0.00104,
-			margins: new Vector2(0.01, 0.018),
-			spacing: new Vector2(0.005, 0.01)
+			padding: new Vector2(0.01, 0.018),
+			itemSpacing: new Vector2(0.005, 0.01)
 		};
 	}
 
