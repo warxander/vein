@@ -1,20 +1,20 @@
-import { Color, FontSize, Image, Vector2 } from './types';
+import { Color, Image, Vector2 } from './types';
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
 type StylePropertyValuesMap = Map<string, StylePropertyValue>;
 
-export type StylePropertyValue = Color | FontSize | Image;
+export type StylePropertyValue = Color | Image | number;
 
 export enum StylePropertyType {
 	Color,
-	FontSize,
+	Float,
 	Image,
 	Integer
 }
 
 const stylePropertyParseFuncs = new Map<StylePropertyType, Function>([
 	[StylePropertyType.Color, parseValueAsColor],
-	[StylePropertyType.FontSize, parseValueAsFontSize],
+	[StylePropertyType.Float, parseFloat],
 	[StylePropertyType.Image, parseValueAsImage],
 	[StylePropertyType.Integer, parseInt]
 ]);
@@ -33,13 +33,6 @@ function parseValueAsColor(value: string): Color {
 		return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), Math.round(parseFloat(match[4]) * 255)];
 
 	throw new Error(`Failed to parseValueAsColor() for style value: ${value}`);
-}
-
-function parseValueAsFontSize(value: string): FontSize {
-	const match = value.match(/^(([0-9]*[.])?[0-9]+)em$/);
-	if (match) return parseFloat(match[1]);
-
-	throw new Error(`Failed to parseValueAsFontSize() for style value: ${value}`);
 }
 
 function parseValueAsImage(value: string): Image {
@@ -67,7 +60,7 @@ export class Style {
 		['border-color', StylePropertyType.Color],
 		['color', StylePropertyType.Color],
 		['font-family', StylePropertyType.Integer],
-		['font-size', StylePropertyType.FontSize]
+		['font-size', StylePropertyType.Float]
 	]);
 
 	private selectorProperties = new Map<string, StylePropertyValuesMap>();

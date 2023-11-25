@@ -30,7 +30,7 @@ globalThis.exports('addStyleSheet', Exports.addStyleSheet);
 globalThis.exports('resetStyle', Exports.resetStyle);
 
 globalThis.exports('registerStylePropertyAsColor', Exports.registerStylePropertyAsColor);
-globalThis.exports('registerStylePropertyAsFontSize', Exports.registerStylePropertyAsFontSize);
+globalThis.exports('registerStylePropertyAsFloat', Exports.registerStylePropertyAsFloat);
 globalThis.exports('registerStylePropertyAsImage', Exports.registerStylePropertyAsImage);
 globalThis.exports('registerStylePropertyAsInteger', Exports.registerStylePropertyAsInteger);
 

@@ -1,5 +1,4 @@
 export type Color = [number, number, number, number];
-export type FontSize = number;
 export type Image = [string, string];
 
 export class Vector2 {

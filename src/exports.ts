@@ -431,8 +431,8 @@ export function registerStylePropertyAsColor(property: string) {
 /**
  * @category Style
  */
-export function registerStylePropertyAsFontSize(property: string) {
-	Frame.getStyle().registerProperty(property, StylePropertyType.FontSize);
+export function registerStylePropertyAsFloat(property: string) {
+	Frame.getStyle().registerProperty(property, StylePropertyType.Float);
 }
 
 /**

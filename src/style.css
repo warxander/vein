@@ -2,7 +2,7 @@ button, check-box, sprite-button, text-edit {
 	background-color: #242730;
 	color: #FFFFF0;
 	font-family: 0;
-	font-size: 0.325em;
+	font-size: 0.325;
 }
 
 button:active, sprite-button:active {
@@ -29,7 +29,7 @@ collapsing-header {
 	accent-color: #FFFFF0;
 	color: #FFFFF0;
 	font-family: 0;
-	font-size: 0.325em;
+	font-size: 0.325;
 }
 
 frame {
@@ -41,13 +41,13 @@ frame {
 heading {
 	color: #FFFFF0;
 	font-family: 0;
-	font-size: 0.45em;
+	font-size: 0.45;
 }
 
 hyperlink {
 	color: #00829B;
 	font-family: 0;
-	font-size: 0.325em;
+	font-size: 0.325;
 }
 
 hyperlink:active {
@@ -61,7 +61,7 @@ hyperlink:hover {
 label, text-area {
 	color: #C4C4BD;
 	font-family: 0;
-	font-size: 0.325em;
+	font-size: 0.325;
 }
 
 progress-bar {
@@ -74,7 +74,7 @@ selectable {
 	background-color: #32353D;
 	color: #FFFFF0;
 	font-family: 0;
-	font-size: 0.325em;
+	font-size: 0.325;
 }
 
 selectable:active {
@@ -95,7 +95,7 @@ slider {
 	background-color: #242730;
 	color: #FFFFF0;
 	font-family: 0;
-	font-size: 0.325em;
+	font-size: 0.325;
 }
 
 text-edit:active {
