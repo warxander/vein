@@ -1,9 +1,9 @@
-import { Color, Image, FontSize, Vector2 } from './types';
+import { Color, FontSize, Image, Vector2 } from './types';
 import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
 
 type StylePropertyValuesMap = Map<string, StylePropertyValue>;
 
-export type StylePropertyValue = Color | Image | FontSize;
+export type StylePropertyValue = Color | FontSize | Image;
 
 export enum StylePropertyType {
 	Color,
@@ -11,6 +11,13 @@ export enum StylePropertyType {
 	Image,
 	Integer
 }
+
+const stylePropertyParseFuncs = new Map<StylePropertyType, Function>([
+	[StylePropertyType.Color, parseValueAsColor],
+	[StylePropertyType.FontSize, parseValueAsFontSize],
+	[StylePropertyType.Image, parseValueAsImage],
+	[StylePropertyType.Integer, parseInt]
+]);
 
 function parseValueAsColor(value: string): Color {
 	if (value.match(/^#([0-9a-f]{6})$/i))
@@ -28,13 +35,6 @@ function parseValueAsColor(value: string): Color {
 	throw new Error(`Failed to parseValueAsColor() for style value: ${value}`);
 }
 
-function parseValueAsImage(value: string): Image {
-	const match = value.match(/^url\('(\S+)',\s*'(\S+)'\)$/);
-	if (match) return [match[1], match[2]];
-
-	throw new Error(`Failed to parseValueAsImage() for style value: ${value}`);
-}
-
 function parseValueAsFontSize(value: string): FontSize {
 	const match = value.match(/^(([0-9]*[.])?[0-9]+)em$/);
 	if (match) return parseFloat(match[1]);
@@ -42,19 +42,17 @@ function parseValueAsFontSize(value: string): FontSize {
 	throw new Error(`Failed to parseValueAsFontSize() for style value: ${value}`);
 }
 
+function parseValueAsImage(value: string): Image {
+	const match = value.match(/^url\('(\S+)',\s*'(\S+)'\)$/);
+	if (match) return [match[1], match[2]];
+
+	throw new Error(`Failed to parseValueAsImage() for style value: ${value}`);
+}
+
 function parseValue(value: string, propertyType: StylePropertyType): StylePropertyValue {
-	switch (propertyType) {
-		case StylePropertyType.Color:
-			return parseValueAsColor(value);
-		case StylePropertyType.FontSize:
-			return parseValueAsFontSize(value);
-		case StylePropertyType.Image:
-			return parseValueAsImage(value);
-		case StylePropertyType.Integer:
-			return parseInt(value);
-		default:
-			throw new Error(`Failed to parseValue() of unsupported style type: ${propertyType}`);
-	}
+	const parseFunc = stylePropertyParseFuncs.get(propertyType);
+	if (parseFunc === undefined) throw new Error(`Failed to parseValue() of unsupported style type: ${propertyType}`);
+	return parseFunc(value);
 }
 
 export class Style {
