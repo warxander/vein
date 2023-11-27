@@ -7,20 +7,12 @@ const KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
 /**
  * @category Items
  */
-export interface ITextEditResponse {
-	isTextChanged: boolean;
-	text: string;
-}
-
-/**
- * @category Items
- */
 export async function textEdit(
 	text: string,
 	keyboardTitle: string,
 	maxTextLength: number,
 	isSecretMode: boolean
-): Promise<ITextEditResponse> {
+): Promise<string> {
 	const frame = getFrameChecked();
 
 	const painter = frame.getPainter();
@@ -40,12 +32,7 @@ export async function textEdit(
 
 	frame.beginItem(w, h);
 
-	selector = frame.buildStyleSelector(
-		'text-edit',
-		frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined
-	);
-
-	let newText = text;
+	let keyboardResultText = null;
 
 	if (frame.isItemClicked()) {
 		AddTextEntry(KEYBOARD_TITLE_ENTRY, keyboardTitle);
@@ -58,11 +45,18 @@ export async function textEdit(
 
 			const status = UpdateOnscreenKeyboard();
 			if (status === 1) {
-				newText = GetOnscreenKeyboardResult();
+				keyboardResultText = GetOnscreenKeyboardResult();
 				break;
 			} else if (status === 2) break;
 		}
 	}
+
+	const inputText = keyboardResultText ?? text;
+
+	selector = frame.buildStyleSelector(
+		'text-edit',
+		frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined
+	);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.drawRect(w, h);
@@ -73,9 +67,9 @@ export async function textEdit(
 	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	painter.move(style.textEdit.padding, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
-	painter.drawText(isSecretMode ? text.replace(/./g, '*') : text, font, scale);
+	painter.drawText(isSecretMode ? inputText.replace(/./g, '*') : inputText, font, scale);
 
 	frame.endItem();
 
-	return { isTextChanged: newText != text, text: newText };
+	return inputText;
 }
