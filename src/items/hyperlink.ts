@@ -20,13 +20,13 @@ export function hyperlink(url: string, urlText: string | null = null) {
 
 	frame.beginItem(w, h);
 
-	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
-	if (state !== undefined) selector = frame.buildStyleSelector('hyperlink', state);
-
 	if (frame.isItemHovered()) {
 		frame.setMouseCursor(MouseCursor.MiddleFinger);
 		if (frame.isItemClicked()) SendNUIMessage({ openUrl: { url: url } });
 	}
+
+	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	if (state !== undefined) selector = frame.buildStyleSelector('hyperlink', state);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);

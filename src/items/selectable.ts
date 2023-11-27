@@ -19,12 +19,12 @@ export function selectable(isSelected: boolean, text: string): boolean {
 
 	frame.beginItem(w, h);
 
+	const inputIsSelected = frame.isItemClicked() ? !isSelected : isSelected;
+
 	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
 	if (state !== undefined) selector = frame.buildStyleSelector('selectable', state);
 
-	if (frame.isItemClicked()) isSelected = !isSelected;
-
-	painter.setColor(style.getPropertyAs<Color>(selector, isSelected ? 'accent-color' : 'background-color'));
+	painter.setColor(style.getPropertyAs<Color>(selector, inputIsSelected ? 'accent-color' : 'background-color'));
 	painter.drawRect(w, h);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
@@ -33,5 +33,5 @@ export function selectable(isSelected: boolean, text: string): boolean {
 
 	frame.endItem();
 
-	return isSelected;
+	return inputIsSelected;
 }
