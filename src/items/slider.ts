@@ -6,21 +6,7 @@ import { InputControl } from '../core/input';
 /**
  * @category Items
  */
-export interface ISliderResponse {
-	isValueChanged: boolean;
-	value: number;
-}
-
-/**
- * @category Items
- */
-export function slider(
-	value: number,
-	min: number,
-	max: number,
-	w: number,
-	text: string | null = null
-): ISliderResponse {
+export function slider(value: number, min: number, max: number, w: number, text: string | null = null): number {
 	const frame = getFrameChecked();
 
 	const input = frame.getInput();
@@ -94,5 +80,5 @@ export function slider(
 
 	frame.endItem();
 
-	return { isValueChanged: !numberEquals(inputValue, value), value: inputValue };
+	return inputValue;
 }
