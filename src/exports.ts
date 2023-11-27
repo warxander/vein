@@ -78,6 +78,7 @@ export interface IFrame {
 	getPainter(): IPainter;
 
 	getRect(): IRect;
+	getScale(): number;
 
 	beginItem(w: number, h: number): void;
 	endItem(): void;
@@ -242,6 +243,10 @@ export function getFrame(): IFrame {
 			return toIRect(frame.getRect());
 		},
 
+		getScale(): number {
+			return Frame.getScale();
+		},
+
 		beginItem(w: number, h: number) {
 			frame.beginItem(w, h);
 		},
@@ -334,6 +339,13 @@ export function setNextFrameDisableInput() {
  */
 export function setNextFrameDisableMove() {
 	Frame.setNextFrameDisableMove();
+}
+
+/**
+ * @category Frame
+ */
+export function setNextFrameScale(scale: number) {
+	Frame.setNextFrameScale(scale);
 }
 
 /**

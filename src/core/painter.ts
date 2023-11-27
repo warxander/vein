@@ -5,7 +5,7 @@ export class Painter {
 	private color: Color = [0, 0, 0, 255];
 	private textEntryIndex = -1;
 
-	constructor(private textEntryPrefix: string) {}
+	constructor(private textEntryPrefix: string, private scale: number) {}
 
 	getPosition(): Vector2 {
 		return this.position;
@@ -17,8 +17,8 @@ export class Painter {
 	}
 
 	move(x: number, y: number) {
-		this.position.x += x;
-		this.position.y += y;
+		this.position.x += x * this.scale;
+		this.position.y += y * this.scale;
 	}
 
 	setColor(color: Color) {
@@ -26,11 +26,14 @@ export class Painter {
 	}
 
 	drawRect(w: number, h: number) {
+		const sw = w * this.scale;
+		const sh = h * this.scale;
+
 		DrawRect(
-			this.position.x + w / 2,
-			this.position.y + h / 2,
-			w,
-			h,
+			this.position.x + sw / 2,
+			this.position.y + sh / 2,
+			sw,
+			sh,
 			this.color[0],
 			this.color[1],
 			this.color[2],
@@ -39,13 +42,16 @@ export class Painter {
 	}
 
 	drawSprite(dict: string, name: string, w: number, h: number, heading?: number) {
+		const sw = w * this.scale;
+		const sh = h * this.scale;
+
 		DrawSprite(
 			dict,
 			name,
-			this.position.x + w / 2,
-			this.position.y + h / 2,
-			w,
-			h,
+			this.position.x + sw / 2,
+			this.position.y + sh / 2,
+			sw,
+			sh,
 			heading ?? 0,
 			this.color[0],
 			this.color[1],
@@ -75,7 +81,7 @@ export class Painter {
 	drawText(text: string, font: number, scale: number) {
 		if (text.length === 0) return;
 
-		this.setText(text, font, scale);
+		this.setText(text, font, scale * this.scale);
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
 		BeginTextCommandDisplayText(this.getTextEntry());
@@ -85,7 +91,7 @@ export class Painter {
 	drawMultilineText(text: string, font: number, scale: number, w: number) {
 		if (text.length === 0) return;
 
-		this.setText(text, font, scale, w);
+		this.setText(text, font, scale * this.scale, w * this.scale);
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
 		BeginTextCommandDisplayText(this.getTextEntry());

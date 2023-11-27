@@ -13,7 +13,7 @@ export class Layout {
 	private contentRect: Rect;
 	private position: Vector2;
 
-	constructor(x: number, y: number, private itemSpacing: Vector2) {
+	constructor(x: number, y: number, private itemSpacing: Vector2, private scale: number) {
 		this.contentRect = new Rect(new Vector2(x, y), new Vector2());
 		this.position = new Vector2(x, y);
 	}
@@ -37,7 +37,7 @@ export class Layout {
 			this.move(ho, vo);
 		}
 
-		this.itemRect = new Rect(new Vector2(this.position.x, this.position.y), new Vector2(w, h));
+		this.itemRect = new Rect(new Vector2(this.position.x, this.position.y), new Vector2(w * this.scale, h * this.scale));
 
 		if (this.rowState) this.rowState.isFirstItem = false;
 	}
