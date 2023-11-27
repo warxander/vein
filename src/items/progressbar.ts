@@ -1,11 +1,11 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { numberEquals } from '../core/utils';
 import { Color } from '../core/types';
 
 /**
  * @category Items
+ * @param value - number in the range [0...1]
  */
-export function progressBar(value: number, min: number, max: number, w: number) {
+export function progressBar(value: number, w: number) {
 	const frame = getFrameChecked();
 
 	const painter = frame.getPainter();
@@ -21,12 +21,8 @@ export function progressBar(value: number, min: number, max: number, w: number) 
 	painter.move(0, (style.item.height - h) / 2);
 	painter.drawRect(w, h);
 
-	if (!numberEquals(value, min)) {
-		const pw = numberEquals(value, max) ? w : ((value - min) / (max - min)) * w;
-
-		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-		painter.drawRect(pw, h);
-	}
+	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
+	painter.drawRect(w * Math.min(1, Math.max(0, value)), h);
 
 	frame.endItem();
 }

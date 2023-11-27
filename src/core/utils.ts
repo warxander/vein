@@ -2,16 +2,10 @@ import { Frame } from './frame';
 import { Style } from './style';
 import { Color, Image } from './types';
 
-const PIXEL_EPSILON = 0.0005;
-
 export function wait(ms: number): Promise<unknown> {
 	return new Promise(function (res: TimerHandler) {
 		setTimeout(res, ms);
 	});
-}
-
-export function numberEquals(l: number, r: number, epsilon?: number): boolean {
-	return Math.abs(l - r) < (epsilon ?? PIXEL_EPSILON);
 }
 
 export function drawItemBackground(frame: Frame, selector: string, w: number, h: number) {

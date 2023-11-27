@@ -1,5 +1,4 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { numberEquals } from '../core/utils';
 import { Color, Rect, Vector2 } from '../core/types';
 import { InputControl } from '../core/input';
 
