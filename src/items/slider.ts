@@ -30,27 +30,17 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	const tw = painter.getTextWidth(sliderText, font, scale);
 	const sw = tw !== 0 ? w - tw - style.slider.padding : w;
-	const frameScale = Frame.getScale();
 
 	const inputValue =
-		(input.isControlDown(InputControl.MouseLeftButton) || input.isControlPressed(InputControl.MouseLeftButton)) &&
-		frame.isAreaHovered(
-			new Rect(
-				new Vector2(
-					layout.getItemRect().position.x - (sliderStyle.thumbSize.x * frameScale) / 2,
-					layout.getItemRect().position.y
-				),
-				new Vector2((sw + sliderStyle.thumbSize.x) * frameScale, h * frameScale)
-			)
-		)
+		frame.isItemHovered() &&
+		(input.isControlDown(InputControl.MouseLeftButton) || input.isControlPressed(InputControl.MouseLeftButton))
 			? Math.min(
 					max,
 					Math.max(
 						min,
 						min +
-							((input.getMousePosition().x - layout.getItemRect().position.x) / sw) *
-								frameScale *
-								(max + min)
+							((input.getMousePosition().x - layout.getItemRect().position.x) / (sw * Frame.getScale())) *
+								(max - min)
 					)
 			  )
 			: value;
@@ -71,7 +61,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 		painter.move(-tho, -tvo);
 	}
 
-	const sx = (sw * inputValue) / (max + min);
+	const sx = (sw * (inputValue - min)) / (max - min);
 
 	painter.move(sx - sliderStyle.thumbSize.x / 2, (sliderStyle.height - sliderStyle.thumbSize.y) / 2);
 	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
