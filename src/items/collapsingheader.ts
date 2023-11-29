@@ -4,7 +4,7 @@ import { Color } from '../core/types';
 /**
  * @category Items
  */
-export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
+export function collapsingHeader(isOpened: boolean, text: string): boolean {
 	const frame = getFrameChecked();
 
 	const painter = frame.getPainter();
@@ -28,7 +28,7 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 
 	frame.beginItem(w, h);
 
-	if (frame.isItemClicked()) isCollapsed = !isCollapsed;
+	if (frame.isItemClicked()) isOpened = !isOpened;
 
 	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
 	if (state !== undefined) selector = frame.buildStyleSelector('collapsing-header', state);
@@ -38,7 +38,7 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
 	RequestStreamedTextureDict('commonmenu', false);
-	painter.drawSprite('commonmenu', 'arrowright', style.collapsingHeader.spriteWidth, sh, isCollapsed ? 0 : 90);
+	painter.drawSprite('commonmenu', 'arrowright', style.collapsingHeader.spriteWidth, sh, isOpened ? 90 : 0);
 
 	painter.move(
 		style.collapsingHeader.spriteWidth,
@@ -49,5 +49,5 @@ export function collapsingHeader(isCollapsed: boolean, text: string): boolean {
 
 	frame.endItem();
 
-	return isCollapsed;
+	return isOpened;
 }
