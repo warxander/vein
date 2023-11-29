@@ -5,7 +5,7 @@ import { drawItemBackground } from '../core/utils';
 /**
  * @category Items
  */
-export function spriteButton(dict: string, name: string, text: string): boolean {
+export function spriteButton(dict: string, name: string, text: string | null = null): boolean {
 	const frame = getFrameChecked();
 
 	const painter = frame.getPainter();
@@ -23,7 +23,7 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	if (iw !== undefined) w = iw;
 	else {
 		w += sw + style.button.padding * 2;
-		const tw = painter.getTextWidth(text, font, scale);
+		const tw = text !== null ? painter.getTextWidth(text, font, scale) : 0;
 		if (tw !== 0) w += tw + spriteButtonStyle.padding;
 	}
 
@@ -44,11 +44,13 @@ export function spriteButton(dict: string, name: string, text: string): boolean 
 	painter.move(style.button.padding, so);
 	painter.drawSprite(dict, name, sw, sh);
 
-	painter.move(
-		sw + spriteButtonStyle.padding,
-		-so + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
-	);
-	painter.drawText(text, font, scale);
+	if (text !== null) {
+		painter.move(
+			sw + spriteButtonStyle.padding,
+			-so + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
+		);
+		painter.drawText(text, font, scale);
+	}
 
 	frame.endItem();
 
