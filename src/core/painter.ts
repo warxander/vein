@@ -1,11 +1,13 @@
 import { Color, Vector2 } from './types';
 
 export class Painter {
-	private position = new Vector2();
+	private position: Vector2;
 	private color: Color = [0, 0, 0, 255];
 	private textEntryIndex = -1;
 
-	constructor(private textEntryPrefix: string, private scale: number) {}
+	constructor(x: number, y: number, private scale: number, private textEntryPrefix: string) {
+		this.position = new Vector2(x, y);
+	}
 
 	getPosition(): Vector2 {
 		return this.position;

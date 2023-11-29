@@ -172,15 +172,16 @@ export class Frame {
 			scale
 		);
 
-		this.painter = new Painter(`VEIN_${id}`, scale);
-		this.painter.setPosition(rect.position.x, rect.position.y);
+		this.painter = new Painter(rect.position.x, rect.position.y, scale, `VEIN_${id}`);
+
+		if (isNewFrame || Frame.isBackgroundDisabled()) return;
 
 		const selector = this.buildStyleSelector('frame');
 		const unscaledRect = new Rect(rect.position, new Vector2(rect.size.x / scale, rect.size.y / scale));
 
-		if (!Frame.isBackgroundDisabled()) drawItemBackground(this, selector, unscaledRect.size.x, unscaledRect.size.y);
+		drawItemBackground(this, selector, unscaledRect.size.x, unscaledRect.size.y);
 
-		if (isNewFrame || Frame.isBorderDisabled()) return;
+		if (Frame.isBorderDisabled()) return;
 
 		this.drawBorder(selector, unscaledRect);
 		this.painter.setPosition(rect.position.x, rect.position.y);
