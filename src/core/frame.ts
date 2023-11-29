@@ -22,7 +22,7 @@ class FrameState {
 	flags = FrameFlags.None;
 	position: Vector2 | undefined = undefined;
 	scale: number | undefined = undefined;
-	spacing: Vector2 | undefined = undefined;
+	spacing: [number | undefined, number | undefined] | undefined = undefined;
 	styleId: string | undefined = undefined;
 }
 
@@ -77,8 +77,8 @@ export class Frame {
 		Frame.nextState.position = new Vector2(x, y);
 	}
 
-	static setNextFrameSpacing(x: number, y: number) {
-		Frame.nextState.spacing = new Vector2(x, y);
+	static setNextFrameSpacing(x: number | undefined, y: number | undefined) {
+		Frame.nextState.spacing = [x, y];
 	}
 
 	static setNextFrameStyleId(id: string) {
@@ -114,7 +114,11 @@ export class Frame {
 	}
 
 	static getSpacing(): Vector2 {
-		return Frame.nextState.spacing ?? Frame.style.frame.itemSpacing;
+		if (Frame.nextState.spacing === undefined) return Frame.style.frame.itemSpacing;
+		return new Vector2(
+			Frame.nextState.spacing[0] ?? Frame.style.frame.itemSpacing.x,
+			Frame.nextState.spacing[1] ?? Frame.style.frame.itemSpacing.y
+		);
 	}
 
 	static isBackgroundDisabled(): boolean {

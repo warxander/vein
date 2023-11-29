@@ -309,8 +309,8 @@ export function setNextFramePosition(x: number, y: number) {
 /**
  * @category Frame
  */
-export function setNextFrameSpacing(x: number, y: number) {
-	Frame.setNextFrameSpacing(x, y);
+export function setNextFrameSpacing(x: number | null, y: number | null) {
+	Frame.setNextFrameSpacing(x ?? undefined, y ?? undefined);
 }
 
 /**
