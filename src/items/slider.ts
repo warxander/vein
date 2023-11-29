@@ -30,16 +30,25 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	const tw = painter.getTextWidth(sliderText, font, scale);
 	const sw = tw !== 0 ? w - tw - style.slider.padding : w;
+	const frameScale = Frame.getScale();
 
 	const inputValue =
-		frame.isItemHovered() &&
+		frame.isAreaHovered(
+			new Rect(
+				new Vector2(
+					layout.getItemRect().position.x - (sliderStyle.thumbSize.x * frameScale) / 2,
+					layout.getItemRect().position.y
+				),
+				new Vector2((sw + sliderStyle.thumbSize.x) * frameScale, h * frameScale)
+			)
+		) &&
 		(input.isControlDown(InputControl.MouseLeftButton) || input.isControlPressed(InputControl.MouseLeftButton))
 			? Math.min(
 					max,
 					Math.max(
 						min,
 						min +
-							((input.getMousePosition().x - layout.getItemRect().position.x) / (sw * Frame.getScale())) *
+							((input.getMousePosition().x - layout.getItemRect().position.x) / (sw * frameScale)) *
 								(max - min)
 					)
 			  )
