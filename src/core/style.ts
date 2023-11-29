@@ -94,7 +94,7 @@ export class Style {
 
 		this.collapsingHeader = {
 			spriteWidth: 0.0125,
-			padding: 0.0025
+			padding: 0.001
 		};
 
 		this.label = {
