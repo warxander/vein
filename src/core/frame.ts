@@ -22,6 +22,7 @@ class FrameState {
 	flags = FrameFlags.None;
 	position: Vector2 | undefined = undefined;
 	scale: number | undefined = undefined;
+	size: [number | undefined, number | undefined] | undefined = undefined;
 	spacing: [number | undefined, number | undefined] | undefined = undefined;
 	styleId: string | undefined = undefined;
 }
@@ -77,6 +78,14 @@ export class Frame {
 		Frame.nextState.position = new Vector2(x, y);
 	}
 
+	static setNextFrameScale(scale: number) {
+		Frame.nextState.scale = scale;
+	}
+
+	static setNextFrameSize(w: number | undefined, h: number | undefined) {
+		Frame.nextState.size = [w, h];
+	}
+
 	static setNextFrameSpacing(x: number | undefined, y: number | undefined) {
 		Frame.nextState.spacing = [x, y];
 	}
@@ -101,16 +110,16 @@ export class Frame {
 		Frame.nextState.flags |= FrameFlags.DisableMove;
 	}
 
-	static setNextFrameScale(scale: number) {
-		Frame.nextState.scale = scale;
-	}
-
 	static getStyle(): Style {
 		return Frame.style;
 	}
 
 	static getStyleId(): string | undefined {
 		return Frame.nextState.styleId;
+	}
+
+	static getScale(): number {
+		return Frame.nextState.scale ?? 1.0;
 	}
 
 	static getSpacing(): Vector2 {
@@ -135,10 +144,6 @@ export class Frame {
 
 	static isMoveDisabled(): boolean {
 		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
-	}
-
-	static getScale(): number {
-		return Frame.nextState.scale ?? 1.0;
 	}
 
 	static getStyleProperty(selector: string, property: string): StylePropertyValue {
@@ -204,7 +209,12 @@ export class Frame {
 	}
 
 	getRect(): Rect {
-		return this.memory.rect;
+		const rect = this.memory.rect;
+		if (Frame.nextState.size === undefined) return rect;
+		return new Rect(
+			new Vector2(rect.position.x, rect.position.y),
+			new Vector2(Frame.nextState.size[0] ?? rect.size.x, Frame.nextState.size[1] ?? rect.size.y)
+		);
 	}
 
 	end() {
@@ -349,7 +359,7 @@ export class Frame {
 	}
 
 	private drawBorder(selector: string, unscaledRect: Rect) {
-		const rect = this.memory.rect;
+		const rect = this.getRect();
 		const scale = Frame.getScale();
 		const bw = Frame.style.frame.borderWidth;
 		const bh = bw * GetAspectRatio(false) + 0.00049;

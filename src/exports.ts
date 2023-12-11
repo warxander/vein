@@ -309,6 +309,20 @@ export function setNextFramePosition(x: number, y: number) {
 /**
  * @category Frame
  */
+export function setNextFrameScale(scale: number) {
+	Frame.setNextFrameScale(scale);
+}
+
+/**
+ * @category Frame
+ */
+export function setNextFrameSize(w: number | null, h: number | null) {
+	Frame.setNextFrameSize(w ?? undefined, h ?? undefined);
+}
+
+/**
+ * @category Frame
+ */
 export function setNextFrameSpacing(x: number | null, y: number | null) {
 	Frame.setNextFrameSpacing(x ?? undefined, y ?? undefined);
 }
@@ -339,13 +353,6 @@ export function setNextFrameDisableInput() {
  */
 export function setNextFrameDisableMove() {
 	Frame.setNextFrameDisableMove();
-}
-
-/**
- * @category Frame
- */
-export function setNextFrameScale(scale: number) {
-	Frame.setNextFrameScale(scale);
 }
 
 /**

@@ -6,13 +6,14 @@ globalThis.exports('isDebugEnabled', Exports.isDebugEnabled);
 globalThis.exports('setDebugEnabled', Exports.setDebugEnabled);
 
 globalThis.exports('setNextFramePosition', Exports.setNextFramePosition);
+globalThis.exports('setNextFrameScale', Exports.setNextFrameScale);
+globalThis.exports('setNextFrameSize', Exports.setNextFrameSize);
 globalThis.exports('setNextFrameSpacing', Exports.setNextFrameSpacing);
 globalThis.exports('setNextFrameStyleId', Exports.setNextFrameStyleId);
 globalThis.exports('setNextFrameDisableBackground', Exports.setNextFrameDisableBackground);
 globalThis.exports('setNextFrameDisableBorder', Exports.setNextFrameDisableBorder);
 globalThis.exports('setNextFrameDisableInput', Exports.setNextFrameDisableInput);
 globalThis.exports('setNextFrameDisableMove', Exports.setNextFrameDisableMove);
-globalThis.exports('setNextFrameScale', Exports.setNextFrameScale);
 
 globalThis.exports('beginFrame', Exports.beginFrame);
 globalThis.exports('endFrame', Exports.endFrame);
