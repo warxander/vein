@@ -11,7 +11,8 @@ export async function textEdit(
 	text: string,
 	keyboardTitle: string,
 	maxTextLength: number,
-	isSecretMode: boolean
+	isSecretMode: boolean,
+	placeholderText: string
 ): Promise<string> {
 	const frame = getFrameChecked();
 
@@ -23,7 +24,7 @@ export async function textEdit(
 	const w =
 		frame.tryGetItemWidth() ??
 		painter.getTextWidth(
-			'M'.repeat(maxTextLength),
+			'M'.repeat(Math.max(maxTextLength, placeholderText.length)),
 			style.getPropertyAs<number>(selector, 'font-family'),
 			style.getPropertyAs<number>(selector, 'font-size')
 		) +
@@ -61,13 +62,18 @@ export async function textEdit(
 	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.drawRect(w, h);
 
-	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-
 	const font = style.getPropertyAs<number>(selector, 'font-family');
 	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	painter.move(style.textEdit.padding, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
-	painter.drawText(isSecretMode ? inputText.replace(/./g, '*') : inputText, font, scale);
+
+	if (inputText.length !== 0) {
+		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
+		painter.drawText(isSecretMode ? inputText.replace(/./g, '*') : inputText, font, scale);
+	} else {
+		painter.setColor(style.getPropertyAs<Color>(selector, 'placeholder-color'));
+		painter.drawText(placeholderText, font, scale);
+	}
 
 	frame.endItem();
 

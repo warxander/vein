@@ -60,7 +60,8 @@ export class Style {
 		['border-color', StylePropertyType.Color],
 		['color', StylePropertyType.Color],
 		['font-family', StylePropertyType.Integer],
-		['font-size', StylePropertyType.Float]
+		['font-size', StylePropertyType.Float],
+		['placeholder-color', StylePropertyType.Color]
 	]);
 
 	private selectorProperties = new Map<string, StylePropertyValuesMap>();

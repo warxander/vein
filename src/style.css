@@ -98,6 +98,10 @@ slider {
 	font-size: 0.325;
 }
 
+text-edit, text-edit:active, text-edit:hover {
+	placeholder-color: #C4C4BD;
+}
+
 text-edit:active {
 	color: #893240;
 }
