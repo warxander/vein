@@ -20,6 +20,7 @@ globalThis.exports('endFrame', Exports.endFrame);
 
 globalThis.exports('isItemHovered', Exports.isItemHovered);
 globalThis.exports('isItemClicked', Exports.isItemClicked);
+globalThis.exports('isItemPressed', Exports.isItemPressed);
 
 globalThis.exports('beginRow', Exports.beginRow);
 globalThis.exports('endRow', Exports.endRow);

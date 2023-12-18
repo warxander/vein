@@ -394,6 +394,13 @@ export function isItemClicked(): boolean {
 /**
  * @category Frame
  */
+export function isItemPressed(): boolean {
+	return getFrameChecked().isItemPressed();
+}
+
+/**
+ * @category Frame
+ */
 export function beginRow() {
 	getFrameChecked().getLayout().beginRow();
 }
