@@ -63,13 +63,6 @@ export interface IRect {
 }
 
 /**
- * @category Frame
- */
-export interface IFrameResponse {
-	rect: IRect;
-}
-
-/**
  * @category Custom Items
  */
 export interface IFrame {
@@ -365,7 +358,7 @@ export function beginFrame(id: string | null = null) {
 /**
  * @category Frame
  */
-export function endFrame(): IFrameResponse {
+export function endFrame(): IRect {
 	const frame = getFrameChecked();
 
 	frame.end();
@@ -374,7 +367,7 @@ export function endFrame(): IFrameResponse {
 
 	setFrame(null);
 
-	return { rect: toIRect(rect) };
+	return toIRect(rect);
 }
 
 /**
