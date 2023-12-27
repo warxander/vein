@@ -11,8 +11,8 @@ export async function textEdit(
 	text: string,
 	keyboardTitle: string,
 	maxTextLength: number,
-	isSecretMode: boolean,
-	placeholderText: string
+	isSecretMode = false,
+	placeholderText: string | null = null
 ): Promise<string> {
 	const frame = getFrameChecked();
 
@@ -24,7 +24,7 @@ export async function textEdit(
 	const w =
 		frame.tryGetItemWidth() ??
 		painter.getTextWidth(
-			'M'.repeat(Math.max(maxTextLength, placeholderText.length)),
+			'M'.repeat(Math.max(maxTextLength, placeholderText !== null ? placeholderText.length : 0)),
 			style.getPropertyAs<number>(selector, 'font-family'),
 			style.getPropertyAs<number>(selector, 'font-size')
 		) +
@@ -70,7 +70,7 @@ export async function textEdit(
 	if (inputText.length !== 0) {
 		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 		painter.drawText(isSecretMode ? inputText.replace(/./g, '*') : inputText, font, scale);
-	} else {
+	} else if (placeholderText !== null) {
 		painter.setColor(style.getPropertyAs<Color>(selector, 'placeholder-color'));
 		painter.drawText(placeholderText, font, scale);
 	}
