@@ -118,6 +118,10 @@ text-edit:active {
 	color: #893240;
 }
 
+text-edit:disabled {
+	placeholder-color: #4F5259;
+}
+
 text-edit:hover {
 	color: #F21951;
 }
