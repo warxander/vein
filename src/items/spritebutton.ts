@@ -31,6 +31,8 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 
 	frame.beginItem(w, h);
 
+	const isClicked = frame.isItemClicked();
+
 	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
 	if (state !== undefined) selector = frame.buildStyleSelector('sprite-button', state);
 
@@ -54,5 +56,5 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 
 	frame.endItem();
 
-	return frame.isItemClicked();
+	return isClicked;
 }

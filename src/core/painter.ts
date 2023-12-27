@@ -111,6 +111,6 @@ export class Painter {
 		SetTextFont(font);
 		SetTextScale(1, scale);
 
-		if (w) SetTextWrap(this.position.x, this.position.x + w);
+		if (w !== null) SetTextWrap(this.position.x, this.position.x + w);
 	}
 }

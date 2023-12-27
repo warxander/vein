@@ -21,6 +21,8 @@ export function button(text: string): boolean {
 
 	frame.beginItem(w, h);
 
+	const isClicked = frame.isItemClicked();
+
 	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
 	if (state !== undefined) selector = frame.buildStyleSelector('button', state);
 
@@ -32,5 +34,5 @@ export function button(text: string): boolean {
 
 	frame.endItem();
 
-	return frame.isItemClicked();
+	return isClicked;
 }
