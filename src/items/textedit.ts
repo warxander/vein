@@ -1,5 +1,5 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { wait } from '../core/utils';
+import { getDefaultStyleSelectorState, wait } from '../core/utils';
 import { Color } from '../core/types';
 
 const KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
@@ -54,10 +54,7 @@ export async function textEdit(
 
 	const inputText = keyboardResultText ?? text;
 
-	selector = frame.buildStyleSelector(
-		'text-edit',
-		frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined
-	);
+	selector = frame.buildStyleSelector('text-edit', getDefaultStyleSelectorState(frame));
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.drawRect(w, h);

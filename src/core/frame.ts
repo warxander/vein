@@ -8,6 +8,7 @@ import { drawItemBackground } from './utils';
 class ItemState {
 	styleId: string | undefined = undefined;
 	width: number | undefined = undefined;
+	disabled = false;
 }
 
 enum FrameFlags {
@@ -279,6 +280,10 @@ export class Frame {
 		this.itemWidthStack.pop();
 	}
 
+	setNextItemDisabled() {
+		this.nextItemState.disabled = true;
+	}
+
 	tryGetItemWidth(): number | undefined {
 		return this.nextItemState.width ?? this.itemWidthStack[this.itemWidthStack.length - 1];
 	}
@@ -299,16 +304,22 @@ export class Frame {
 		return rect.contains(this.input.getMousePosition());
 	}
 
+	isItemDisabled(): boolean {
+		return this.nextItemState.disabled;
+	}
+
 	isItemClicked(): boolean {
-		return this.input.isControlReleased(InputControl.MouseLeftButton) && this.isItemHovered();
+		return (
+			!this.isItemDisabled() && this.input.isControlReleased(InputControl.MouseLeftButton) && this.isItemHovered()
+		);
 	}
 
 	isItemHovered(): boolean {
-		return this.isAreaHovered(this.layout.getItemRect());
+		return !this.isItemDisabled() && this.isAreaHovered(this.layout.getItemRect());
 	}
 
 	isItemPressed(): boolean {
-		return this.input.isControlDown(InputControl.MouseLeftButton) && this.isItemHovered();
+		return !this.isItemDisabled() && this.input.isControlDown(InputControl.MouseLeftButton) && this.isItemHovered();
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {

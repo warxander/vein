@@ -1,5 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
+import { getDefaultStyleSelectorState } from '../core/utils';
 
 /**
  * @category Items
@@ -33,7 +34,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 
 	if (frame.isItemClicked()) isChecked = !isChecked;
 
-	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	const state = getDefaultStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('check-box', state);
 
 	const vo = (h - checkboxStyle.height) / 2;

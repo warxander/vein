@@ -1,5 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
+import { getDefaultStyleSelectorState } from '../core/utils';
 
 /**
  * @category Items
@@ -21,7 +22,7 @@ export function selectable(isSelected: boolean, text: string): boolean {
 
 	const inputIsSelected = frame.isItemClicked() ? !isSelected : isSelected;
 
-	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	const state = getDefaultStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('selectable', state);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, inputIsSelected ? 'accent-color' : 'background-color'));

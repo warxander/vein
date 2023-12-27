@@ -1,5 +1,6 @@
 import { Frame, MouseCursor, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
+import { getDefaultStyleSelectorState } from '../core/utils';
 
 /**
  * @category Items
@@ -25,7 +26,7 @@ export function hyperlink(url: string, urlText: string | null = null) {
 		if (frame.isItemClicked()) SendNUIMessage({ openUrl: { url: url } });
 	}
 
-	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	const state = getDefaultStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('hyperlink', state);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));

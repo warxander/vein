@@ -78,6 +78,7 @@ export interface IFrame {
 
 	tryGetItemWidth(): number | null;
 
+	isItemDisabled(): boolean;
 	isItemClicked(): boolean;
 	isItemHovered(): boolean;
 	isItemPressed(): boolean;
@@ -252,6 +253,10 @@ export function getFrame(): IFrame {
 			return frame.tryGetItemWidth() ?? null;
 		},
 
+		isItemDisabled(): boolean {
+			return frame.isItemDisabled();
+		},
+
 		isItemClicked(): boolean {
 			return frame.isItemClicked();
 		},
@@ -373,6 +378,20 @@ export function endFrame(): IRect {
 /**
  * @category Frame
  */
+export function beginRow() {
+	getFrameChecked().getLayout().beginRow();
+}
+
+/**
+ * @category Frame
+ */
+export function endRow() {
+	getFrameChecked().getLayout().endRow();
+}
+
+/**
+ * @category Frame
+ */
 export function isItemHovered(): boolean {
 	return getFrameChecked().isItemHovered();
 }
@@ -394,20 +413,6 @@ export function isItemPressed(): boolean {
 /**
  * @category Frame
  */
-export function beginRow() {
-	getFrameChecked().getLayout().beginRow();
-}
-
-/**
- * @category Frame
- */
-export function endRow() {
-	getFrameChecked().getLayout().endRow();
-}
-
-/**
- * @category Frame
- */
 export function setNextItemWidth(w: number) {
 	getFrameChecked().setNextItemWidth(w);
 }
@@ -424,6 +429,13 @@ export function pushItemWidth(w: number) {
  */
 export function popItemWidth() {
 	getFrameChecked().popItemWidth();
+}
+
+/**
+ * @category Frame
+ */
+export function setNextItemDisabled() {
+	getFrameChecked().setNextItemDisabled();
 }
 
 /**

@@ -1,5 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
+import { getDefaultStyleSelectorState } from '../core/utils';
 
 /**
  * @category Items
@@ -30,7 +31,7 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 
 	if (frame.isItemClicked()) isOpened = !isOpened;
 
-	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	const state = getDefaultStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('collapsing-header', state);
 
 	const sh = style.collapsingHeader.spriteWidth * GetAspectRatio(false);

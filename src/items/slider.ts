@@ -1,6 +1,7 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color, Rect, Vector2 } from '../core/types';
 import { InputControl } from '../core/input';
+import { getDefaultStyleSelectorState } from '../core/utils';
 
 /**
  * @category Items
@@ -17,10 +18,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	frame.beginItem(w, h);
 
-	const selector = frame.buildStyleSelector(
-		'slider',
-		frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined
-	);
+	const selector = frame.buildStyleSelector('slider', getDefaultStyleSelectorState(frame));
 
 	const sliderStyle = style.slider;
 
@@ -33,6 +31,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 	const frameScale = Frame.getScale();
 
 	const inputValue =
+		!frame.isItemDisabled() &&
 		frame.isAreaHovered(
 			new Rect(
 				new Vector2(

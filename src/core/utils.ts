@@ -22,3 +22,13 @@ export function drawItemBackground(frame: Frame, selector: string, w: number, h:
 		painter.drawRect(w, h);
 	}
 }
+
+export function getDefaultStyleSelectorState(frame: Frame): string | undefined {
+	return frame.isItemDisabled()
+		? 'disabled'
+		: frame.isItemPressed()
+		? 'active'
+		: frame.isItemHovered()
+		? 'hover'
+		: undefined;
+}

@@ -18,16 +18,18 @@ globalThis.exports('setNextFrameDisableMove', Exports.setNextFrameDisableMove);
 globalThis.exports('beginFrame', Exports.beginFrame);
 globalThis.exports('endFrame', Exports.endFrame);
 
+globalThis.exports('beginRow', Exports.beginRow);
+globalThis.exports('endRow', Exports.endRow);
+
 globalThis.exports('isItemHovered', Exports.isItemHovered);
 globalThis.exports('isItemClicked', Exports.isItemClicked);
 globalThis.exports('isItemPressed', Exports.isItemPressed);
 
-globalThis.exports('beginRow', Exports.beginRow);
-globalThis.exports('endRow', Exports.endRow);
-
 globalThis.exports('setNextItemWidth', Exports.setNextItemWidth);
 globalThis.exports('pushItemWidth', Exports.pushItemWidth);
 globalThis.exports('popItemWidth', Exports.popItemWidth);
+
+globalThis.exports('setNextItemDisabled', Exports.setNextItemDisabled);
 
 globalThis.exports('addStyleSheet', Exports.addStyleSheet);
 globalThis.exports('resetStyle', Exports.resetStyle);

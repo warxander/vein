@@ -9,6 +9,10 @@ button:active, sprite-button:active {
 	background-color: #893240;
 }
 
+button:disabled, check-box:disabled, collapsing-header:disabled, hyperlink:disabled, selectable:disabled, slider:disabled, sprite-button:disabled, text-edit:disabled {
+	color: #4F5259;
+}
+
 button:hover, sprite-button:hover {
 	background-color: #F21951;
 }
@@ -19,6 +23,10 @@ check-box {
 
 check-box:active, collapsing-header:active, slider:active {
 	accent-color: #893240;
+}
+
+check-box:disabled, collapsing-header:disabled, slider:disabled {
+	accent-color: #4F5259;
 }
 
 check-box:hover, collapsing-header:hover, slider:hover {
@@ -80,6 +88,10 @@ selectable {
 selectable:active {
 	accent-color: #295F52;
 	background-color: #15171C;
+}
+
+selectable:disabled {
+	accent-color: #242730;
 }
 
 selectable:hover {

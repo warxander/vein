@@ -1,6 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color } from '../core/types';
-import { drawItemBackground } from '../core/utils';
+import { drawItemBackground, getDefaultStyleSelectorState } from '../core/utils';
 
 /**
  * @category Items
@@ -23,7 +23,7 @@ export function button(text: string): boolean {
 
 	const isClicked = frame.isItemClicked();
 
-	const state: string | undefined = frame.isItemPressed() ? 'active' : frame.isItemHovered() ? 'hover' : undefined;
+	const state = getDefaultStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('button', state);
 
 	drawItemBackground(frame, selector, w, h);
