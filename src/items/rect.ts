@@ -3,7 +3,7 @@ import { getFrameChecked } from '../core/frame';
 /**
  * @category Items
  */
-export function rect(w: number, h: number, r: number, g: number, b: number, a: number) {
+export function rect(w: number, h: number, r: number, g: number, b: number, a = 255) {
 	const frame = getFrameChecked();
 	const painter = frame.getPainter();
 
