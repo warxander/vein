@@ -64,7 +64,6 @@ export class Frame {
 	private painter: Painter;
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
-	private itemWidthStack: number[] = [];
 	private itemStyleIdStack: string[] = [];
 
 	private layout: Layout;
@@ -230,6 +229,8 @@ export class Frame {
 
 		this.mouseCursor = MouseCursor.Normal;
 
+		this.layout.end();
+
 		const contentRect = this.layout.getContentRect();
 		const scale = Frame.getScale();
 
@@ -239,7 +240,6 @@ export class Frame {
 		);
 
 		this.itemStyleIdStack = [];
-		this.itemWidthStack = [];
 
 		Frame.nextState = new FrameState();
 	}
@@ -270,24 +270,16 @@ export class Frame {
 		this.nextItemState = new ItemState();
 	}
 
-	setNextItemWidth(w: number) {
-		this.nextItemState.width = w;
-	}
-
-	pushItemWidth(w: number) {
-		this.itemWidthStack.push(w);
-	}
-
-	popItemWidth() {
-		this.itemWidthStack.pop();
-	}
-
 	setNextItemDisabled() {
 		this.nextItemState.disabled = true;
 	}
 
+	setNextItemWidth(w: number) {
+		this.nextItemState.width = w;
+	}
+
 	tryGetItemWidth(): number | undefined {
-		return this.nextItemState.width ?? this.itemWidthStack[this.itemWidthStack.length - 1];
+		return this.nextItemState.width;
 	}
 
 	setNextItemStyleId(id: string) {
@@ -388,7 +380,7 @@ export class Frame {
 let frame: Frame | null = null;
 
 export function getFrameChecked(): Frame {
-	if (!frame) throw new Error('Frame is null');
+	if (!frame) throw new Error('getFrameChecked() failed: Frame is null');
 	return frame;
 }
 

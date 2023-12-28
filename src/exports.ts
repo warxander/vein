@@ -22,7 +22,7 @@ function toInputMouseControl(control: number): InputControl {
 		case 3:
 			return InputControl.MouseScrollWheelDown;
 		default:
-			throw new Error(`Unsupported mouse control ${control}`);
+			throw new Error(`toInputMouseControl() failed: Unsupported mouse control ${control}`);
 	}
 }
 
@@ -376,17 +376,35 @@ export function endFrame(): IRect {
 }
 
 /**
- * @category Frame
+ * @category Layout
  */
-export function beginRow() {
-	getFrameChecked().getLayout().beginRow();
+export function beginHorizontal(h: number | null = null) {
+	getFrameChecked()
+		.getLayout()
+		.beginHorizontal(h ?? undefined);
 }
 
 /**
- * @category Frame
+ * @category Layout
  */
-export function endRow() {
-	getFrameChecked().getLayout().endRow();
+export function endHorizontal() {
+	getFrameChecked().getLayout().endHorizontal();
+}
+
+/**
+ * @category Layout
+ */
+export function beginVertical(w: number | null = null) {
+	getFrameChecked()
+		.getLayout()
+		.beginVertical(w ?? undefined);
+}
+
+/**
+ * @category Layout
+ */
+export function endVertical() {
+	getFrameChecked().getLayout().endVertical();
 }
 
 /**
@@ -413,29 +431,15 @@ export function isItemPressed(): boolean {
 /**
  * @category Frame
  */
-export function setNextItemWidth(w: number) {
-	getFrameChecked().setNextItemWidth(w);
-}
-
-/**
- * @category Frame
- */
-export function pushItemWidth(w: number) {
-	getFrameChecked().pushItemWidth(w);
-}
-
-/**
- * @category Frame
- */
-export function popItemWidth() {
-	getFrameChecked().popItemWidth();
-}
-
-/**
- * @category Frame
- */
 export function setNextItemDisabled() {
 	getFrameChecked().setNextItemDisabled();
+}
+
+/**
+ * @category Frame
+ */
+export function setNextItemWidth(w: number) {
+	getFrameChecked().setNextItemWidth(w);
 }
 
 /**

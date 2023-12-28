@@ -1,17 +1,17 @@
 import { Frame, getFrameChecked } from '../core/frame';
+import { LayoutOrientation } from '../core/layout';
 
 /**
- * Horizontal if in row mode, vertical otherwise
  * @category Items
  */
 export function spacing(count = 1) {
 	const frame = getFrameChecked();
 
-	const isInRowMode = frame.getLayout().isInRowMode();
+	const isHorizontal = frame.getLayout().getOrientation() === LayoutOrientation.Horizontal;
 
 	const frameSpacing = Frame.getSpacing();
-	const w = isInRowMode ? frameSpacing.x * count : 0;
-	const h = isInRowMode ? 0 : frameSpacing.y * count;
+	const w = isHorizontal ? frameSpacing.x * count : 0;
+	const h = isHorizontal ? 0 : frameSpacing.y * count;
 
 	frame.beginItem(w, h);
 

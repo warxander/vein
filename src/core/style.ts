@@ -32,19 +32,19 @@ function parseValueAsColor(value: string): Color {
 	if (match)
 		return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), Math.round(parseFloat(match[4]) * 255)];
 
-	throw new Error(`Failed to parseValueAsColor() for style value: ${value}`);
+	throw new Error(`parseValueAsColor() failed: Wrong value ${value}`);
 }
 
 function parseValueAsImage(value: string): Image {
 	const match = value.match(/^url\('(\S+)',\s*'(\S+)'\)$/);
 	if (match) return [match[1], match[2]];
 
-	throw new Error(`Failed to parseValueAsImage() for style value: ${value}`);
+	throw new Error(`parseValueAsImage() failed: Wrong value ${value}`);
 }
 
 function parseValue(value: string, propertyType: StylePropertyType): StylePropertyValue {
 	const parseFunc = stylePropertyParseFuncs.get(propertyType);
-	if (parseFunc === undefined) throw new Error(`Failed to parseValue() of unsupported style type: ${propertyType}`);
+	if (parseFunc === undefined) throw new Error(`parseValue() failed: Unsupported property type ${propertyType}`);
 	return parseFunc(value);
 }
 
@@ -149,7 +149,10 @@ export class Style {
 
 	getPropertyAs<T extends StylePropertyValue>(selector: string, property: string): T {
 		const value = this.tryGetPropertyAs<T>(selector, property);
-		if (value === undefined) throw new Error(`Failed to find property ${property} for selector ${selector}`);
+		if (value === undefined)
+			throw new Error(
+				`Style.getPropertyAs() failed: Unable to find property ${property} for selector ${selector}`
+			);
 		return value;
 	}
 
