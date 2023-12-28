@@ -31,6 +31,8 @@ class FrameState {
 class FrameMemory {
 	rect = new Rect(new Vector2(0.33, 0.33));
 	movePosition: Vector2 | null = null;
+
+	constructor(public id: number) {}
 }
 
 export enum MouseCursor {
@@ -158,7 +160,7 @@ export class Frame {
 		const isNewFrame = memory === undefined;
 
 		if (memory === undefined) {
-			memory = new FrameMemory();
+			memory = new FrameMemory(Frame.frameMemory.size);
 			Frame.frameMemory.set(id, memory);
 		}
 
@@ -182,7 +184,7 @@ export class Frame {
 			scale
 		);
 
-		this.painter = new Painter(rect.position.x, rect.position.y, scale, `VEIN_${id}`);
+		this.painter = new Painter(rect.position.x, rect.position.y, scale, `VEIN_${this.memory.id}`);
 
 		if (isNewFrame || Frame.isBackgroundDisabled()) return;
 
