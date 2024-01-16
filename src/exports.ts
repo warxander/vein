@@ -3,11 +3,11 @@ import { InputControl } from './core/input';
 import { StylePropertyType } from './core/style';
 import { Rect, Vector2 } from './core/types';
 
-function toIRect(rect: Rect): IRect {
+function toRect(rect: Rect): ExportTypes.Rect {
 	return { x: rect.position.x, y: rect.position.y, w: rect.size.x, h: rect.size.y };
 }
 
-function toIVector2(vector2: Vector2): IVector2 {
+function toVector2(vector2: Vector2): ExportTypes.Vector2 {
 	return { x: vector2.x, y: vector2.y };
 }
 
@@ -23,6 +23,108 @@ function toInputMouseControl(control: number): InputControl {
 			return InputControl.MouseScrollWheelDown;
 		default:
 			throw new Error(`toInputMouseControl() failed: Unsupported mouse control ${control}`);
+	}
+}
+
+export namespace ExportTypes {
+	/**
+	 * @category Types
+	 */
+	export interface Vector2 {
+		x: number;
+		y: number;
+	}
+
+	/**
+	 * @category Types
+	 */
+	export interface Rect {
+		x: number;
+		y: number;
+		w: number;
+		h: number;
+	}
+
+	/**
+	 * @category Custom Items
+	 */
+	export interface Frame {
+		getInput(): Input;
+		getLayout(): Layout;
+		getPainter(): Painter;
+
+		getRect(): ExportTypes.Rect;
+		getScale(): number;
+
+		beginItem(w: number, h: number): void;
+		endItem(): void;
+
+		tryGetItemWidth(): number | null;
+
+		isItemDisabled(): boolean;
+		isItemClicked(): boolean;
+		isItemHovered(): boolean;
+		isItemPressed(): boolean;
+
+		setMouseCursor(mouseCursor: number): void;
+
+		buildStyleSelector(name: string, state: string | null): string;
+		getStyleProperty(selector: string, property: string): any;
+	}
+
+	/**
+	 * @category Custom Items
+	 */
+	export interface Input {
+		getMousePosition(): ExportTypes.Vector2;
+
+		/**
+		 *
+		 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
+		 */
+		isMouseControlPressed(control: number): boolean;
+
+		/**
+		 *
+		 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
+		 */
+		isMouseControlReleased(control: number): boolean;
+
+		/**
+		 *
+		 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
+		 */
+		isMouseControlDown(control: number): boolean;
+	}
+
+	/**
+	 * @category Custom Items
+	 */
+	export interface Layout {
+		getContentRect(): ExportTypes.Rect;
+		getItemRect(): ExportTypes.Rect;
+	}
+
+	/**
+	 * @category Custom Items
+	 */
+	export interface Painter {
+		move(x: number, y: number): void;
+
+		getPosition(): ExportTypes.Vector2;
+		setPosition(x: number, y: number): void;
+
+		setColor(r: number, g: number, b: number, a: number): void;
+
+		drawRect(w: number, h: number): void;
+
+		drawSprite(dict: string, name: string, w: number, h: number): void;
+
+		getTextWidth(text: string, font: number, scale: number): number;
+		getTextLineCount(text: string, font: number, scale: number, w: number): number;
+
+		drawText(text: string, font: number, scale: number): void;
+		drawMultilineText(text: string, font: number, scale: number, w: number): void;
 	}
 }
 
@@ -45,118 +147,18 @@ export * from './items/textarea';
 export * from './items/textedit';
 
 /**
- * @category Types
- */
-export interface IVector2 {
-	x: number;
-	y: number;
-}
-
-/**
- * @category Types
- */
-export interface IRect {
-	x: number;
-	y: number;
-	w: number;
-	h: number;
-}
-
-/**
  * @category Custom Items
  */
-export interface IFrame {
-	getInput(): IInput;
-	getLayout(): ILayout;
-	getPainter(): IPainter;
-
-	getRect(): IRect;
-	getScale(): number;
-
-	beginItem(w: number, h: number): void;
-	endItem(): void;
-
-	tryGetItemWidth(): number | null;
-
-	isItemDisabled(): boolean;
-	isItemClicked(): boolean;
-	isItemHovered(): boolean;
-	isItemPressed(): boolean;
-
-	setMouseCursor(mouseCursor: number): void;
-
-	buildStyleSelector(name: string, state: string | null): string;
-	getStyleProperty(selector: string, property: string): any;
-}
-
-/**
- * @category Custom Items
- */
-export interface IInput {
-	getMousePosition(): IVector2;
-
-	/**
-	 *
-	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
-	 */
-	isMouseControlPressed(control: number): boolean;
-
-	/**
-	 *
-	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
-	 */
-	isMouseControlReleased(control: number): boolean;
-
-	/**
-	 *
-	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
-	 */
-	isMouseControlDown(control: number): boolean;
-}
-
-/**
- * @category Custom Items
- */
-export interface ILayout {
-	getContentRect(): IRect;
-	getItemRect(): IRect;
-}
-
-/**
- * @category Custom Items
- */
-export interface IPainter {
-	move(x: number, y: number): void;
-
-	getPosition(): IVector2;
-	setPosition(x: number, y: number): void;
-
-	setColor(r: number, g: number, b: number, a: number): void;
-
-	drawRect(w: number, h: number): void;
-
-	drawSprite(dict: string, name: string, w: number, h: number): void;
-
-	getTextWidth(text: string, font: number, scale: number): number;
-	getTextLineCount(text: string, font: number, scale: number, w: number): number;
-
-	drawText(text: string, font: number, scale: number): void;
-	drawMultilineText(text: string, font: number, scale: number, w: number): void;
-}
-
-/**
- * @category Custom Items
- */
-export function getFrame(): IFrame {
+export function getFrame(): ExportTypes.Frame {
 	const frame = getFrameChecked();
 
 	return {
-		getInput(): IInput {
+		getInput(): ExportTypes.Input {
 			const input = frame.getInput();
 
 			return {
-				getMousePosition(): IVector2 {
-					return toIVector2(input.getMousePosition());
+				getMousePosition(): ExportTypes.Vector2 {
+					return toVector2(input.getMousePosition());
 				},
 
 				isMouseControlPressed(control: number): boolean {
@@ -173,21 +175,21 @@ export function getFrame(): IFrame {
 			};
 		},
 
-		getLayout(): ILayout {
+		getLayout(): ExportTypes.Layout {
 			const layout = frame.getLayout();
 
 			return {
-				getContentRect(): IRect {
-					return toIRect(layout.getContentRect());
+				getContentRect(): ExportTypes.Rect {
+					return toRect(layout.getContentRect());
 				},
 
-				getItemRect(): IRect {
-					return toIRect(layout.getItemRect());
+				getItemRect(): ExportTypes.Rect {
+					return toRect(layout.getItemRect());
 				}
 			};
 		},
 
-		getPainter(): IPainter {
+		getPainter(): ExportTypes.Painter {
 			const painter = frame.getPainter();
 
 			return {
@@ -195,8 +197,8 @@ export function getFrame(): IFrame {
 					painter.move(x, y);
 				},
 
-				getPosition(): IVector2 {
-					return toIVector2(painter.getPosition());
+				getPosition(): ExportTypes.Vector2 {
+					return toVector2(painter.getPosition());
 				},
 
 				setPosition(x: number, y: number) {
@@ -233,8 +235,8 @@ export function getFrame(): IFrame {
 			};
 		},
 
-		getRect(): IRect {
-			return toIRect(frame.getRect());
+		getRect(): ExportTypes.Rect {
+			return toRect(frame.getRect());
 		},
 
 		getScale(): number {
@@ -363,7 +365,7 @@ export function beginFrame(id: string | null = null) {
 /**
  * @category Frame
  */
-export function endFrame(): IRect {
+export function endFrame(): ExportTypes.Rect {
 	const frame = getFrameChecked();
 
 	frame.end();
@@ -372,7 +374,7 @@ export function endFrame(): IRect {
 
 	setFrame(null);
 
-	return toIRect(rect);
+	return toRect(rect);
 }
 
 /**
