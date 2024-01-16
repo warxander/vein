@@ -15,7 +15,7 @@ export function drawItemBackground(frame: Frame, selector: string, w: number, h:
 	const backgroundImage = style.tryGetPropertyAs<Image>(selector, 'background-image');
 	if (backgroundImage !== undefined) {
 		const backgroundColor = style.tryGetPropertyAs<Color>(selector, 'background-color');
-		painter.setColor(backgroundColor ?? Style.SPRITE_COLOR);
+		painter.setColor(backgroundColor ?? [255, 255, 255, 255]);
 		painter.drawSprite(backgroundImage[0], backgroundImage[1], w, h);
 	} else {
 		painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));

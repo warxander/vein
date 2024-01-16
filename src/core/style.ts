@@ -49,8 +49,6 @@ function parseValue(value: string, propertyType: StylePropertyType): StyleProper
 }
 
 export class Style {
-	static readonly SPRITE_COLOR: Color = [254, 254, 254, 255];
-
 	private static defaultSheet = LoadResourceFile('vein', 'src/style.css');
 
 	private static propertyTypes = new Map<string, StylePropertyType>([
