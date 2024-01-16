@@ -6,9 +6,10 @@ import { Style, StylePropertyValue } from './style';
 import { drawItemBackground } from './utils';
 
 class ItemState {
-	styleId: string | undefined = undefined;
-	width: number | undefined = undefined;
 	disabled = false;
+	position: Vector2 | undefined = undefined;
+	width: number | undefined = undefined;
+	styleId: string | undefined = undefined;
 }
 
 enum FrameFlags {
@@ -245,7 +246,7 @@ export class Frame {
 	}
 
 	beginItem(w: number, h: number) {
-		this.layout.beginItem(w, h);
+		this.layout.beginItem(this.nextItemState.position, w, h);
 
 		const itemRect = this.layout.getItemRect();
 		this.painter.setPosition(itemRect.position.x, itemRect.position.y);
@@ -272,6 +273,10 @@ export class Frame {
 
 	setNextItemDisabled() {
 		this.nextItemState.disabled = true;
+	}
+
+	setNextItemPosition(x: number, y: number) {
+		this.nextItemState.position = new Vector2(x, y);
 	}
 
 	setNextItemWidth(w: number) {

@@ -440,6 +440,13 @@ export function setNextItemDisabled() {
 /**
  * @category Frame
  */
+export function setNextItemPosition(x: number, y: number) {
+	getFrameChecked().setNextItemPosition(x, y);
+}
+
+/**
+ * @category Frame
+ */
 export function setNextItemWidth(w: number) {
 	getFrameChecked().setNextItemWidth(w);
 }

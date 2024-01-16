@@ -29,6 +29,7 @@ globalThis.exports('isItemClicked', Exports.isItemClicked);
 globalThis.exports('isItemPressed', Exports.isItemPressed);
 
 globalThis.exports('setNextItemDisabled', Exports.setNextItemDisabled);
+globalThis.exports('setNextItemPosition', Exports.setNextItemPosition);
 globalThis.exports('setNextItemWidth', Exports.setNextItemWidth);
 
 globalThis.exports('addStyleSheet', Exports.addStyleSheet);

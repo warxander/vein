@@ -15,6 +15,8 @@ export class Layout {
 	private layoutStateStack: LayoutState[] = [];
 
 	private itemRect = new Rect();
+	private isCustomItemPosition = false;
+
 	private contentRect: Rect;
 
 	constructor(x: number, y: number, private itemSpacing: Vector2, private scale: number) {
@@ -35,11 +37,21 @@ export class Layout {
 		this.contentRect.size.y = Math.max(this.contentRect.size.y, layoutSize.y);
 	}
 
-	beginItem(w: number, h: number) {
-		this.itemRect = new Rect(this.getItemPosition(), new Vector2(w * this.scale, h * this.scale));
+	beginItem(position: Vector2 | undefined, w: number, h: number) {
+		this.itemRect = new Rect(
+			position !== undefined ? position : this.getItemPosition(),
+			new Vector2(w * this.scale, h * this.scale)
+		);
+
+		this.isCustomItemPosition = position !== undefined;
 	}
 
 	endItem() {
+		if (this.isCustomItemPosition) {
+			this.isCustomItemPosition = false;
+			return;
+		}
+
 		const w = this.itemRect.size.x;
 		const h = this.itemRect.size.y;
 
