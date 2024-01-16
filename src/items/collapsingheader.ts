@@ -20,9 +20,9 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 	let w = 0;
 	if (iw !== undefined) w = iw;
 	else {
-		w += style.collapsingHeader.spriteWidth;
+		w += style.collapsingHeader.sprite.width;
 		const tw = painter.getTextWidth(text, font, scale);
-		if (tw !== 0) w += tw + style.collapsingHeader.padding;
+		if (tw !== 0) w += tw;
 	}
 
 	const h = style.item.height;
@@ -34,15 +34,15 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 	const state = getDefaultStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('collapsing-header', state);
 
-	const sh = style.collapsingHeader.spriteWidth * GetAspectRatio(false);
-	painter.move(0, (h - sh) / 2);
+	const sh = style.collapsingHeader.sprite.width * GetAspectRatio(false);
+	painter.move(style.collapsingHeader.sprite.offset, (h - sh) / 2);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'accent-color'));
 	RequestStreamedTextureDict('commonmenu', false);
-	painter.drawSprite('commonmenu', 'arrowright', style.collapsingHeader.spriteWidth, sh, isOpened ? 90 : 0);
+	painter.drawSprite('commonmenu', 'arrowright', style.collapsingHeader.sprite.width, sh, isOpened ? 90 : 0);
 
 	painter.move(
-		style.collapsingHeader.spriteWidth + style.collapsingHeader.padding,
+		style.collapsingHeader.sprite.width - style.collapsingHeader.sprite.offset + style.collapsingHeader.textOffset,
 		sh / 2 - GetRenderedCharacterHeight(scale, font) / 2 + style.item.textOffset
 	);
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));

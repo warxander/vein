@@ -82,22 +82,25 @@ export class Style {
 		this.reset();
 
 		this.button = {
-			padding: 0.005
+			padding: 0.0045
 		};
 
 		this.checkbox = {
 			height: 0.02,
-			padding: 0.0025,
+			padding: 0.0018,
 			inlineHeight: 0.0035
 		};
 
 		this.collapsingHeader = {
-			spriteWidth: 0.0125,
-			padding: 0.001
+			sprite: {
+				width: 0.0144,
+				offset: -0.001
+			},
+			textOffset: -0.002
 		};
 
 		this.label = {
-			text: { offset: -0.005 }
+			text: { offset: -0.0045 }
 		};
 
 		this.progressBar = {
@@ -105,37 +108,37 @@ export class Style {
 		};
 
 		this.selectable = {
-			padding: 0.005
+			padding: 0.0045
 		};
 
 		this.separator = {
-			height: 0.001
+			height: 0.0009
 		};
 
 		this.slider = {
-			height: 0.002,
-			thumbSize: new Vector2(0.004, 0.02),
-			padding: 0.005
+			height: 0.0018,
+			thumbSize: new Vector2(0.0036, 0.018),
+			padding: 0.0045
 		};
 
 		this.spriteButton = {
-			spriteWidth: 0.016,
-			padding: 0.001
+			spriteWidth: 0.0144,
+			padding: 0.0009
 		};
 
 		this.textEdit = {
-			padding: 0.002
+			padding: 0.0018
 		};
 
 		this.item = {
-			height: 0.035,
-			textOffset: -0.0035
+			height: 0.0315,
+			textOffset: -0.0038
 		};
 
 		this.frame = {
-			borderWidth: 0.00104,
-			padding: new Vector2(0.01, 0.018),
-			itemSpacing: new Vector2(0.005, 0.01)
+			borderWidth: 0.0009,
+			padding: new Vector2(0.008, 0.0142),
+			itemSpacing: new Vector2(0.004, 0.0071)
 		};
 	}
 
