@@ -55,6 +55,7 @@ export namespace ExportTypes {
 
 		getRect(): ExportTypes.Rect;
 		getScale(): number;
+		getSpacing(): ExportTypes.Vector2;
 
 		beginItem(w: number, h: number): void;
 		endItem(): void;
@@ -240,6 +241,10 @@ export function getFrame(): ExportTypes.Frame {
 
 		getScale(): number {
 			return Frame.getScale();
+		},
+
+		getSpacing(): ExportTypes.Vector2 {
+			return toVector2(Frame.getSpacing());
 		},
 
 		beginItem(w: number, h: number) {
