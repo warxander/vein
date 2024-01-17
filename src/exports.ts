@@ -447,6 +447,13 @@ export function setNextItemPosition(x: number, y: number) {
 /**
  * @category Frame
  */
+export function setNextItemSpacing(spacing: number) {
+	getFrameChecked().setNextItemSpacing(spacing);
+}
+
+/**
+ * @category Frame
+ */
 export function setNextItemWidth(w: number) {
 	getFrameChecked().setNextItemWidth(w);
 }

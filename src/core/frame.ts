@@ -8,6 +8,7 @@ import { drawItemBackground } from './utils';
 class ItemState {
 	disabled = false;
 	position: Vector2 | undefined = undefined;
+	spacing: number | undefined = undefined;
 	width: number | undefined = undefined;
 	styleId: string | undefined = undefined;
 }
@@ -246,7 +247,7 @@ export class Frame {
 	}
 
 	beginItem(w: number, h: number) {
-		this.layout.beginItem(this.nextItemState.position, w, h);
+		this.layout.beginItem(this.nextItemState.position, this.nextItemState.spacing, w, h);
 
 		const itemRect = this.layout.getItemRect();
 		this.painter.setPosition(itemRect.position.x, itemRect.position.y);
@@ -277,6 +278,10 @@ export class Frame {
 
 	setNextItemPosition(x: number, y: number) {
 		this.nextItemState.position = new Vector2(x, y);
+	}
+
+	setNextItemSpacing(spacing: number) {
+		this.nextItemState.spacing = spacing;
 	}
 
 	setNextItemWidth(w: number) {

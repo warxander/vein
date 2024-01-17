@@ -14,8 +14,10 @@ export enum LayoutOrientation {
 export class Layout {
 	private layoutStack: LayoutState[] = [];
 
-	private itemRect = new Rect();
 	private isCustomItemPosition = false;
+	private customItemSpacing: number | undefined = undefined;
+
+	private itemRect = new Rect();
 
 	private contentRect: Rect;
 
@@ -37,22 +39,21 @@ export class Layout {
 		this.contentRect.size.y = Math.max(this.contentRect.size.y, layoutSize.y);
 	}
 
-	beginItem(position: Vector2 | undefined, w: number, h: number) {
+	beginItem(position: Vector2 | undefined, spacing: number | undefined, w: number, h: number) {
+		this.isCustomItemPosition = position !== undefined;
+		this.customItemSpacing = spacing;
+
 		this.itemRect = new Rect(
 			position !== undefined ? position : this.getNextItemPosition(),
 			new Vector2(w * this.scale, h * this.scale)
 		);
-
-		this.isCustomItemPosition = position !== undefined;
 	}
 
 	endItem() {
-		if (this.isCustomItemPosition) {
-			this.isCustomItemPosition = false;
-			return;
-		}
+		if (!this.isCustomItemPosition) this.extendTopLayout(this.itemRect.size);
 
-		this.extendTopLayout(this.itemRect.size);
+		this.customItemSpacing = undefined;
+		this.isCustomItemPosition = false;
 	}
 
 	beginHorizontal(h?: number) {
@@ -68,9 +69,7 @@ export class Layout {
 		if (this.getTopLayout().orientation !== LayoutOrientation.Horizontal)
 			throw new Error('Layout.endHorizontal() failed: Vertical layout is active');
 
-		const size = this.getTopLayout().rect.size;
-		this.layoutStack.pop();
-		this.extendTopLayout(size);
+		this.endTopLayout();
 	}
 
 	beginVertical(w?: number) {
@@ -86,9 +85,7 @@ export class Layout {
 		if (this.getTopLayout().orientation !== LayoutOrientation.Vertical)
 			throw new Error('Layout.endVertical() failed: Horizontal layout is active');
 
-		const size = this.getTopLayout().rect.size;
-		this.layoutStack.pop();
-		this.extendTopLayout(size);
+		this.endTopLayout();
 	}
 
 	getContentRect(): Rect {
@@ -106,13 +103,25 @@ export class Layout {
 		switch (layout.orientation) {
 			case LayoutOrientation.Horizontal:
 				return new Vector2(
-					layoutRect.position.x + layoutRect.size.x + (layout.isFirstUse ? 0 : this.itemSpacing.x),
+					layoutRect.position.x +
+						layoutRect.size.x +
+						(layout.isFirstUse
+							? 0
+							: this.customItemSpacing !== undefined
+							? this.customItemSpacing
+							: this.itemSpacing.x),
 					layoutRect.position.y
 				);
 			case LayoutOrientation.Vertical:
 				return new Vector2(
 					layoutRect.position.x,
-					layoutRect.position.y + layoutRect.size.y + (layout.isFirstUse ? 0 : this.itemSpacing.y)
+					layoutRect.position.y +
+						layoutRect.size.y +
+						(layout.isFirstUse
+							? 0
+							: this.customItemSpacing !== undefined
+							? this.customItemSpacing
+							: this.itemSpacing.y)
 				);
 		}
 	}
@@ -121,18 +130,36 @@ export class Layout {
 		return this.layoutStack[this.layoutStack.length - 1];
 	}
 
+	private endTopLayout() {
+		const size = this.getTopLayout().rect.size;
+		this.layoutStack.pop();
+		this.extendTopLayout(size);
+	}
+
 	private extendTopLayout(size: Vector2) {
 		const layout = this.getTopLayout();
 		const layoutSize = layout.rect.size;
 
 		switch (layout.orientation) {
 			case LayoutOrientation.Horizontal:
-				layoutSize.x += size.x + (layout.isFirstUse ? 0 : this.itemSpacing.x);
+				layoutSize.x +=
+					size.x +
+					(layout.isFirstUse
+						? 0
+						: this.customItemSpacing !== undefined
+						? this.customItemSpacing
+						: this.itemSpacing.x);
 				layoutSize.y = Math.max(layoutSize.y, size.y);
 				break;
 			case LayoutOrientation.Vertical:
 				layoutSize.x = Math.max(layoutSize.x, size.x);
-				layoutSize.y += size.y + (layout.isFirstUse ? 0 : this.itemSpacing.y);
+				layoutSize.y +=
+					size.y +
+					(layout.isFirstUse
+						? 0
+						: this.customItemSpacing !== undefined
+						? this.customItemSpacing
+						: this.itemSpacing.y);
 				break;
 		}
 
