@@ -21,7 +21,7 @@ export function textArea(text: string, w: number) {
 	frame.beginItem(w, h);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	if (lc == 1) painter.move(0, style.item.textOffset);
+	if (lc === 1) painter.move(0, style.item.textOffset);
 
 	painter.drawMultilineText(text, font, scale, w);
 
