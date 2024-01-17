@@ -382,35 +382,31 @@ export function endFrame(): ExportTypes.Rect {
 }
 
 /**
- * @category Layout
+ * @category Frame
  */
 export function beginHorizontal(h: number | null = null) {
-	getFrameChecked()
-		.getLayout()
-		.beginHorizontal(h ?? undefined);
+	getFrameChecked().beginHorizontal(h ?? undefined);
 }
 
 /**
- * @category Layout
+ * @category Frame
  */
 export function endHorizontal() {
-	getFrameChecked().getLayout().endHorizontal();
+	getFrameChecked().endHorizontal();
 }
 
 /**
- * @category Layout
+ * @category Frame
  */
 export function beginVertical(w: number | null = null) {
-	getFrameChecked()
-		.getLayout()
-		.beginVertical(w ?? undefined);
+	getFrameChecked().beginVertical(w ?? undefined);
 }
 
 /**
- * @category Layout
+ * @category Frame
  */
 export function endVertical() {
-	getFrameChecked().getLayout().endVertical();
+	getFrameChecked().endVertical();
 }
 
 /**

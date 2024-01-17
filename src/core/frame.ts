@@ -181,8 +181,7 @@ export class Frame {
 		this.layout = new Layout(
 			rect.position.x + Frame.style.frame.padding.x * scale,
 			rect.position.y + Frame.style.frame.padding.y * scale,
-			new Vector2(spacing.x * scale, spacing.y * scale),
-			scale
+			new Vector2(spacing.x * scale, spacing.y * scale)
 		);
 
 		this.painter = new Painter(rect.position.x, rect.position.y, scale, `VEIN_${this.memory.id}`);
@@ -246,8 +245,31 @@ export class Frame {
 		Frame.nextState = new FrameState();
 	}
 
+	beginHorizontal(h?: number) {
+		this.layout.beginHorizontal(h !== undefined ? h * Frame.getScale() : undefined);
+	}
+
+	endHorizontal() {
+		this.layout.endHorizontal();
+	}
+
+	beginVertical(w?: number) {
+		this.layout.beginVertical(w !== undefined ? w * Frame.getScale() : undefined);
+	}
+
+	endVertical() {
+		this.layout.endVertical();
+	}
+
 	beginItem(w: number, h: number) {
-		this.layout.beginItem(this.nextItemState.position, this.nextItemState.spacing, w, h);
+		const scale = Frame.getScale();
+
+		this.layout.beginItem(
+			this.nextItemState.position,
+			this.nextItemState.spacing !== undefined ? this.nextItemState.spacing * scale : undefined,
+			w * scale,
+			h * scale
+		);
 
 		const itemRect = this.layout.getItemRect();
 		this.painter.setPosition(itemRect.position.x, itemRect.position.y);

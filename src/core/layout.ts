@@ -21,7 +21,7 @@ export class Layout {
 
 	private contentRect: Rect;
 
-	constructor(x: number, y: number, private itemSpacing: Vector2, private scale: number) {
+	constructor(x: number, y: number, private itemSpacing: Vector2) {
 		this.layoutStack.push(new LayoutState(LayoutOrientation.Vertical, new Rect(new Vector2(x, y))));
 
 		this.contentRect = new Rect(new Vector2(x, y));
@@ -43,10 +43,7 @@ export class Layout {
 		this.isCustomItemPosition = position !== undefined;
 		this.customItemSpacing = spacing;
 
-		this.itemRect = new Rect(
-			position !== undefined ? position : this.getNextItemPosition(),
-			new Vector2(w * this.scale, h * this.scale)
-		);
+		this.itemRect = new Rect(position !== undefined ? position : this.getNextItemPosition(), new Vector2(w, h));
 	}
 
 	endItem() {
@@ -60,7 +57,7 @@ export class Layout {
 		this.layoutStack.push(
 			new LayoutState(
 				LayoutOrientation.Horizontal,
-				new Rect(this.getNextItemPosition(), new Vector2(0, h !== undefined ? h * this.scale : 0))
+				new Rect(this.getNextItemPosition(), new Vector2(0, h !== undefined ? h : 0))
 			)
 		);
 	}
@@ -76,7 +73,7 @@ export class Layout {
 		this.layoutStack.push(
 			new LayoutState(
 				LayoutOrientation.Vertical,
-				new Rect(this.getNextItemPosition(), new Vector2(w !== undefined ? w * this.scale : 0, 0))
+				new Rect(this.getNextItemPosition(), new Vector2(w !== undefined ? w : 0, 0))
 			)
 		);
 	}
