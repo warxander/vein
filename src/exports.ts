@@ -140,7 +140,6 @@ export * from './items/rect';
 export * from './items/selectable';
 export * from './items/separator';
 export * from './items/slider';
-export * from './items/spacing';
 export * from './items/sprite';
 export * from './items/spritebutton';
 export * from './items/textarea';

@@ -57,7 +57,6 @@ globalThis.exports('rect', Exports.rect);
 globalThis.exports('selectable', Exports.selectable);
 globalThis.exports('separator', Exports.separator);
 globalThis.exports('slider', Exports.slider);
-globalThis.exports('spacing', Exports.spacing);
 globalThis.exports('sprite', Exports.sprite);
 globalThis.exports('spriteButton', Exports.spriteButton);
 globalThis.exports('textArea', Exports.textArea);
