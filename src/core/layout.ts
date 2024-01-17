@@ -12,7 +12,7 @@ export enum LayoutOrientation {
 }
 
 export class Layout {
-	private layoutStateStack: LayoutState[] = [];
+	private layoutStack: LayoutState[] = [];
 
 	private itemRect = new Rect();
 	private isCustomItemPosition = false;
@@ -20,26 +20,26 @@ export class Layout {
 	private contentRect: Rect;
 
 	constructor(x: number, y: number, private itemSpacing: Vector2, private scale: number) {
-		this.layoutStateStack.push(new LayoutState(LayoutOrientation.Vertical, new Rect(new Vector2(x, y))));
+		this.layoutStack.push(new LayoutState(LayoutOrientation.Vertical, new Rect(new Vector2(x, y))));
 
 		this.contentRect = new Rect(new Vector2(x, y));
 	}
 
 	getOrientation(): LayoutOrientation {
-		return this.layoutStateStack[this.layoutStateStack.length - 1].orientation;
+		return this.getTopLayout().orientation;
 	}
 
 	end() {
-		if (this.layoutStateStack.length !== 1) throw new Error('Layout.end() failed: Stack is not empty');
+		if (this.layoutStack.length !== 1) throw new Error('Layout.end() failed: Stack is not empty');
 
-		const layoutSize = this.layoutStateStack[this.layoutStateStack.length - 1].rect.size;
+		const layoutSize = this.getTopLayout().rect.size;
 		this.contentRect.size.x = Math.max(this.contentRect.size.x, layoutSize.x);
 		this.contentRect.size.y = Math.max(this.contentRect.size.y, layoutSize.y);
 	}
 
 	beginItem(position: Vector2 | undefined, w: number, h: number) {
 		this.itemRect = new Rect(
-			position !== undefined ? position : this.getItemPosition(),
+			position !== undefined ? position : this.getNextItemPosition(),
 			new Vector2(w * this.scale, h * this.scale)
 		);
 
@@ -52,66 +52,43 @@ export class Layout {
 			return;
 		}
 
-		const w = this.itemRect.size.x;
-		const h = this.itemRect.size.y;
-
-		const layoutState = this.layoutStateStack[this.layoutStateStack.length - 1];
-		const layoutSize = layoutState.rect.size;
-
-		switch (layoutState.orientation) {
-			case LayoutOrientation.Horizontal:
-				layoutSize.x += w + (layoutState.isFirstUse ? 0 : this.itemSpacing.x);
-				layoutSize.y = Math.max(layoutSize.y, h);
-				break;
-			case LayoutOrientation.Vertical:
-				layoutSize.x = Math.max(layoutSize.x, w);
-				layoutSize.y += h + (layoutState.isFirstUse ? 0 : this.itemSpacing.y);
-				break;
-		}
-
-		layoutState.isFirstUse = false;
+		this.extendTopLayout(this.itemRect.size);
 	}
 
 	beginHorizontal(h?: number) {
-		this.layoutStateStack.push(
+		this.layoutStack.push(
 			new LayoutState(
 				LayoutOrientation.Horizontal,
-				new Rect(this.getItemPosition(), new Vector2(0, h !== undefined ? h * this.scale : 0))
+				new Rect(this.getNextItemPosition(), new Vector2(0, h !== undefined ? h * this.scale : 0))
 			)
 		);
 	}
 
 	endHorizontal() {
-		if (this.layoutStateStack[this.layoutStateStack.length - 1].orientation !== LayoutOrientation.Horizontal)
+		if (this.getTopLayout().orientation !== LayoutOrientation.Horizontal)
 			throw new Error('Layout.endHorizontal() failed: Vertical layout is active');
 
-		const size = this.layoutStateStack[this.layoutStateStack.length - 1].rect.size;
-
-		this.layoutStateStack.pop();
-		this.endLayout(size);
-
-		this.layoutStateStack[this.layoutStateStack.length - 1].isFirstUse = false;
+		const size = this.getTopLayout().rect.size;
+		this.layoutStack.pop();
+		this.extendTopLayout(size);
 	}
 
 	beginVertical(w?: number) {
-		this.layoutStateStack.push(
+		this.layoutStack.push(
 			new LayoutState(
 				LayoutOrientation.Vertical,
-				new Rect(this.getItemPosition(), new Vector2(w !== undefined ? w * this.scale : 0, 0))
+				new Rect(this.getNextItemPosition(), new Vector2(w !== undefined ? w * this.scale : 0, 0))
 			)
 		);
 	}
 
 	endVertical() {
-		if (this.layoutStateStack[this.layoutStateStack.length - 1].orientation !== LayoutOrientation.Vertical)
+		if (this.getTopLayout().orientation !== LayoutOrientation.Vertical)
 			throw new Error('Layout.endVertical() failed: Horizontal layout is active');
 
-		const size = this.layoutStateStack[this.layoutStateStack.length - 1].rect.size;
-
-		this.layoutStateStack.pop();
-		this.endLayout(size);
-
-		this.layoutStateStack[this.layoutStateStack.length - 1].isFirstUse = false;
+		const size = this.getTopLayout().rect.size;
+		this.layoutStack.pop();
+		this.extendTopLayout(size);
 	}
 
 	getContentRect(): Rect {
@@ -122,37 +99,43 @@ export class Layout {
 		return this.itemRect;
 	}
 
-	private getItemPosition(): Vector2 {
-		const layoutState = this.layoutStateStack[this.layoutStateStack.length - 1];
-		const layoutRect = layoutState.rect;
+	private getNextItemPosition(): Vector2 {
+		const layout = this.getTopLayout();
+		const layoutRect = layout.rect;
 
-		switch (layoutState.orientation) {
+		switch (layout.orientation) {
 			case LayoutOrientation.Horizontal:
 				return new Vector2(
-					layoutRect.position.x + layoutRect.size.x + (layoutState.isFirstUse ? 0 : this.itemSpacing.x),
+					layoutRect.position.x + layoutRect.size.x + (layout.isFirstUse ? 0 : this.itemSpacing.x),
 					layoutRect.position.y
 				);
 			case LayoutOrientation.Vertical:
 				return new Vector2(
 					layoutRect.position.x,
-					layoutRect.position.y + layoutRect.size.y + (layoutState.isFirstUse ? 0 : this.itemSpacing.y)
+					layoutRect.position.y + layoutRect.size.y + (layout.isFirstUse ? 0 : this.itemSpacing.y)
 				);
 		}
 	}
 
-	private endLayout(size: Vector2) {
-		const layoutState = this.layoutStateStack[this.layoutStateStack.length - 1];
-		const layoutSize = layoutState.rect.size;
+	private getTopLayout(): LayoutState {
+		return this.layoutStack[this.layoutStack.length - 1];
+	}
 
-		switch (layoutState.orientation) {
+	private extendTopLayout(size: Vector2) {
+		const layout = this.getTopLayout();
+		const layoutSize = layout.rect.size;
+
+		switch (layout.orientation) {
 			case LayoutOrientation.Horizontal:
-				layoutSize.x += size.x + (layoutState.isFirstUse ? 0 : this.itemSpacing.x);
+				layoutSize.x += size.x + (layout.isFirstUse ? 0 : this.itemSpacing.x);
 				layoutSize.y = Math.max(layoutSize.y, size.y);
 				break;
 			case LayoutOrientation.Vertical:
 				layoutSize.x = Math.max(layoutSize.x, size.x);
-				layoutSize.y += size.y + (layoutState.isFirstUse ? 0 : this.itemSpacing.y);
+				layoutSize.y += size.y + (layout.isFirstUse ? 0 : this.itemSpacing.y);
 				break;
 		}
+
+		layout.isFirstUse = false;
 	}
 }
