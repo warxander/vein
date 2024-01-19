@@ -162,7 +162,7 @@ export class Style {
 		property: string,
 		allowId: boolean = true
 	): T | undefined {
-		let value: any = undefined;
+		let value: unknown = undefined;
 
 		let properties = this.selectorProperties.get(selector);
 		if (properties !== undefined) value = properties.get(property);
@@ -194,7 +194,7 @@ export class Style {
 	addSheet(sheet: string) {
 		try {
 			this.addSheetImpl(sheet);
-		} catch (e: any) {
+		} catch (e: unknown) {
 			console.log(`Failed to add style sheet: ${e}`);
 		}
 	}

@@ -43,7 +43,7 @@ export class Layout {
 		this.isCustomItemPosition = position !== undefined;
 		this.customItemSpacing = spacing;
 
-		this.itemRect = new Rect(position !== undefined ? position : this.getNextItemPosition(), new Vector2(w, h));
+		this.itemRect = new Rect(position ?? this.getNextItemPosition(), new Vector2(w, h));
 	}
 
 	endItem() {
@@ -55,10 +55,7 @@ export class Layout {
 
 	beginHorizontal(h?: number) {
 		this.layoutStack.push(
-			new LayoutState(
-				LayoutOrientation.Horizontal,
-				new Rect(this.getNextItemPosition(), new Vector2(0, h !== undefined ? h : 0))
-			)
+			new LayoutState(LayoutOrientation.Horizontal, new Rect(this.getNextItemPosition(), new Vector2(0, h ?? 0)))
 		);
 	}
 
@@ -71,10 +68,7 @@ export class Layout {
 
 	beginVertical(w?: number) {
 		this.layoutStack.push(
-			new LayoutState(
-				LayoutOrientation.Vertical,
-				new Rect(this.getNextItemPosition(), new Vector2(w !== undefined ? w : 0, 0))
-			)
+			new LayoutState(LayoutOrientation.Vertical, new Rect(this.getNextItemPosition(), new Vector2(w ?? 0, 0)))
 		);
 	}
 
@@ -102,11 +96,7 @@ export class Layout {
 				return new Vector2(
 					layoutRect.position.x +
 						layoutRect.size.x +
-						(layout.isFirstUse
-							? 0
-							: this.customItemSpacing !== undefined
-							? this.customItemSpacing
-							: this.itemSpacing.x),
+						(layout.isFirstUse ? 0 : this.customItemSpacing ?? this.itemSpacing.x),
 					layoutRect.position.y
 				);
 			case LayoutOrientation.Vertical:
@@ -114,11 +104,7 @@ export class Layout {
 					layoutRect.position.x,
 					layoutRect.position.y +
 						layoutRect.size.y +
-						(layout.isFirstUse
-							? 0
-							: this.customItemSpacing !== undefined
-							? this.customItemSpacing
-							: this.itemSpacing.y)
+						(layout.isFirstUse ? 0 : this.customItemSpacing ?? this.itemSpacing.y)
 				);
 		}
 	}
@@ -139,24 +125,12 @@ export class Layout {
 
 		switch (layout.orientation) {
 			case LayoutOrientation.Horizontal:
-				layoutSize.x +=
-					size.x +
-					(layout.isFirstUse
-						? 0
-						: this.customItemSpacing !== undefined
-						? this.customItemSpacing
-						: this.itemSpacing.x);
+				layoutSize.x += size.x + (layout.isFirstUse ? 0 : this.customItemSpacing ?? this.itemSpacing.x);
 				layoutSize.y = Math.max(layoutSize.y, size.y);
 				break;
 			case LayoutOrientation.Vertical:
 				layoutSize.x = Math.max(layoutSize.x, size.x);
-				layoutSize.y +=
-					size.y +
-					(layout.isFirstUse
-						? 0
-						: this.customItemSpacing !== undefined
-						? this.customItemSpacing
-						: this.itemSpacing.y);
+				layoutSize.y += size.y + (layout.isFirstUse ? 0 : this.customItemSpacing ?? this.itemSpacing.y);
 				break;
 		}
 

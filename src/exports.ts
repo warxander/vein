@@ -1,13 +1,13 @@
-import { Frame, getFrameChecked, setFrame } from './core/frame';
+import * as cFrame from './core/frame';
 import { InputControl } from './core/input';
 import { StylePropertyType } from './core/style';
-import { Rect, Vector2 } from './core/types';
+import * as cTypes from './core/types';
 
-function toRect(rect: Rect): ExportTypes.Rect {
+function toRect(rect: cTypes.Rect): Rect {
 	return { x: rect.position.x, y: rect.position.y, w: rect.size.x, h: rect.size.y };
 }
 
-function toVector2(vector2: Vector2): ExportTypes.Vector2 {
+function toVector2(vector2: cTypes.Vector2): Vector2 {
 	return { x: vector2.x, y: vector2.y };
 }
 
@@ -26,138 +26,136 @@ function toInputMouseControl(control: number): InputControl {
 	}
 }
 
-export namespace ExportTypes {
-	/**
-	 * @category Types
-	 */
-	export interface Vector2 {
-		x: number;
-		y: number;
-	}
+/**
+ * @category Types
+ */
+export interface Vector2 {
+	x: number;
+	y: number;
+}
+
+/**
+ * @category Types
+ */
+export interface Rect {
+	x: number;
+	y: number;
+	w: number;
+	h: number;
+}
+
+/**
+ * @category Custom Items
+ */
+export interface Frame {
+	getInput(): Input;
+	getLayout(): Layout;
+	getPainter(): Painter;
+
+	getRect(): Rect;
+	getScale(): number;
+	getSpacing(): Vector2;
+
+	beginItem(w: number, h: number): void;
+	endItem(): void;
+
+	tryGetItemWidth(): number | null;
+
+	isItemDisabled(): boolean;
+	isItemClicked(): boolean;
+	isItemHovered(): boolean;
+	isItemPressed(): boolean;
+
+	setMouseCursor(mouseCursor: number): void;
+
+	buildStyleSelector(name: string, state: string | null): string;
+	getStyleProperty(selector: string, property: string): unknown;
+}
+
+/**
+ * @category Custom Items
+ */
+export interface Input {
+	getMousePosition(): Vector2;
 
 	/**
-	 * @category Types
+	 *
+	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
 	 */
-	export interface Rect {
-		x: number;
-		y: number;
-		w: number;
-		h: number;
-	}
+	isMouseControlPressed(control: number): boolean;
 
 	/**
-	 * @category Custom Items
+	 *
+	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
 	 */
-	export interface Frame {
-		getInput(): Input;
-		getLayout(): Layout;
-		getPainter(): Painter;
-
-		getRect(): ExportTypes.Rect;
-		getScale(): number;
-		getSpacing(): ExportTypes.Vector2;
-
-		beginItem(w: number, h: number): void;
-		endItem(): void;
-
-		tryGetItemWidth(): number | null;
-
-		isItemDisabled(): boolean;
-		isItemClicked(): boolean;
-		isItemHovered(): boolean;
-		isItemPressed(): boolean;
-
-		setMouseCursor(mouseCursor: number): void;
-
-		buildStyleSelector(name: string, state: string | null): string;
-		getStyleProperty(selector: string, property: string): any;
-	}
+	isMouseControlReleased(control: number): boolean;
 
 	/**
-	 * @category Custom Items
+	 *
+	 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
 	 */
-	export interface Input {
-		getMousePosition(): ExportTypes.Vector2;
+	isMouseControlDown(control: number): boolean;
+}
 
-		/**
-		 *
-		 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
-		 */
-		isMouseControlPressed(control: number): boolean;
+/**
+ * @category Custom Items
+ */
+export interface Layout {
+	getContentRect(): Rect;
+	getItemRect(): Rect;
+}
 
-		/**
-		 *
-		 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
-		 */
-		isMouseControlReleased(control: number): boolean;
+/**
+ * @category Custom Items
+ */
+export interface Painter {
+	move(x: number, y: number): void;
 
-		/**
-		 *
-		 * @param control 0 - LeftButton, 1 - RightButton, 2 - ScrollWheelUp, 3 - ScrollWheelDown
-		 */
-		isMouseControlDown(control: number): boolean;
-	}
+	getPosition(): Vector2;
+	setPosition(x: number, y: number): void;
 
-	/**
-	 * @category Custom Items
-	 */
-	export interface Layout {
-		getContentRect(): ExportTypes.Rect;
-		getItemRect(): ExportTypes.Rect;
-	}
+	setColor(r: number, g: number, b: number, a: number): void;
 
-	/**
-	 * @category Custom Items
-	 */
-	export interface Painter {
-		move(x: number, y: number): void;
+	drawRect(w: number, h: number): void;
 
-		getPosition(): ExportTypes.Vector2;
-		setPosition(x: number, y: number): void;
+	drawSprite(dict: string, name: string, w: number, h: number): void;
 
-		setColor(r: number, g: number, b: number, a: number): void;
+	getTextWidth(text: string, font: number, scale: number): number;
+	getTextLineCount(text: string, font: number, scale: number, w: number): number;
 
-		drawRect(w: number, h: number): void;
-
-		drawSprite(dict: string, name: string, w: number, h: number): void;
-
-		getTextWidth(text: string, font: number, scale: number): number;
-		getTextLineCount(text: string, font: number, scale: number, w: number): number;
-
-		drawText(text: string, font: number, scale: number): void;
-		drawMultilineText(text: string, font: number, scale: number, w: number): void;
-	}
+	drawText(text: string, font: number, scale: number): void;
+	drawMultilineText(text: string, font: number, scale: number, w: number): void;
 }
 
 export * from './items/button';
-export * from './items/checkbox';
-export * from './items/collapsingheader';
+export * from './items/check_box';
+export * from './items/collapsing_header';
 export * from './items/dummy';
 export * from './items/heading';
 export * from './items/hyperlink';
 export * from './items/label';
-export * from './items/progressbar';
+export * from './items/progress_bar';
 export * from './items/rect';
 export * from './items/selectable';
 export * from './items/separator';
 export * from './items/slider';
 export * from './items/sprite';
-export * from './items/spritebutton';
-export * from './items/textarea';
-export * from './items/textedit';
+export * from './items/sprite_button';
+export * from './items/text_area';
+export * from './items/text_edit';
 
 /**
  * @category Custom Items
  */
-export function getFrame(): ExportTypes.Frame {
-	const frame = getFrameChecked();
+export function getFrame(): Frame {
+	const frame = cFrame.getFrameChecked();
 
 	return {
-		getInput(): ExportTypes.Input {
+		getInput(): Input {
 			const input = frame.getInput();
 
 			return {
-				getMousePosition(): ExportTypes.Vector2 {
+				getMousePosition(): Vector2 {
 					return toVector2(input.getMousePosition());
 				},
 
@@ -175,21 +173,21 @@ export function getFrame(): ExportTypes.Frame {
 			};
 		},
 
-		getLayout(): ExportTypes.Layout {
+		getLayout(): Layout {
 			const layout = frame.getLayout();
 
 			return {
-				getContentRect(): ExportTypes.Rect {
+				getContentRect(): Rect {
 					return toRect(layout.getContentRect());
 				},
 
-				getItemRect(): ExportTypes.Rect {
+				getItemRect(): Rect {
 					return toRect(layout.getItemRect());
 				}
 			};
 		},
 
-		getPainter(): ExportTypes.Painter {
+		getPainter(): Painter {
 			const painter = frame.getPainter();
 
 			return {
@@ -197,7 +195,7 @@ export function getFrame(): ExportTypes.Frame {
 					painter.move(x, y);
 				},
 
-				getPosition(): ExportTypes.Vector2 {
+				getPosition(): Vector2 {
 					return toVector2(painter.getPosition());
 				},
 
@@ -235,16 +233,16 @@ export function getFrame(): ExportTypes.Frame {
 			};
 		},
 
-		getRect(): ExportTypes.Rect {
+		getRect(): Rect {
 			return toRect(frame.getRect());
 		},
 
 		getScale(): number {
-			return Frame.getScale();
+			return cFrame.Frame.getScale();
 		},
 
-		getSpacing(): ExportTypes.Vector2 {
-			return toVector2(Frame.getSpacing());
+		getSpacing(): Vector2 {
+			return toVector2(cFrame.Frame.getSpacing());
 		},
 
 		beginItem(w: number, h: number) {
@@ -283,8 +281,8 @@ export function getFrame(): ExportTypes.Frame {
 			return frame.buildStyleSelector(name, state ?? undefined);
 		},
 
-		getStyleProperty(selector: string, property: string): any {
-			return Frame.getStyleProperty(selector, property);
+		getStyleProperty(selector: string, property: string): unknown {
+			return cFrame.Frame.getStyleProperty(selector, property);
 		}
 	};
 }
@@ -293,90 +291,90 @@ export function getFrame(): ExportTypes.Frame {
  * @category General
  */
 export function isDebugEnabled(): boolean {
-	return Frame.isDebugEnabled();
+	return cFrame.Frame.isDebugEnabled();
 }
 
 /**
  * @category General
  */
 export function setDebugEnabled(enabled: boolean) {
-	Frame.setDebugEnabled(enabled);
+	cFrame.Frame.setDebugEnabled(enabled);
 }
 
 /**
  * @category Frame
  */
 export function setNextFramePosition(x: number, y: number) {
-	Frame.setNextFramePosition(x, y);
+	cFrame.Frame.setNextFramePosition(x, y);
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameScale(scale: number) {
-	Frame.setNextFrameScale(scale);
+	cFrame.Frame.setNextFrameScale(scale);
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameSize(w: number | null, h: number | null) {
-	Frame.setNextFrameSize(w ?? undefined, h ?? undefined);
+	cFrame.Frame.setNextFrameSize(w ?? undefined, h ?? undefined);
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameSpacing(x: number | null, y: number | null) {
-	Frame.setNextFrameSpacing(x ?? undefined, y ?? undefined);
+	cFrame.Frame.setNextFrameSpacing(x ?? undefined, y ?? undefined);
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameDisableBackground() {
-	Frame.setNextFrameDisableBackground();
+	cFrame.Frame.setNextFrameDisableBackground();
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameDisableBorder() {
-	Frame.setNextFrameDisableBorder();
+	cFrame.Frame.setNextFrameDisableBorder();
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameDisableInput() {
-	Frame.setNextFrameDisableInput();
+	cFrame.Frame.setNextFrameDisableInput();
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameDisableMove() {
-	Frame.setNextFrameDisableMove();
+	cFrame.Frame.setNextFrameDisableMove();
 }
 
 /**
  * @category Frame
  */
 export function beginFrame(id: string | null = null) {
-	setFrame(new Frame(id ?? undefined));
+	cFrame.setFrame(new cFrame.Frame(id ?? undefined));
 }
 
 /**
  * @category Frame
  */
-export function endFrame(): ExportTypes.Rect {
-	const frame = getFrameChecked();
+export function endFrame(): Rect {
+	const frame = cFrame.getFrameChecked();
 
 	frame.end();
 
 	const rect = frame.getRect();
 
-	setFrame(null);
+	cFrame.setFrame(null);
 
 	return toRect(rect);
 }
@@ -385,145 +383,145 @@ export function endFrame(): ExportTypes.Rect {
  * @category Frame
  */
 export function beginHorizontal(h: number | null = null) {
-	getFrameChecked().beginHorizontal(h ?? undefined);
+	cFrame.getFrameChecked().beginHorizontal(h ?? undefined);
 }
 
 /**
  * @category Frame
  */
 export function endHorizontal() {
-	getFrameChecked().endHorizontal();
+	cFrame.getFrameChecked().endHorizontal();
 }
 
 /**
  * @category Frame
  */
 export function beginVertical(w: number | null = null) {
-	getFrameChecked().beginVertical(w ?? undefined);
+	cFrame.getFrameChecked().beginVertical(w ?? undefined);
 }
 
 /**
  * @category Frame
  */
 export function endVertical() {
-	getFrameChecked().endVertical();
+	cFrame.getFrameChecked().endVertical();
 }
 
 /**
  * @category Frame
  */
 export function isItemHovered(): boolean {
-	return getFrameChecked().isItemHovered();
+	return cFrame.getFrameChecked().isItemHovered();
 }
 
 /**
  * @category Frame
  */
 export function isItemClicked(): boolean {
-	return getFrameChecked().isItemClicked();
+	return cFrame.getFrameChecked().isItemClicked();
 }
 
 /**
  * @category Frame
  */
 export function isItemPressed(): boolean {
-	return getFrameChecked().isItemPressed();
+	return cFrame.getFrameChecked().isItemPressed();
 }
 
 /**
  * @category Frame
  */
 export function setNextItemDisabled() {
-	getFrameChecked().setNextItemDisabled();
+	cFrame.getFrameChecked().setNextItemDisabled();
 }
 
 /**
  * @category Frame
  */
 export function setNextItemPosition(x: number, y: number) {
-	getFrameChecked().setNextItemPosition(x, y);
+	cFrame.getFrameChecked().setNextItemPosition(x, y);
 }
 
 /**
  * @category Frame
  */
 export function setNextItemSpacing(spacing: number) {
-	getFrameChecked().setNextItemSpacing(spacing);
+	cFrame.getFrameChecked().setNextItemSpacing(spacing);
 }
 
 /**
  * @category Frame
  */
 export function setNextItemWidth(w: number) {
-	getFrameChecked().setNextItemWidth(w);
+	cFrame.getFrameChecked().setNextItemWidth(w);
 }
 
 /**
  * @category Style
  */
 export function addStyleSheet(sheet: string) {
-	Frame.getStyle().addSheet(sheet);
+	cFrame.Frame.getStyle().addSheet(sheet);
 }
 
 /**
  * @category Style
  */
 export function resetStyle() {
-	Frame.getStyle().reset();
+	cFrame.Frame.getStyle().reset();
 }
 
 /**
  * @category Style
  */
 export function registerStylePropertyAsColor(property: string) {
-	Frame.getStyle().registerProperty(property, StylePropertyType.Color);
+	cFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Color);
 }
 
 /**
  * @category Style
  */
 export function registerStylePropertyAsFloat(property: string) {
-	Frame.getStyle().registerProperty(property, StylePropertyType.Float);
+	cFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Float);
 }
 
 /**
  * @category Style
  */
 export function registerStylePropertyAsImage(property: string) {
-	Frame.getStyle().registerProperty(property, StylePropertyType.Image);
+	cFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Image);
 }
 
 /**
  * @category Style
  */
 export function registerStylePropertyAsInteger(property: string) {
-	Frame.getStyle().registerProperty(property, StylePropertyType.Integer);
+	cFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Integer);
 }
 
 /**
  * @category Style
  */
 export function setNextFrameStyleId(id: string) {
-	Frame.setNextFrameStyleId(id);
+	cFrame.Frame.setNextFrameStyleId(id);
 }
 
 /**
  * @category Style
  */
 export function setNextItemStyleId(id: string) {
-	getFrameChecked().setNextItemStyleId(id);
+	cFrame.getFrameChecked().setNextItemStyleId(id);
 }
 
 /**
  * @category Style
  */
 export function pushItemStyleId(id: string) {
-	getFrameChecked().pushItemStyleId(id);
+	cFrame.getFrameChecked().pushItemStyleId(id);
 }
 
 /**
  * @category Style
  */
 export function popItemStyleId() {
-	getFrameChecked().popItemStyleId();
+	cFrame.getFrameChecked().popItemStyleId();
 }
