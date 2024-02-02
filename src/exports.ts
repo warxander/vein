@@ -245,11 +245,11 @@ export function getFrame(): Frame {
 		},
 
 		getScale(): number {
-			return cFrame.Frame.getScale();
+			return frame.getScale();
 		},
 
 		getSpacing(): Vector2 {
-			return toVector2(cFrame.Frame.getSpacing());
+			return toVector2(frame.getSpacing());
 		},
 
 		beginItem(w: number, h: number) {
@@ -289,7 +289,7 @@ export function getFrame(): Frame {
 		},
 
 		getStyleProperty(selector: string, property: string): unknown {
-			return cFrame.Frame.getStyleProperty(selector, property);
+			return frame.getStyleProperty(selector, property);
 		}
 	};
 }

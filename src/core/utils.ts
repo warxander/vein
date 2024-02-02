@@ -1,5 +1,4 @@
 import { Frame } from './frame';
-import { Style } from './style';
 import { Color, Image } from './types';
 
 export function wait(ms: number): Promise<unknown> {
@@ -16,7 +15,7 @@ export function drawItemBackground(frame: Frame, selector: string, w: number, h:
 	if (backgroundImage !== undefined) {
 		const backgroundColor = style.tryGetPropertyAs<Color>(selector, 'background-color');
 		painter.setColor(backgroundColor ?? [255, 255, 255, 255]);
-		painter.drawSprite(backgroundImage[0], backgroundImage[1], w, h);
+		painter.drawSprite(...backgroundImage, w, h);
 	} else {
 		painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 		painter.drawRect(w, h);

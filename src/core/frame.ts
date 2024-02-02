@@ -118,42 +118,6 @@ export class Frame {
 		return Frame.style;
 	}
 
-	static getStyleId(): string | undefined {
-		return Frame.nextState.styleId;
-	}
-
-	static getScale(): number {
-		return Frame.nextState.scale ?? 1.0;
-	}
-
-	static getSpacing(): Vector2 {
-		if (Frame.nextState.spacing === undefined) return Frame.style.frame.itemSpacing;
-		return new Vector2(
-			Frame.nextState.spacing[0] ?? Frame.style.frame.itemSpacing.x,
-			Frame.nextState.spacing[1] ?? Frame.style.frame.itemSpacing.y
-		);
-	}
-
-	static isBackgroundDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableBackground);
-	}
-
-	static isBorderDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableBorder);
-	}
-
-	static isInputDisabled(): boolean {
-		return !!(Frame.nextState.inputFlags & InputFlags.DisableInput);
-	}
-
-	static isMoveDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
-	}
-
-	static getStyleProperty(selector: string, property: string): StylePropertyValue {
-		return Frame.style.getProperty(selector, property);
-	}
-
 	constructor(id: string | undefined) {
 		if (id === undefined) id = Frame.DEFAULT_ID;
 
@@ -175,8 +139,8 @@ export class Frame {
 		this.beginMove();
 
 		const rect = this.getRect();
-		const scale = Frame.getScale();
-		const spacing = Frame.getSpacing();
+		const scale = this.getScale();
+		const spacing = this.getSpacing();
 
 		this.layout = new Layout(
 			rect.position.x + Frame.style.frame.padding.x * scale,
@@ -186,14 +150,14 @@ export class Frame {
 
 		this.painter = new Painter(rect.position.x, rect.position.y, scale, `VEIN_${this.memory.id}`);
 
-		if (isNewFrame || Frame.isBackgroundDisabled()) return;
+		if (isNewFrame || this.isBackgroundDisabled()) return;
 
 		const selector = this.buildStyleSelector('frame');
 		const unscaledRect = new Rect(rect.position, new Vector2(rect.size.x / scale, rect.size.y / scale));
 
 		drawItemBackground(this, selector, unscaledRect.size.x, unscaledRect.size.y);
 
-		if (Frame.isBorderDisabled()) return;
+		if (this.isBorderDisabled()) return;
 
 		this.drawBorder(selector, unscaledRect);
 		this.painter.setPosition(rect.position.x, rect.position.y);
@@ -220,10 +184,46 @@ export class Frame {
 		);
 	}
 
+	getStyleId(): string | undefined {
+		return Frame.nextState.styleId;
+	}
+
+	getScale(): number {
+		return Frame.nextState.scale ?? 1;
+	}
+
+	getSpacing(): Vector2 {
+		if (Frame.nextState.spacing === undefined) return Frame.style.frame.itemSpacing;
+		return new Vector2(
+			Frame.nextState.spacing[0] ?? Frame.style.frame.itemSpacing.x,
+			Frame.nextState.spacing[1] ?? Frame.style.frame.itemSpacing.y
+		);
+	}
+
+	isBackgroundDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableBackground);
+	}
+
+	isBorderDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableBorder);
+	}
+
+	isInputDisabled(): boolean {
+		return !!(Frame.nextState.inputFlags & InputFlags.DisableInput);
+	}
+
+	isMoveDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
+	}
+
+	getStyleProperty(selector: string, property: string): StylePropertyValue {
+		return Frame.style.getProperty(selector, property);
+	}
+
 	end() {
 		this.endMove();
 
-		if (!Frame.isInputDisabled()) {
+		if (!this.isInputDisabled()) {
 			SetMouseCursorActiveThisFrame();
 			SetMouseCursorSprite(this.mouseCursor);
 		}
@@ -233,7 +233,7 @@ export class Frame {
 		this.layout.end();
 
 		const contentRect = this.layout.getContentRect();
-		const scale = Frame.getScale();
+		const scale = this.getScale();
 
 		this.memory.rect.size = new Vector2(
 			contentRect.size.x + Frame.style.frame.padding.x * scale * 2,
@@ -246,7 +246,7 @@ export class Frame {
 	}
 
 	beginHorizontal(h?: number) {
-		this.layout.beginHorizontal(h !== undefined ? h * Frame.getScale() : undefined);
+		this.layout.beginHorizontal(h !== undefined ? h * this.getScale() : undefined);
 	}
 
 	endHorizontal() {
@@ -254,7 +254,7 @@ export class Frame {
 	}
 
 	beginVertical(w?: number) {
-		this.layout.beginVertical(w !== undefined ? w * Frame.getScale() : undefined);
+		this.layout.beginVertical(w !== undefined ? w * this.getScale() : undefined);
 	}
 
 	endVertical() {
@@ -262,7 +262,7 @@ export class Frame {
 	}
 
 	beginItem(w: number, h: number) {
-		const scale = Frame.getScale();
+		const scale = this.getScale();
 
 		this.layout.beginItem(
 			this.nextItemState.position,
@@ -278,7 +278,7 @@ export class Frame {
 	endItem() {
 		if (Frame.isDebugEnabled_) {
 			const itemRect = this.layout.getItemRect();
-			const scale = Frame.getScale();
+			const scale = this.getScale();
 			const unscaledItemRect = new Rect(
 				itemRect.position,
 				new Vector2(itemRect.size.x / scale, itemRect.size.y / scale)
@@ -358,13 +358,13 @@ export class Frame {
 	}
 
 	private beginMove() {
-		if (Frame.isMoveDisabled() || Frame.isInputDisabled()) return;
+		if (this.isMoveDisabled() || this.isInputDisabled()) return;
 
 		if (
 			!this.isAreaHovered(
 				new Rect(
 					this.memory.rect.position,
-					new Vector2(this.memory.rect.size.x, Frame.style.frame.padding.y * Frame.getScale())
+					new Vector2(this.memory.rect.size.x, Frame.style.frame.padding.y * this.getScale())
 				)
 			)
 		)
@@ -397,7 +397,7 @@ export class Frame {
 
 	private drawBorder(selector: string, unscaledRect: Rect) {
 		const rect = this.getRect();
-		const scale = Frame.getScale();
+		const scale = this.getScale();
 		const bw = Frame.style.frame.borderWidth;
 		const bh = bw * GetAspectRatio(false) + 0.00049;
 

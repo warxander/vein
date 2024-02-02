@@ -35,35 +35,14 @@ export class Painter {
 		const sw = w * this.scale;
 		const sh = h * this.scale;
 
-		DrawRect(
-			this.position.x + sw / 2,
-			this.position.y + sh / 2,
-			sw,
-			sh,
-			this.color[0],
-			this.color[1],
-			this.color[2],
-			this.color[3]
-		);
+		DrawRect(this.position.x + sw / 2, this.position.y + sh / 2, sw, sh, ...this.color);
 	}
 
 	drawSprite(dict: string, name: string, w: number, h: number, heading?: number) {
 		const sw = w * this.scale;
 		const sh = h * this.scale;
 
-		DrawSprite(
-			dict,
-			name,
-			this.position.x + sw / 2,
-			this.position.y + sh / 2,
-			sw,
-			sh,
-			heading ?? 0,
-			this.color[0],
-			this.color[1],
-			this.color[2],
-			this.color[3]
-		);
+		DrawSprite(dict, name, this.position.x + sw / 2, this.position.y + sh / 2, sw, sh, heading ?? 0, ...this.color);
 	}
 
 	getFontSize(font: number, scale: number): number {
@@ -71,8 +50,6 @@ export class Painter {
 	}
 
 	getTextWidth(textData: TextData): number {
-		if (textData.text.length === 0) return 0;
-
 		this.setText(textData, false);
 
 		BeginTextCommandGetWidth(this.getTextEntry());
@@ -80,8 +57,6 @@ export class Painter {
 	}
 
 	getTextLineCount(textData: TextData): number {
-		if (textData.text.length === 0) return 0;
-
 		this.setWrappedText(textData, false);
 
 		BeginTextCommandLineCount(this.getTextEntry());
@@ -89,20 +64,16 @@ export class Painter {
 	}
 
 	drawText(textData: TextData) {
-		if (textData.text.length === 0) return;
-
 		this.setText(textData, true);
-		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
+		SetTextColour(...this.color);
 
 		BeginTextCommandDisplayText(this.getTextEntry());
 		EndTextCommandDisplayText(this.position.x, this.position.y);
 	}
 
 	drawMultilineText(textData: TextData) {
-		if (textData.text.length === 0) return;
-
 		this.setWrappedText(textData, true);
-		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
+		SetTextColour(...this.color);
 
 		BeginTextCommandDisplayText(this.getTextEntry());
 		EndTextCommandDisplayText(this.position.x, this.position.y);
@@ -113,6 +84,8 @@ export class Painter {
 	}
 
 	private setText(textData: TextData, useScaling: boolean) {
+		if (textData.text.length === 0) return;
+
 		++this.textEntryIndex;
 		AddTextEntry(this.getTextEntry(), textData.text);
 
@@ -121,6 +94,8 @@ export class Painter {
 	}
 
 	private setWrappedText(textData: TextData, useScaling: boolean) {
+		if (textData.text.length === 0) return;
+
 		++this.textEntryIndex;
 		AddTextEntry(this.getTextEntry(), textData.text);
 

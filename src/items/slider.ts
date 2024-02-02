@@ -29,7 +29,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	const tw = painter.getTextWidth(sliderTextData);
 	const sw = tw !== 0 ? w - tw - style.slider.padding : w;
-	const frameScale = Frame.getScale();
+	const frameScale = frame.getScale();
 
 	const inputValue =
 		!frame.isItemDisabled() &&
