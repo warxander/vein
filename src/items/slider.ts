@@ -2,6 +2,7 @@ import { Frame, getFrameChecked } from '../core/frame';
 import { Color, Rect, Vector2 } from '../core/types';
 import { InputControl } from '../core/input';
 import { getDefaultStyleSelectorState } from '../core/utils';
+import { TextData } from '../core/painter';
 
 /**
  * @category Items
@@ -24,9 +25,9 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	const font = style.getPropertyAs<number>(selector, 'font-family');
 	const scale = style.getPropertyAs<number>(selector, 'font-size');
-	const sliderText = text ?? value.toFixed(2);
+	const sliderTextData = new TextData(text ?? value.toFixed(2), font, scale);
 
-	const tw = painter.getTextWidth(sliderText, font, scale);
+	const tw = painter.getTextWidth(sliderTextData);
 	const sw = tw !== 0 ? w - tw - style.slider.padding : w;
 	const frameScale = Frame.getScale();
 
@@ -65,7 +66,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 		painter.move(tho, tvo);
 		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-		painter.drawText(sliderText, font, scale);
+		painter.drawText(sliderTextData);
 		painter.move(-tho, -tvo);
 	}
 

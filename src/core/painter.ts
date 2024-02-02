@@ -1,5 +1,9 @@
 import { Color, Vector2 } from './types';
 
+export class TextData {
+	constructor(public text: string, public font: number, public scale: number, public width?: number) {}
+}
+
 export class Painter {
 	private position: Vector2;
 	private color: Color = [0, 0, 0, 255];
@@ -62,38 +66,38 @@ export class Painter {
 		);
 	}
 
-	getTextWidth(text: string, font: number, scale: number): number {
-		if (text.length === 0) return 0;
+	getTextWidth(textData: TextData): number {
+		if (textData.text.length === 0) return 0;
 
-		this.setText(text, font, scale);
+		this.setText(textData, false);
 
 		BeginTextCommandGetWidth(this.getTextEntry());
 		return EndTextCommandGetWidth(true);
 	}
 
-	getTextLineCount(text: string, font: number, scale: number, w: number): number {
-		if (text.length === 0) return 0;
+	getTextLineCount(textData: TextData): number {
+		if (textData.text.length === 0) return 0;
 
-		this.setText(text, font, scale, w);
+		this.setWrappedText(textData, false);
 
 		BeginTextCommandLineCount(this.getTextEntry());
 		return EndTextCommandLineCount(this.position.x, this.position.y);
 	}
 
-	drawText(text: string, font: number, scale: number) {
-		if (text.length === 0) return;
+	drawText(textData: TextData) {
+		if (textData.text.length === 0) return;
 
-		this.setText(text, font, scale * this.scale);
+		this.setText(textData, true);
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
 		BeginTextCommandDisplayText(this.getTextEntry());
 		EndTextCommandDisplayText(this.position.x, this.position.y);
 	}
 
-	drawMultilineText(text: string, font: number, scale: number, w: number) {
-		if (text.length === 0) return;
+	drawMultilineText(textData: TextData) {
+		if (textData.text.length === 0) return;
 
-		this.setText(text, font, scale * this.scale, w * this.scale);
+		this.setWrappedText(textData, true);
 		SetTextColour(this.color[0], this.color[1], this.color[2], this.color[3]);
 
 		BeginTextCommandDisplayText(this.getTextEntry());
@@ -104,13 +108,20 @@ export class Painter {
 		return `${this.textEntryPrefix}_${this.textEntryIndex}`;
 	}
 
-	private setText(text: string, font: number, scale: number, w: number | null = null) {
+	private setText(textData: TextData, useScaling: boolean) {
 		++this.textEntryIndex;
-		AddTextEntry(this.getTextEntry(), text);
+		AddTextEntry(this.getTextEntry(), textData.text);
 
-		SetTextFont(font);
-		SetTextScale(1, scale);
+		SetTextFont(textData.font);
+		SetTextScale(1, useScaling ? textData.scale * this.scale : textData.scale);
+	}
 
-		if (w !== null) SetTextWrap(this.position.x, this.position.x + w);
+	private setWrappedText(textData: TextData, useScaling: boolean) {
+		++this.textEntryIndex;
+		AddTextEntry(this.getTextEntry(), textData.text);
+
+		SetTextFont(textData.font);
+		SetTextScale(1, useScaling ? textData.scale * this.scale : textData.scale);
+		SetTextWrap(this.position.x, this.position.x + (useScaling ? textData.width! * this.scale : textData.width!));
 	}
 }

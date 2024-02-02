@@ -1,5 +1,6 @@
 import * as cFrame from './core/frame';
 import { InputControl } from './core/input';
+import { TextData } from './core/painter';
 import { StylePropertyType } from './core/style';
 import * as cTypes from './core/types';
 
@@ -216,19 +217,19 @@ export function getFrame(): Frame {
 				},
 
 				getTextWidth(text: string, font: number, scale: number): number {
-					return painter.getTextWidth(text, font, scale);
+					return painter.getTextWidth(new TextData(text, font, scale));
 				},
 
 				getTextLineCount(text: string, font: number, scale: number, w: number): number {
-					return painter.getTextLineCount(text, font, scale, w);
+					return painter.getTextLineCount(new TextData(text, font, scale, w));
 				},
 
 				drawText(text: string, font: number, scale: number) {
-					painter.drawText(text, font, scale);
+					painter.drawText(new TextData(text, font, scale));
 				},
 
 				drawMultilineText(text: string, font: number, scale: number, w: number) {
-					painter.drawMultilineText(text, font, scale, w);
+					painter.drawMultilineText(new TextData(text, font, scale, w));
 				}
 			};
 		},

@@ -1,4 +1,5 @@
 import { Frame, MouseCursor, getFrameChecked } from '../core/frame';
+import { TextData } from '../core/painter';
 import { Color } from '../core/types';
 import { getDefaultStyleSelectorState } from '../core/utils';
 
@@ -12,11 +13,13 @@ export function hyperlink(url: string, urlText: string | null = null) {
 	const style = Frame.getStyle();
 
 	let selector = frame.buildStyleSelector('hyperlink');
+
 	const font = style.getPropertyAs<number>(selector, 'font-family');
 	const scale = style.getPropertyAs<number>(selector, 'font-size');
 	const text = urlText ?? url;
+	const textData = new TextData(text, font, scale);
 
-	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(text, font, scale);
+	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(textData);
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
@@ -31,7 +34,7 @@ export function hyperlink(url: string, urlText: string | null = null) {
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
-	painter.drawText(text, font, scale);
+	painter.drawText(textData);
 
 	frame.endItem();
 }

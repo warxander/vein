@@ -1,4 +1,5 @@
 import { Frame, getFrameChecked } from '../core/frame';
+import { TextData } from '../core/painter';
 import { Color } from '../core/types';
 import { drawItemBackground, getDefaultStyleSelectorState } from '../core/utils';
 
@@ -12,8 +13,13 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	const style = Frame.getStyle();
 
 	let selector = frame.buildStyleSelector('sprite-button');
-	const font = style.getPropertyAs<number>(selector, 'font-family');
-	const scale = style.getPropertyAs<number>(selector, 'font-size');
+
+	let textData: TextData | undefined;
+	if (text !== null) {
+		const font = style.getPropertyAs<number>(selector, 'font-family');
+		const scale = style.getPropertyAs<number>(selector, 'font-size');
+		textData = new TextData(text, font, scale);
+	}
 
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;
@@ -23,7 +29,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	if (iw !== undefined) w = iw;
 	else {
 		w += sw + style.button.padding * 2;
-		const tw = text !== null ? painter.getTextWidth(text, font, scale) : 0;
+		const tw = textData !== undefined ? painter.getTextWidth(textData) : 0;
 		if (tw !== 0) w += tw + spriteButtonStyle.padding;
 	}
 
@@ -46,12 +52,12 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	painter.move(style.button.padding, so);
 	painter.drawSprite(dict, name, sw, sh);
 
-	if (text !== null) {
+	if (textData !== undefined) {
 		painter.move(
 			sw + spriteButtonStyle.padding,
-			-so + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
+			-so + (h - GetRenderedCharacterHeight(textData.scale, textData.font)) / 2 + style.item.textOffset
 		);
-		painter.drawText(text, font, scale);
+		painter.drawText(textData);
 	}
 
 	frame.endItem();

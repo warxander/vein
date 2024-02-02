@@ -1,4 +1,5 @@
 import { Frame, getFrameChecked } from '../core/frame';
+import { TextData } from '../core/painter';
 import { Color } from '../core/types';
 import { getDefaultStyleSelectorState } from '../core/utils';
 
@@ -12,8 +13,10 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	const style = Frame.getStyle();
 
 	let selector = frame.buildStyleSelector('check-box');
+
 	const font = style.getPropertyAs<number>(selector, 'font-family');
 	const scale = style.getPropertyAs<number>(selector, 'font-size');
+	const textData = new TextData(text, font, scale);
 
 	const aspectRatio = GetAspectRatio(false);
 	const checkboxStyle = style.checkbox;
@@ -25,7 +28,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	if (iw !== undefined) w = iw;
 	else {
 		w += cw;
-		const tw = painter.getTextWidth(text, font, scale);
+		const tw = painter.getTextWidth(textData);
 		if (tw !== 0) w += checkboxStyle.padding + tw;
 	}
 	const h = style.item.height;
@@ -57,7 +60,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 		(h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
 	);
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	painter.drawText(text, font, scale);
+	painter.drawText(textData);
 
 	frame.endItem();
 
