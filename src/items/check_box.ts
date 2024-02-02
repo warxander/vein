@@ -57,7 +57,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 
 	painter.move(
 		checkboxStyle.height / aspectRatio + checkboxStyle.padding * 2,
-		(h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset
+		(h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset
 	);
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.drawText(textData);

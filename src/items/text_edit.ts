@@ -63,7 +63,7 @@ export async function textEdit(
 	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.drawRect(w, h);
 
-	painter.move(style.textEdit.padding, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
+	painter.move(style.textEdit.padding, (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset);
 
 	const inputText = keyboardResultText ?? text;
 	const hasInputText = inputText.length !== 0;

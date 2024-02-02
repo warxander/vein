@@ -55,7 +55,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	if (textData !== undefined) {
 		painter.move(
 			sw + spriteButtonStyle.padding,
-			-so + (h - GetRenderedCharacterHeight(textData.scale, textData.font)) / 2 + style.item.textOffset
+			-so + (h - painter.getFontSize(textData.font, textData.scale)) / 2 + style.item.textOffset
 		);
 		painter.drawText(textData);
 	}

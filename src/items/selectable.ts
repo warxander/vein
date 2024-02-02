@@ -32,7 +32,7 @@ export function selectable(isSelected: boolean, text: string): boolean {
 	painter.drawRect(w, h);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	painter.move(style.selectable.padding, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
+	painter.move(style.selectable.padding, (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset);
 	painter.drawText(textData);
 
 	frame.endItem();

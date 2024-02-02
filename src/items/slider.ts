@@ -62,7 +62,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	if (tw !== 0) {
 		const tho = sw + style.slider.padding;
-		const tvo = -sh + (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset;
+		const tvo = -sh + (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset;
 
 		painter.move(tho, tvo);
 		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));

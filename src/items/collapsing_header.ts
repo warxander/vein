@@ -46,7 +46,7 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 
 	painter.move(
 		style.collapsingHeader.sprite.width - style.collapsingHeader.sprite.offset + style.collapsingHeader.textOffset,
-		sh / 2 - GetRenderedCharacterHeight(scale, font) / 2 + style.item.textOffset
+		sh / 2 - painter.getFontSize(font, scale) / 2 + style.item.textOffset
 	);
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.drawText(textData);

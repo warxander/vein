@@ -66,6 +66,10 @@ export class Painter {
 		);
 	}
 
+	getFontSize(font: number, scale: number): number {
+		return GetRenderedCharacterHeight(scale, font);
+	}
+
 	getTextWidth(textData: TextData): number {
 		if (textData.text.length === 0) return 0;
 

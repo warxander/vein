@@ -23,7 +23,7 @@ export function label(text: string) {
 	frame.beginItem(w, h);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
+	painter.move(0, (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset);
 	painter.drawText(textData);
 
 	frame.endItem();

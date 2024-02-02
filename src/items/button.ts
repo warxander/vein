@@ -31,7 +31,7 @@ export function button(text: string): boolean {
 	drawItemBackground(frame, selector, w, h);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	painter.move(style.button.padding, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
+	painter.move(style.button.padding, (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset);
 	painter.drawText(textData);
 
 	frame.endItem();

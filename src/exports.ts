@@ -121,6 +121,8 @@ export interface Painter {
 
 	drawSprite(dict: string, name: string, w: number, h: number): void;
 
+	getFontSize(font: number, scale: number): number;
+
 	getTextWidth(text: string, font: number, scale: number): number;
 	getTextLineCount(text: string, font: number, scale: number, w: number): number;
 
@@ -214,6 +216,10 @@ export function getFrame(): Frame {
 
 				drawSprite(dict: string, name: string, w: number, h: number) {
 					painter.drawSprite(dict, name, w, h);
+				},
+
+				getFontSize(font: number, scale: number): number {
+					return painter.getFontSize(font, scale);
 				},
 
 				getTextWidth(text: string, font: number, scale: number): number {

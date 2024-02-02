@@ -19,7 +19,7 @@ export function textArea(text: string, w: number) {
 
 	const lc = painter.getTextLineCount(textData);
 
-	const h = lc === 0 ? 0 : lc === 1 ? style.item.height : GetRenderedCharacterHeight(scale, font) * (lc + 1);
+	const h = lc === 0 ? 0 : lc === 1 ? style.item.height : painter.getFontSize(font, scale) * (lc + 1);
 
 	frame.beginItem(w, h);
 

@@ -33,7 +33,7 @@ export function hyperlink(url: string, urlText: string | null = null) {
 	if (state !== undefined) selector = frame.buildStyleSelector('hyperlink', state);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	painter.move(0, (h - GetRenderedCharacterHeight(scale, font)) / 2 + style.item.textOffset);
+	painter.move(0, (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset);
 	painter.drawText(textData);
 
 	frame.endItem();
