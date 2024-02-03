@@ -69,6 +69,10 @@ export interface Frame {
 
 	setMouseCursor(mouseCursor: number): void;
 
+	isKeyboardOnScreen(): boolean;
+	showOnScreenKeyboard(title: string, text: string, maxTextLength: number): void;
+	tryGetOnScreenKeyboardResult(): string | null;
+
 	buildStyleSelector(name: string, state: string | null): string;
 	getStyleProperty(selector: string, property: string): unknown;
 }
@@ -282,6 +286,18 @@ export function getFrame(): Frame {
 
 		setMouseCursor(mouseCursor: number) {
 			frame.setMouseCursor(mouseCursor);
+		},
+
+		isKeyboardOnScreen(): boolean {
+			return frame.isKeyboardOnScreen();
+		},
+
+		showOnScreenKeyboard(title: string, text: string, maxTextLength: number) {
+			frame.showOnScreenKeyboard(title, text, maxTextLength);
+		},
+
+		tryGetOnScreenKeyboardResult(): string | null {
+			return frame.tryGetOnScreenKeyboardResult();
 		},
 
 		buildStyleSelector(name: string, state: string | null = null): string {

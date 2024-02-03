@@ -55,10 +55,12 @@ export enum MouseCursor {
 
 export class Frame {
 	private static readonly DEFAULT_ID = 'DEFAULT';
+	private static readonly KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
 
 	private static frameMemory = new Map<string, FrameMemory>();
 	private static style = new Style();
 	private static nextState = new FrameState();
+	private static isKeyboardOnScreen = false;
 	private static isDebugEnabled_ = false;
 
 	private memory: FrameMemory;
@@ -355,6 +357,30 @@ export class Frame {
 	buildStyleSelector(name: string, state: string | undefined = undefined): string {
 		const id = this.nextItemState.styleId ?? this.itemStyleIdStack[this.itemStyleIdStack.length - 1];
 		return Frame.style.buildSelector(name, id, state);
+	}
+
+	isKeyboardOnScreen(): boolean {
+		return Frame.isKeyboardOnScreen;
+	}
+
+	showOnScreenKeyboard(title: string, text: string, maxTextLength: number) {
+		if (Frame.isKeyboardOnScreen) return;
+
+		CancelOnscreenKeyboard();
+
+		AddTextEntry(Frame.KEYBOARD_TITLE_ENTRY, title);
+		DisplayOnscreenKeyboard(1, Frame.KEYBOARD_TITLE_ENTRY, '', text, '', '', '', maxTextLength);
+
+		Frame.isKeyboardOnScreen = true;
+	}
+
+	tryGetOnScreenKeyboardResult(): string | null {
+		if (!Frame.isKeyboardOnScreen || UpdateOnscreenKeyboard() <= 0) return null;
+
+		const result = GetOnscreenKeyboardResult();
+		Frame.isKeyboardOnScreen = false;
+
+		return result;
 	}
 
 	private beginMove() {
