@@ -1,12 +1,6 @@
 import { Frame } from './frame';
 import { Color, Image } from './types';
 
-export function wait(ms: number): Promise<unknown> {
-	return new Promise(function (res: TimerHandler) {
-		setTimeout(res, ms);
-	});
-}
-
 export function drawItemBackground(frame: Frame, selector: string, w: number, h: number) {
 	const style = Frame.getStyle();
 	const painter = frame.getPainter();

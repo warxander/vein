@@ -1,20 +1,18 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { getDefaultStyleSelectorState, wait } from '../core/utils';
+import { getDefaultStyleSelectorState } from '../core/utils';
 import { Color } from '../core/types';
 import { TextData } from '../core/painter';
-
-const KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
 
 /**
  * @category Items
  */
-export async function textEdit(
+export function textEdit(
 	text: string,
 	keyboardTitle: string,
 	maxTextLength: number,
 	isSecretMode = false,
 	placeholderText: string | null = null
-): Promise<string> {
+): string | null {
 	const frame = getFrameChecked();
 
 	const painter = frame.getPainter();
@@ -39,24 +37,9 @@ export async function textEdit(
 
 	frame.beginItem(w, h);
 
-	let keyboardResultText = null;
-
-	if (frame.isItemClicked()) {
-		AddTextEntry(KEYBOARD_TITLE_ENTRY, keyboardTitle);
-		DisplayOnscreenKeyboard(1, KEYBOARD_TITLE_ENTRY, '', text, '', '', '', maxTextLength);
-
-		while (true) {
-			await wait(0);
-
-			DisableAllControlActions(0);
-
-			const status = UpdateOnscreenKeyboard();
-			if (status === 1) {
-				keyboardResultText = GetOnscreenKeyboardResult();
-				break;
-			} else if (status === 2) break;
-		}
-	}
+	let resultText: string | null = null;
+	if (frame.isKeyboardOnScreen()) resultText = frame.tryGetOnScreenKeyboardResult();
+	else if (frame.isItemClicked()) frame.showOnScreenKeyboard(keyboardTitle, text, maxTextLength);
 
 	selector = frame.buildStyleSelector('text-edit', getDefaultStyleSelectorState(frame));
 
@@ -65,22 +48,17 @@ export async function textEdit(
 
 	painter.move(style.textEdit.padding, (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset);
 
-	const inputText = keyboardResultText ?? text;
-	const hasInputText = inputText.length !== 0;
+	const hasText = text.length !== 0;
 	const hasPlaceholderText = placeholderText !== null;
 
-	if (hasInputText || hasPlaceholderText) {
-		painter.setColor(style.getPropertyAs<Color>(selector, hasInputText ? 'color' : 'placeholder-color'));
+	if (hasText || hasPlaceholderText) {
+		painter.setColor(style.getPropertyAs<Color>(selector, hasText ? 'color' : 'placeholder-color'));
 		painter.drawText(
-			new TextData(
-				hasPlaceholderText ? placeholderText : isSecretMode ? inputText.replace(/./g, '*') : inputText,
-				font,
-				scale
-			)
+			new TextData(hasText ? (isSecretMode ? text.replace(/./g, '*') : text) : placeholderText!, font, scale)
 		);
 	}
 
 	frame.endItem();
 
-	return inputText;
+	return resultText;
 }
