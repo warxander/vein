@@ -1,14 +1,13 @@
-import * as cFrame from './core/frame';
+import * as CoreFrame from './core/frame';
 import { InputControl } from './core/input';
-import { TextData } from './core/painter';
 import { StylePropertyType } from './core/style';
-import * as cTypes from './core/types';
+import * as CoreTypes from './core/types';
 
-function toRect(rect: cTypes.Rect): Rect {
+function toRect(rect: CoreTypes.Rect): Rect {
 	return { x: rect.position.x, y: rect.position.y, w: rect.size.x, h: rect.size.y };
 }
 
-function toVector2(vector2: cTypes.Vector2): Vector2 {
+function toVector2(vector2: CoreTypes.Vector2): Vector2 {
 	return { x: vector2.x, y: vector2.y };
 }
 
@@ -155,7 +154,7 @@ export * from './items/text_edit';
  * @category Custom Items
  */
 export function getFrame(): Frame {
-	const frame = cFrame.getFrameChecked();
+	const frame = CoreFrame.getFrameChecked();
 
 	return {
 		getInput(): Input {
@@ -227,19 +226,19 @@ export function getFrame(): Frame {
 				},
 
 				getTextWidth(text: string, font: number, scale: number): number {
-					return painter.getTextWidth(new TextData(text, font, scale));
+					return painter.getTextWidth(new CoreTypes.TextData(text, font, scale));
 				},
 
 				getTextLineCount(text: string, font: number, scale: number, w: number): number {
-					return painter.getTextLineCount(new TextData(text, font, scale, w));
+					return painter.getTextLineCount(new CoreTypes.TextData(text, font, scale, w));
 				},
 
 				drawText(text: string, font: number, scale: number) {
-					painter.drawText(new TextData(text, font, scale));
+					painter.drawText(new CoreTypes.TextData(text, font, scale));
 				},
 
 				drawMultilineText(text: string, font: number, scale: number, w: number) {
-					painter.drawMultilineText(new TextData(text, font, scale, w));
+					painter.drawMultilineText(new CoreTypes.TextData(text, font, scale, w));
 				}
 			};
 		},
@@ -314,90 +313,90 @@ export function getFrame(): Frame {
  * @category General
  */
 export function isDebugEnabled(): boolean {
-	return cFrame.Frame.isDebugEnabled();
+	return CoreFrame.Frame.isDebugEnabled();
 }
 
 /**
  * @category General
  */
 export function setDebugEnabled(enabled: boolean) {
-	cFrame.Frame.setDebugEnabled(enabled);
+	CoreFrame.Frame.setDebugEnabled(enabled);
 }
 
 /**
  * @category Frame
  */
 export function setNextFramePosition(x: number, y: number) {
-	cFrame.Frame.setNextFramePosition(x, y);
+	CoreFrame.Frame.setNextFramePosition(x, y);
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameScale(scale: number) {
-	cFrame.Frame.setNextFrameScale(scale);
+	CoreFrame.Frame.setNextFrameScale(scale);
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameSize(w: number | null, h: number | null) {
-	cFrame.Frame.setNextFrameSize(w ?? undefined, h ?? undefined);
+	CoreFrame.Frame.setNextFrameSize(w ?? undefined, h ?? undefined);
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameSpacing(x: number | null, y: number | null) {
-	cFrame.Frame.setNextFrameSpacing(x ?? undefined, y ?? undefined);
+	CoreFrame.Frame.setNextFrameSpacing(x ?? undefined, y ?? undefined);
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameDisableBackground() {
-	cFrame.Frame.setNextFrameDisableBackground();
+	CoreFrame.Frame.setNextFrameDisableBackground();
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameDisableBorder() {
-	cFrame.Frame.setNextFrameDisableBorder();
+	CoreFrame.Frame.setNextFrameDisableBorder();
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameDisableInput() {
-	cFrame.Frame.setNextFrameDisableInput();
+	CoreFrame.Frame.setNextFrameDisableInput();
 }
 
 /**
  * @category Frame
  */
 export function setNextFrameDisableMove() {
-	cFrame.Frame.setNextFrameDisableMove();
+	CoreFrame.Frame.setNextFrameDisableMove();
 }
 
 /**
  * @category Frame
  */
 export function beginFrame(id: string | null = null) {
-	cFrame.setFrame(new cFrame.Frame(id ?? undefined));
+	CoreFrame.setFrame(new CoreFrame.Frame(id ?? undefined));
 }
 
 /**
  * @category Frame
  */
 export function endFrame(): Rect {
-	const frame = cFrame.getFrameChecked();
+	const frame = CoreFrame.getFrameChecked();
 
 	frame.end();
 
 	const rect = frame.getRect();
 
-	cFrame.setFrame(null);
+	CoreFrame.setFrame(null);
 
 	return toRect(rect);
 }
@@ -406,145 +405,145 @@ export function endFrame(): Rect {
  * @category Frame
  */
 export function beginHorizontal(h: number | null = null) {
-	cFrame.getFrameChecked().beginHorizontal(h ?? undefined);
+	CoreFrame.getFrameChecked().beginHorizontal(h ?? undefined);
 }
 
 /**
  * @category Frame
  */
 export function endHorizontal() {
-	cFrame.getFrameChecked().endHorizontal();
+	CoreFrame.getFrameChecked().endHorizontal();
 }
 
 /**
  * @category Frame
  */
 export function beginVertical(w: number | null = null) {
-	cFrame.getFrameChecked().beginVertical(w ?? undefined);
+	CoreFrame.getFrameChecked().beginVertical(w ?? undefined);
 }
 
 /**
  * @category Frame
  */
 export function endVertical() {
-	cFrame.getFrameChecked().endVertical();
+	CoreFrame.getFrameChecked().endVertical();
 }
 
 /**
  * @category Frame
  */
 export function isItemHovered(): boolean {
-	return cFrame.getFrameChecked().isItemHovered();
+	return CoreFrame.getFrameChecked().isItemHovered();
 }
 
 /**
  * @category Frame
  */
 export function isItemClicked(): boolean {
-	return cFrame.getFrameChecked().isItemClicked();
+	return CoreFrame.getFrameChecked().isItemClicked();
 }
 
 /**
  * @category Frame
  */
 export function isItemPressed(): boolean {
-	return cFrame.getFrameChecked().isItemPressed();
+	return CoreFrame.getFrameChecked().isItemPressed();
 }
 
 /**
  * @category Frame
  */
 export function setNextItemDisabled() {
-	cFrame.getFrameChecked().setNextItemDisabled();
+	CoreFrame.getFrameChecked().setNextItemDisabled();
 }
 
 /**
  * @category Frame
  */
 export function setNextItemPosition(x: number, y: number) {
-	cFrame.getFrameChecked().setNextItemPosition(x, y);
+	CoreFrame.getFrameChecked().setNextItemPosition(x, y);
 }
 
 /**
  * @category Frame
  */
 export function setNextItemSpacing(spacing: number) {
-	cFrame.getFrameChecked().setNextItemSpacing(spacing);
+	CoreFrame.getFrameChecked().setNextItemSpacing(spacing);
 }
 
 /**
  * @category Frame
  */
 export function setNextItemWidth(w: number) {
-	cFrame.getFrameChecked().setNextItemWidth(w);
+	CoreFrame.getFrameChecked().setNextItemWidth(w);
 }
 
 /**
  * @category Style
  */
 export function addStyleSheet(sheet: string) {
-	cFrame.Frame.getStyle().addSheet(sheet);
+	CoreFrame.Frame.getStyle().addSheet(sheet);
 }
 
 /**
  * @category Style
  */
 export function resetStyle() {
-	cFrame.Frame.getStyle().reset();
+	CoreFrame.Frame.getStyle().reset();
 }
 
 /**
  * @category Style
  */
 export function registerStylePropertyAsColor(property: string) {
-	cFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Color);
+	CoreFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Color);
 }
 
 /**
  * @category Style
  */
 export function registerStylePropertyAsFloat(property: string) {
-	cFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Float);
+	CoreFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Float);
 }
 
 /**
  * @category Style
  */
 export function registerStylePropertyAsImage(property: string) {
-	cFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Image);
+	CoreFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Image);
 }
 
 /**
  * @category Style
  */
 export function registerStylePropertyAsInteger(property: string) {
-	cFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Integer);
+	CoreFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Integer);
 }
 
 /**
  * @category Style
  */
 export function setNextFrameStyleId(id: string) {
-	cFrame.Frame.setNextFrameStyleId(id);
+	CoreFrame.Frame.setNextFrameStyleId(id);
 }
 
 /**
  * @category Style
  */
 export function setNextItemStyleId(id: string) {
-	cFrame.getFrameChecked().setNextItemStyleId(id);
+	CoreFrame.getFrameChecked().setNextItemStyleId(id);
 }
 
 /**
  * @category Style
  */
 export function pushItemStyleId(id: string) {
-	cFrame.getFrameChecked().pushItemStyleId(id);
+	CoreFrame.getFrameChecked().pushItemStyleId(id);
 }
 
 /**
  * @category Style
  */
 export function popItemStyleId() {
-	cFrame.getFrameChecked().popItemStyleId();
+	CoreFrame.getFrameChecked().popItemStyleId();
 }

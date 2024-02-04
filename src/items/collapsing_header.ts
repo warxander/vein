@@ -1,7 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { TextData } from '../core/painter';
 import { Color } from '../core/types';
-import { getDefaultStyleSelectorState } from '../core/utils';
+import * as Utils from '../core/utils';
 
 /**
  * @category Items
@@ -13,10 +12,7 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 	const style = Frame.getStyle();
 
 	let selector = frame.buildStyleSelector('collapsing-header');
-
-	const font = style.getPropertyAs<number>(selector, 'font-family');
-	const scale = style.getPropertyAs<number>(selector, 'font-size');
-	const textData = new TextData(text, font, scale);
+	const textData = Utils.createTextData(text, selector);
 
 	const iw = frame.tryGetItemWidth();
 
@@ -34,7 +30,7 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 
 	if (frame.isItemClicked()) isOpened = !isOpened;
 
-	const state = getDefaultStyleSelectorState(frame);
+	const state = Utils.getStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('collapsing-header', state);
 
 	const sh = style.collapsingHeader.sprite.width * GetAspectRatio(false);
@@ -46,7 +42,7 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 
 	painter.move(
 		style.collapsingHeader.sprite.width - style.collapsingHeader.sprite.offset + style.collapsingHeader.textOffset,
-		sh / 2 - painter.getFontSize(font, scale) / 2 + style.item.textOffset
+		sh / 2 - painter.getFontSize(textData.font, textData.scale) / 2 + style.item.textOffset
 	);
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.drawText(textData);

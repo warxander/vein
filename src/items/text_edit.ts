@@ -1,7 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { getDefaultStyleSelectorState } from '../core/utils';
-import { Color } from '../core/types';
-import { TextData } from '../core/painter';
+import { Color, TextData } from '../core/types';
+import * as Utils from '../core/utils';
 
 /**
  * @category Items
@@ -41,7 +40,7 @@ export function textEdit(
 	if (frame.isKeyboardOnScreen()) resultText = frame.tryGetOnScreenKeyboardResult();
 	else if (frame.isItemClicked()) frame.showOnScreenKeyboard(keyboardTitle, text, maxTextLength);
 
-	selector = frame.buildStyleSelector('text-edit', getDefaultStyleSelectorState(frame));
+	selector = frame.buildStyleSelector('text-edit', Utils.getStyleSelectorState(frame));
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.drawRect(w, h);

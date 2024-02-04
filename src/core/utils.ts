@@ -1,5 +1,17 @@
 import { Frame } from './frame';
-import { Color, Image } from './types';
+import { Color, Image, TextData } from './types';
+
+export function createTextData(text: string, selector: string, w?: number): TextData {
+	if (text.length === 0) return TextData.Empty;
+
+	const style = Frame.getStyle();
+	return new TextData(
+		text,
+		style.getPropertyAs<number>(selector, 'font-family'),
+		style.getPropertyAs<number>(selector, 'font-size'),
+		w
+	);
+}
 
 export function drawItemBackground(frame: Frame, selector: string, w: number, h: number) {
 	const style = Frame.getStyle();
@@ -16,7 +28,7 @@ export function drawItemBackground(frame: Frame, selector: string, w: number, h:
 	}
 }
 
-export function getDefaultStyleSelectorState(frame: Frame): string | undefined {
+export function getStyleSelectorState(frame: Frame): string | undefined {
 	return frame.isItemDisabled()
 		? 'disabled'
 		: frame.isItemPressed()

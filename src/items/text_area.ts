@@ -1,6 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { TextData } from '../core/painter';
 import { Color } from '../core/types';
+import * as Utils from '../core/utils';
 
 /**
  * @category Items
@@ -12,14 +12,12 @@ export function textArea(text: string, w: number) {
 	const style = Frame.getStyle();
 
 	const selector = frame.buildStyleSelector('text-area');
-
-	const font = style.getPropertyAs<number>(selector, 'font-family');
-	const scale = style.getPropertyAs<number>(selector, 'font-size');
-	const textData = new TextData(text, font, scale, w);
+	const textData = Utils.createTextData(text, selector, w);
 
 	const lc = painter.getTextLineCount(textData);
 
-	const h = lc === 0 ? 0 : lc === 1 ? style.item.height : painter.getFontSize(font, scale) * (lc + 1);
+	const h =
+		lc === 0 ? 0 : lc === 1 ? style.item.height : painter.getFontSize(textData.font, textData.scale) * (lc + 1);
 
 	frame.beginItem(w, h);
 

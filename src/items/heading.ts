@@ -1,6 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { TextData } from '../core/painter';
 import { Color } from '../core/types';
+import * as Utils from '../core/utils';
 
 /**
  * @category Items
@@ -12,10 +12,7 @@ export function heading(text: string) {
 	const style = Frame.getStyle();
 
 	const selector = frame.buildStyleSelector('heading');
-
-	const font = style.getPropertyAs<number>(selector, 'font-family');
-	const scale = style.getPropertyAs<number>(selector, 'font-size');
-	const textData = new TextData(text, font, scale);
+	const textData = Utils.createTextData(text, selector);
 
 	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(textData);
 	const h = style.item.height;
@@ -23,7 +20,7 @@ export function heading(text: string) {
 	frame.beginItem(w, h);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	painter.move(0, (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset);
+	painter.move(0, (h - painter.getFontSize(textData.font, textData.scale)) / 2 + style.item.textOffset);
 	painter.drawText(textData);
 
 	frame.endItem();

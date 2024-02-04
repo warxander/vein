@@ -1,5 +1,4 @@
 import { getFrameChecked } from '../core/frame';
-import { Style } from '../core/style';
 
 /**
  * @category Items

@@ -1,7 +1,6 @@
 import { Frame, MouseCursor, getFrameChecked } from '../core/frame';
-import { TextData } from '../core/painter';
 import { Color } from '../core/types';
-import { getDefaultStyleSelectorState } from '../core/utils';
+import * as Utils from '../core/utils';
 
 /**
  * @category Items
@@ -13,11 +12,8 @@ export function hyperlink(url: string, urlText: string | null = null) {
 	const style = Frame.getStyle();
 
 	let selector = frame.buildStyleSelector('hyperlink');
-
-	const font = style.getPropertyAs<number>(selector, 'font-family');
-	const scale = style.getPropertyAs<number>(selector, 'font-size');
 	const text = urlText ?? url;
-	const textData = new TextData(text, font, scale);
+	const textData = Utils.createTextData(text, selector);
 
 	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(textData);
 	const h = style.item.height;
@@ -29,11 +25,11 @@ export function hyperlink(url: string, urlText: string | null = null) {
 		if (frame.isItemClicked()) SendNUIMessage({ openUrl: { url: url } });
 	}
 
-	const state = getDefaultStyleSelectorState(frame);
+	const state = Utils.getStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('hyperlink', state);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	painter.move(0, (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset);
+	painter.move(0, (h - painter.getFontSize(textData.font, textData.scale)) / 2 + style.item.textOffset);
 	painter.drawText(textData);
 
 	frame.endItem();

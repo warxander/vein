@@ -1,7 +1,6 @@
 import { Frame, getFrameChecked } from '../core/frame';
-import { TextData } from '../core/painter';
 import { Color } from '../core/types';
-import { drawItemBackground, getDefaultStyleSelectorState } from '../core/utils';
+import * as Utils from '../core/utils';
 
 /**
  * @category Items
@@ -13,13 +12,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	const style = Frame.getStyle();
 
 	let selector = frame.buildStyleSelector('sprite-button');
-
-	let textData: TextData | undefined;
-	if (text !== null) {
-		const font = style.getPropertyAs<number>(selector, 'font-family');
-		const scale = style.getPropertyAs<number>(selector, 'font-size');
-		textData = new TextData(text, font, scale);
-	}
+	const textData = text !== null ? Utils.createTextData(text, selector) : null;
 
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;
@@ -29,7 +22,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	if (iw !== undefined) w = iw;
 	else {
 		w += sw + style.button.padding * 2;
-		const tw = textData !== undefined ? painter.getTextWidth(textData) : 0;
+		const tw = textData !== null ? painter.getTextWidth(textData) : 0;
 		if (tw !== 0) w += tw + spriteButtonStyle.padding;
 	}
 
@@ -39,10 +32,10 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 
 	const isClicked = frame.isItemClicked();
 
-	const state = getDefaultStyleSelectorState(frame);
+	const state = Utils.getStyleSelectorState(frame);
 	if (state !== undefined) selector = frame.buildStyleSelector('sprite-button', state);
 
-	drawItemBackground(frame, selector, w, h);
+	Utils.drawItemBackground(frame, selector, w, h);
 
 	const sh = sw * GetAspectRatio(false);
 	const so = (h - sh) / 2;
@@ -52,7 +45,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	painter.move(style.button.padding, so);
 	painter.drawSprite(dict, name, sw, sh);
 
-	if (textData !== undefined) {
+	if (textData !== null) {
 		painter.move(
 			sw + spriteButtonStyle.padding,
 			-so + (h - painter.getFontSize(textData.font, textData.scale)) / 2 + style.item.textOffset

@@ -1,8 +1,7 @@
 import { Frame, getFrameChecked } from '../core/frame';
 import { Color, Rect, Vector2 } from '../core/types';
 import { InputControl } from '../core/input';
-import { getDefaultStyleSelectorState } from '../core/utils';
-import { TextData } from '../core/painter';
+import * as Utils from '../core/utils';
 
 /**
  * @category Items
@@ -19,13 +18,10 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	frame.beginItem(w, h);
 
-	const selector = frame.buildStyleSelector('slider', getDefaultStyleSelectorState(frame));
+	const selector = frame.buildStyleSelector('slider', Utils.getStyleSelectorState(frame));
+	const sliderTextData = Utils.createTextData(text ?? value.toFixed(2), selector);
 
 	const sliderStyle = style.slider;
-
-	const font = style.getPropertyAs<number>(selector, 'font-family');
-	const scale = style.getPropertyAs<number>(selector, 'font-size');
-	const sliderTextData = new TextData(text ?? value.toFixed(2), font, scale);
 
 	const tw = painter.getTextWidth(sliderTextData);
 	const sw = tw !== 0 ? w - tw - style.slider.padding : w;
@@ -62,7 +58,8 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	if (tw !== 0) {
 		const tho = sw + style.slider.padding;
-		const tvo = -sh + (h - painter.getFontSize(font, scale)) / 2 + style.item.textOffset;
+		const tvo =
+			-sh + (h - painter.getFontSize(sliderTextData.font, sliderTextData.scale)) / 2 + style.item.textOffset;
 
 		painter.move(tho, tvo);
 		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));

@@ -1,8 +1,4 @@
-import { Color, Vector2 } from './types';
-
-export class TextData {
-	constructor(public text: string, public font: number, public scale: number, public width?: number) {}
-}
+import { Color, TextData, Vector2 } from './types';
 
 export class Painter {
 	private position: Vector2;
@@ -32,6 +28,8 @@ export class Painter {
 	}
 
 	drawRect(w: number, h: number) {
+		if (w === 0 || h === 0) return;
+
 		const sw = w * this.scale;
 		const sh = h * this.scale;
 
@@ -39,6 +37,8 @@ export class Painter {
 	}
 
 	drawSprite(dict: string, name: string, w: number, h: number, heading?: number) {
+		if (dict.length === 0 || name.length === 0 || w === 0 || h === 0) return;
+
 		const sw = w * this.scale;
 		const sh = h * this.scale;
 
@@ -50,6 +50,8 @@ export class Painter {
 	}
 
 	getTextWidth(textData: TextData): number {
+		if (textData.isEmpty()) return 0;
+
 		this.setText(textData, false);
 
 		BeginTextCommandGetWidth(this.getTextEntry());
@@ -57,6 +59,8 @@ export class Painter {
 	}
 
 	getTextLineCount(textData: TextData): number {
+		if (textData.isEmpty()) return 0;
+
 		this.setWrappedText(textData, false);
 
 		BeginTextCommandLineCount(this.getTextEntry());
@@ -64,6 +68,8 @@ export class Painter {
 	}
 
 	drawText(textData: TextData) {
+		if (textData.isEmpty()) return 0;
+
 		this.setText(textData, true);
 		SetTextColour(...this.color);
 
@@ -72,6 +78,8 @@ export class Painter {
 	}
 
 	drawMultilineText(textData: TextData) {
+		if (textData.isEmpty()) return 0;
+
 		this.setWrappedText(textData, true);
 		SetTextColour(...this.color);
 
@@ -84,8 +92,6 @@ export class Painter {
 	}
 
 	private setText(textData: TextData, useScaling: boolean) {
-		if (textData.text.length === 0) return;
-
 		++this.textEntryIndex;
 		AddTextEntry(this.getTextEntry(), textData.text);
 
@@ -94,8 +100,6 @@ export class Painter {
 	}
 
 	private setWrappedText(textData: TextData, useScaling: boolean) {
-		if (textData.text.length === 0) return;
-
 		++this.textEntryIndex;
 		AddTextEntry(this.getTextEntry(), textData.text);
 

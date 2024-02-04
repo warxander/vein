@@ -21,8 +21,10 @@ export function progressBar(value: number, w: number) {
 	painter.move(0, (style.item.height - h) / 2);
 	painter.drawRect(w, h);
 
-	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
-	painter.drawRect(w * Math.min(1, Math.max(0, value)), h);
+	if (value !== 0) {
+		painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
+		painter.drawRect(w * Math.min(1, Math.max(0, value)), h);
+	}
 
 	frame.endItem();
 }
