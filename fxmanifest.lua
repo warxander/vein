@@ -1,6 +1,9 @@
 fx_version 'cerulean'
 game 'gta5'
 
+author 'Warxander (https://github.com/warxander/vein)'
+description 'FiveM GUI Library'
+
 dependencies {
 	'yarn',
 	'webpack'
