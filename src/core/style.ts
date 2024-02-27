@@ -210,7 +210,7 @@ export class Style {
 		for (const rule of styleSheetAst.stylesheet.rules) {
 			if (rule.type != CssTypes.rule) continue;
 
-			let properties = new Map<string, StylePropertyValue>();
+			const properties = new Map<string, StylePropertyValue>();
 
 			for (const declaration of (rule as CssRuleAST).declarations) {
 				if (declaration.type != CssTypes.declaration) continue;
