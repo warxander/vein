@@ -533,17 +533,3 @@ export function setNextFrameStyleId(id: string) {
 export function setNextItemStyleId(id: string) {
 	CoreFrame.getFrameChecked().setNextItemStyleId(id);
 }
-
-/**
- * @category Style
- */
-export function pushItemStyleId(id: string) {
-	CoreFrame.getFrameChecked().pushItemStyleId(id);
-}
-
-/**
- * @category Style
- */
-export function popItemStyleId() {
-	CoreFrame.getFrameChecked().popItemStyleId();
-}

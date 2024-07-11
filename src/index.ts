@@ -42,8 +42,6 @@ globalThis.exports('registerStylePropertyAsImage', Exports.registerStyleProperty
 globalThis.exports('registerStylePropertyAsInteger', Exports.registerStylePropertyAsInteger);
 
 globalThis.exports('setNextItemStyleId', Exports.setNextItemStyleId);
-globalThis.exports('pushItemStyleId', Exports.pushItemStyleId);
-globalThis.exports('popItemStyleId', Exports.popItemStyleId);
 
 globalThis.exports('button', Exports.button);
 globalThis.exports('checkBox', Exports.checkBox);

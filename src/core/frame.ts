@@ -68,7 +68,6 @@ export class Frame {
 	private painter: Painter;
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
-	private itemStyleIdStack: string[] = [];
 
 	private layout: Layout;
 
@@ -242,8 +241,6 @@ export class Frame {
 			contentRect.size.y + Frame.style.frame.padding.y * scale * 2
 		);
 
-		this.itemStyleIdStack = [];
-
 		Frame.nextState = new FrameState();
 	}
 
@@ -320,14 +317,6 @@ export class Frame {
 		this.nextItemState.styleId = id;
 	}
 
-	pushItemStyleId(id: string) {
-		this.itemStyleIdStack.push(id);
-	}
-
-	popItemStyleId() {
-		this.itemStyleIdStack.pop();
-	}
-
 	isAreaHovered(rect: Rect): boolean {
 		return rect.contains(this.input.getMousePosition());
 	}
@@ -355,8 +344,7 @@ export class Frame {
 	}
 
 	buildStyleSelector(name: string, state: string | undefined = undefined): string {
-		const id = this.nextItemState.styleId ?? this.itemStyleIdStack[this.itemStyleIdStack.length - 1];
-		return Frame.style.buildSelector(name, id, state);
+		return Frame.style.buildSelector(name, this.nextItemState.styleId, state);
 	}
 
 	isKeyboardOnScreen(): boolean {
