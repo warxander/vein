@@ -180,7 +180,7 @@ export class Frame {
 		const rect = this.memory.rect;
 		if (Frame.nextState.size === undefined) return rect;
 		return new Rect(
-			new Vector2(rect.position.x, rect.position.y),
+			rect.position,
 			new Vector2(Frame.nextState.size[0] ?? rect.size.x, Frame.nextState.size[1] ?? rect.size.y)
 		);
 	}

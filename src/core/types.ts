@@ -13,10 +13,20 @@ export class TextData {
 
 export class Vector2 {
 	constructor(public x: number = 0, public y: number = 0) {}
+
+	clone(): Vector2 {
+		return new Vector2(this.x, this.y);
+	}
 }
 
 export class Rect {
-	constructor(public position: Vector2 = new Vector2(), public size: Vector2 = new Vector2()) {}
+	position: Vector2;
+	size: Vector2;
+
+	constructor(position = new Vector2(), size = new Vector2()) {
+		this.position = position.clone();
+		this.size = size.clone();
+	}
 
 	contains(point: Vector2): boolean {
 		return !(
