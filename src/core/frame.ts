@@ -32,7 +32,7 @@ class FrameState {
 
 class FrameMemory {
 	rect = new Rect(new Vector2(0.33, 0.33));
-	movePosition: Vector2 | null = null;
+	movePosition: Vector2 | undefined = undefined;
 
 	constructor(public id: number) {}
 }
@@ -384,20 +384,20 @@ export class Frame {
 		)
 			return;
 
-		if (!this.memory.movePosition) {
+		if (this.memory.movePosition === undefined) {
 			if (this.input.isControlPressed(InputControl.MouseLeftButton)) {
 				const mousePosition = this.input.getMousePosition();
 				this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
 			}
 		} else if (!this.input.isControlDown(InputControl.MouseLeftButton)) {
-			this.memory.movePosition = null;
+			this.memory.movePosition = undefined;
 		}
 
 		if (!this.memory.movePosition) this.mouseCursor = MouseCursor.PreGrab;
 	}
 
 	private endMove() {
-		if (!this.memory.movePosition) return;
+		if (this.memory.movePosition === undefined) return;
 
 		const mousePosition = this.input.getMousePosition();
 
