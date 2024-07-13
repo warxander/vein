@@ -1,0 +1,127 @@
+button, check-box, sprite-button, text-edit {
+	background-color: #242730;
+	color: #FFFFF0;
+	font-family: 0;
+	font-size: 0.292;
+}
+
+button:active, sprite-button:active {
+	background-color: #893240;
+}
+
+button:disabled, check-box:disabled, collapsing-header:disabled, hyperlink:disabled, selectable:disabled, slider:disabled, sprite-button:disabled, text-edit:disabled {
+	color: #4F5259;
+}
+
+button:hover, sprite-button:hover {
+	background-color: #F21951;
+}
+
+check-box {
+	accent-color: #FFFFF0;
+}
+
+check-box:active, collapsing-header:active, slider:active {
+	accent-color: #893240;
+}
+
+check-box:disabled, collapsing-header:disabled, slider:disabled {
+	accent-color: #4F5259;
+}
+
+check-box:hover, collapsing-header:hover, slider:hover {
+	accent-color: #F21951;
+}
+
+collapsing-header {
+	accent-color: #FFFFF0;
+	color: #FFFFF0;
+	font-family: 0;
+	font-size: 0.292;
+}
+
+frame {
+	background-color: #32353D;
+	border-color: rgba(12, 12, 12, 0.375);
+	color: rgba(105, 255, 89, 0.125);
+}
+
+heading {
+	color: #FFFFF0;
+	font-family: 0;
+	font-size: 0.405;
+}
+
+hyperlink {
+	color: #00829B;
+	font-family: 0;
+	font-size: 0.292;
+}
+
+hyperlink:active {
+	color: #275363;
+}
+
+hyperlink:hover {
+	color: #00ADCE;
+}
+
+label, text-area {
+	color: #C4C4BD;
+	font-family: 0;
+	font-size: 0.292;
+}
+
+progress-bar {
+	background-color: #242730;
+	color: #099C76;
+}
+
+selectable {
+	accent-color: #099C76;
+	background-color: #32353D;
+	color: #FFFFF0;
+	font-family: 0;
+	font-size: 0.292;
+}
+
+selectable:active {
+	accent-color: #295F52;
+	background-color: #15171C;
+}
+
+selectable:disabled {
+	accent-color: #242730;
+}
+
+selectable:hover {
+	background-color: #242730;
+}
+
+separator {
+	color: #242730;
+}
+
+slider {
+	accent-color: #C4C4BD;
+	background-color: #242730;
+	color: #FFFFF0;
+	font-family: 0;
+	font-size: 0.292;
+}
+
+text-edit, text-edit:active, text-edit:hover {
+	placeholder-color: #C4C4BD;
+}
+
+text-edit:active {
+	color: #893240;
+}
+
+text-edit:disabled {
+	placeholder-color: #4F5259;
+}
+
+text-edit:hover {
+	color: #F21951;
+}
