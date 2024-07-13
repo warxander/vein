@@ -70,3 +70,5 @@ globalThis.exports('sprite', Exports.sprite);
 globalThis.exports('spriteButton', Exports.spriteButton);
 globalThis.exports('textArea', Exports.textArea);
 globalThis.exports('textEdit', Exports.textEdit);
+
+globalThis.exports('openUrl', Exports.openUrl);

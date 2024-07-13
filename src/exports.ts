@@ -2,6 +2,7 @@ import * as CoreFrame from './core/frame';
 import { InputControl } from './core/input';
 import { StylePropertyType } from './core/style';
 import * as CoreTypes from './core/types';
+import * as CoreUtils from './core/utils';
 
 function toRect(rect: CoreTypes.Rect): Rect {
 	return { x: rect.position.x, y: rect.position.y, w: rect.size.x, h: rect.size.y };
@@ -588,4 +589,11 @@ export function setNextFrameStyleId(id: string) {
  */
 export function setNextItemStyleId(id: string) {
 	CoreFrame.getFrameChecked().setNextItemStyleId(id);
+}
+
+/**
+ * @category Misc
+ */
+export function openUrl(url: string) {
+	CoreUtils.openUrl(url);
 }

@@ -22,7 +22,7 @@ export function hyperlink(url: string, urlText: string | null = null) {
 
 	if (frame.isItemHovered()) {
 		frame.setMouseCursor(MouseCursor.MiddleFinger);
-		if (frame.isItemClicked()) SendNUIMessage({ openUrl: { url: url } });
+		if (frame.isItemClicked()) Utils.openUrl(url);
 	}
 
 	const state = Utils.getStyleSelectorState(frame);

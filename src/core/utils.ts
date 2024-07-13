@@ -37,3 +37,7 @@ export function getStyleSelectorState(frame: Frame): string | undefined {
 		? 'hover'
 		: undefined;
 }
+
+export function openUrl(url: string) {
+	SendNUIMessage({ openUrl: { url: url } });
+}
