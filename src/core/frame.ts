@@ -1,4 +1,4 @@
-import { Color, Rect, Vector2 } from './types';
+import { Color, MouseCursor, Rect, Vector2 } from './types';
 import { Input, InputFlags, InputControl } from './input';
 import { Layout } from './layout';
 import { Painter } from './painter';
@@ -35,22 +35,6 @@ class FrameMemory {
 	movePosition: Vector2 | undefined = undefined;
 
 	constructor(public id: number) {}
-}
-
-export enum MouseCursor {
-	None = 0,
-	Normal = 1,
-	TransparentNormal = 2,
-	PreGrab = 3,
-	Grab = 4,
-	MiddleFinger = 5,
-	LeftArrow = 6,
-	RightArrow = 7,
-	UpArrow = 8,
-	DownArrow = 9,
-	HorizontalExpand = 10,
-	Add = 11,
-	Remove = 12
 }
 
 export class Frame {
@@ -224,11 +208,8 @@ export class Frame {
 	end() {
 		this.endMove();
 
-		if (!this.isInputDisabled()) {
-			SetMouseCursorActiveThisFrame();
-			SetMouseCursorSprite(this.mouseCursor);
-		}
 
+		if (!this.isInputDisabled()) SetMouseCursorSprite(this.mouseCursor);
 		this.mouseCursor = MouseCursor.Normal;
 
 		this.layout.end();

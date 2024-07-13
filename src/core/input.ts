@@ -23,6 +23,8 @@ export class Input {
 	private static readonly DISABLED_CONTROLS_IN_VEHICLE = [80, 106, 122, 135, 282, 283, 284, 285];
 
 	constructor(private inputFlags: InputFlags) {
+		if (!this.isDisabled()) SetMouseCursorActiveThisFrame();
+
 		this.mousePosition = this.isDisabled()
 			? new Vector2(-Infinity, -Infinity)
 			: new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));

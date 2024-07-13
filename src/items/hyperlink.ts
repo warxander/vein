@@ -1,5 +1,5 @@
-import { Frame, MouseCursor, getFrameChecked } from '../core/frame';
-import { Color } from '../core/types';
+import { Frame, getFrameChecked } from '../core/frame';
+import { Color, MouseCursor } from '../core/types';
 import * as Utils from '../core/utils';
 
 /**
