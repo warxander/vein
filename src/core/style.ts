@@ -132,7 +132,8 @@ export class Style {
 
 		this.item = {
 			height: 0.0315,
-			textOffset: -0.0038
+			textOffset: -0.0038,
+			dragOffset: new Vector2(0.012, 0.008)
 		};
 
 		this.frame = {

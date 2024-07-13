@@ -13,11 +13,25 @@ class ItemState {
 	styleId: string | undefined = undefined;
 }
 
+class ItemDragState {
+	isDropped = false;
+	isDragged = true;
+	payload: string | null = null;
+
+	constructor(public readonly id: string) {}
+}
+
 enum FrameFlags {
 	None,
 	DisableBackground = 1 << 1,
 	DisableBorder = 1 << 2,
 	DisableMove = 1 << 3
+}
+
+enum FrameDrawOrder {
+	Background = 1,
+	Ui = 2,
+	DragAndDrop = 7
 }
 
 class FrameState {
@@ -33,20 +47,23 @@ class FrameState {
 class FrameMemory {
 	rect = new Rect(new Vector2(0.33, 0.33));
 	movePosition: Vector2 | undefined = undefined;
+	itemDragState: ItemDragState | undefined = undefined;
 
 	constructor(public readonly id: number) {}
 }
 
 export class Frame {
 	private static readonly DEFAULT_ID = 'DEFAULT';
+	private static readonly ITEM_DRAG_TIME_THRESHOLD = 175;
 	private static readonly KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
 
 	private static readonly frameMemory = new Map<string, FrameMemory>();
 	private static readonly style = new Style();
 
-	private static nextState = new FrameState();
 	private static isKeyboardOnScreen = false;
 	private static isDebugEnabled_ = false;
+	private static leftMouseButtonPressedTime: number | undefined = undefined;
+	private static nextState = new FrameState();
 
 	private readonly memory: FrameMemory;
 	private readonly input = new Input(Frame.nextState.inputFlags);
@@ -54,6 +71,8 @@ export class Frame {
 
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
+	private frameLayout: Layout;
+
 	private layout: Layout;
 
 	static isDebugEnabled(): boolean {
@@ -122,17 +141,21 @@ export class Frame {
 			this.memory.rect.position.y = Frame.nextState.position.y;
 		}
 
+		if (!this.input.isControlDown(InputControl.MouseLeftButton)) Frame.leftMouseButtonPressedTime = undefined;
+		else if (Frame.leftMouseButtonPressedTime === undefined) Frame.leftMouseButtonPressedTime = GetGameTimer();
+
 		this.beginMove();
 
 		const rect = this.getRect();
 		const scale = this.getScale();
 		const spacing = this.getSpacing();
 
-		this.layout = new Layout(
+		this.frameLayout = new Layout(
 			rect.position.x + Frame.style.frame.padding.x * scale,
 			rect.position.y + Frame.style.frame.padding.y * scale,
 			new Vector2(spacing.x * scale, spacing.y * scale)
 		);
+		this.layout = this.frameLayout;
 
 		this.painter = new Painter(rect.position.x, rect.position.y, scale, `VEIN_${this.memory.id}`);
 
@@ -141,12 +164,16 @@ export class Frame {
 		const selector = this.buildStyleSelector('frame');
 		const unscaledRect = new Rect(rect.position, new Vector2(rect.size.x / scale, rect.size.y / scale));
 
+		SetScriptGfxDrawOrder(FrameDrawOrder.Background);
 		drawItemBackground(this, selector, unscaledRect.size.x, unscaledRect.size.y);
+		SetScriptGfxDrawOrder(FrameDrawOrder.Ui);
 
 		if (this.isBorderDisabled()) return;
 
+		SetScriptGfxDrawOrder(FrameDrawOrder.Background);
 		this.drawBorder(selector, unscaledRect);
 		this.painter.setPosition(rect.position.x, rect.position.y);
+		SetScriptGfxDrawOrder(FrameDrawOrder.Ui);
 	}
 
 	getInput(): Input {
@@ -208,6 +235,9 @@ export class Frame {
 
 	end() {
 		this.endMove();
+
+		if (this.memory.itemDragState !== undefined && !this.input.isControlDown(InputControl.MouseLeftButton))
+			this.memory.itemDragState = undefined;
 
 		if (!this.isInputDisabled()) SetMouseCursorSprite(this.mouseCursor);
 		this.mouseCursor = MouseCursor.Normal;
@@ -294,6 +324,88 @@ export class Frame {
 		return this.nextItemState.width;
 	}
 
+	beginItemDrag(id: string): boolean {
+		if (Frame.leftMouseButtonPressedTime === undefined) return false;
+
+		if (
+			this.memory.itemDragState === undefined &&
+			!this.isItemDisabled() &&
+			this.isItemHovered() &&
+			GetGameTimer() - Frame.leftMouseButtonPressedTime >= Frame.ITEM_DRAG_TIME_THRESHOLD
+		)
+			this.memory.itemDragState = new ItemDragState(id);
+
+		const isItemDragging =
+			this.memory.itemDragState !== undefined &&
+			!this.memory.itemDragState.isDropped &&
+			this.memory.itemDragState.id === id;
+
+		if (isItemDragging) {
+			const mousePosition = this.input.getMousePosition();
+			const scale = this.getScale();
+			const spacing = this.getSpacing();
+
+			this.layout = new Layout(
+				mousePosition.x + Frame.style.item.dragOffset.x,
+				mousePosition.y + Frame.style.item.dragOffset.y,
+				new Vector2(spacing.x * scale, spacing.y * scale)
+			);
+
+			SetScriptGfxDrawOrder(FrameDrawOrder.DragAndDrop);
+		}
+
+		return isItemDragging;
+	}
+
+	endItemDrag() {
+		if (this.memory.itemDragState === undefined) return;
+
+		this.layout = this.frameLayout;
+		SetScriptGfxDrawOrder(FrameDrawOrder.Ui);
+
+		this.memory.itemDragState.isDragged = false;
+	}
+
+	isItemDragged(): boolean {
+		return this.memory.itemDragState !== undefined && this.memory.itemDragState.isDragged;
+	}
+
+	getItemDragPayload(): string | null {
+		if (this.memory.itemDragState === undefined) return null;
+		return this.memory.itemDragState.payload;
+	}
+
+	setItemDragPayload(payload: string | null) {
+		if (this.memory.itemDragState === undefined)
+			throw new Error('Frame.setItemDragPayload() failed: Nothing is dragged');
+
+		this.memory.itemDragState.payload = payload;
+	}
+
+	beginItemDrop(): boolean {
+		if (
+			this.memory.itemDragState === undefined ||
+			this.isItemDisabled() ||
+			!this.isAreaHovered(this.layout.getItemRect())
+		)
+			return false;
+
+		if (!this.memory.itemDragState.isDropped && !this.input.isControlDown(InputControl.MouseLeftButton))
+			this.memory.itemDragState.isDropped = true;
+
+		return true;
+	}
+
+	endItemDrop() {
+		if (this.memory.itemDragState === undefined || !this.memory.itemDragState.isDropped) return;
+
+		this.memory.itemDragState = undefined;
+	}
+
+	isItemDropped(): boolean {
+		return this.memory.itemDragState !== undefined && this.memory.itemDragState.isDropped;
+	}
+
 	setNextItemStyleId(id: string) {
 		this.nextItemState.styleId = id;
 	}
@@ -308,16 +420,28 @@ export class Frame {
 
 	isItemClicked(): boolean {
 		return (
-			!this.isItemDisabled() && this.input.isControlReleased(InputControl.MouseLeftButton) && this.isItemHovered()
+			this.memory.itemDragState === undefined &&
+			!this.isItemDisabled() &&
+			this.input.isControlReleased(InputControl.MouseLeftButton) &&
+			this.isItemHovered()
 		);
 	}
 
 	isItemHovered(): boolean {
-		return !this.isItemDisabled() && this.isAreaHovered(this.layout.getItemRect());
+		return (
+			this.memory.itemDragState === undefined &&
+			!this.isItemDisabled() &&
+			this.isAreaHovered(this.layout.getItemRect())
+		);
 	}
 
 	isItemPressed(): boolean {
-		return !this.isItemDisabled() && this.input.isControlDown(InputControl.MouseLeftButton) && this.isItemHovered();
+		return (
+			this.memory.itemDragState === undefined &&
+			!this.isItemDisabled() &&
+			this.input.isControlDown(InputControl.MouseLeftButton) &&
+			this.isItemHovered()
+		);
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {
@@ -353,7 +477,7 @@ export class Frame {
 	}
 
 	private beginMove() {
-		if (this.isMoveDisabled() || this.isInputDisabled()) return;
+		if (this.memory.itemDragState !== undefined || this.isMoveDisabled() || this.isInputDisabled()) return;
 
 		if (
 			!this.isAreaHovered(

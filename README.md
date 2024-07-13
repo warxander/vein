@@ -5,6 +5,7 @@ Vein is an [immediate mode](https://en.wikipedia.org/wiki/Immediate_mode_GUI) GU
 * Native-based input and rendering (custom fonts, textures, full control)
 * Based on [FiveM exports](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports) API (supports all languages)
 * 16 built-in items (plus [custom item support](https://github.com/warxander/vein-demo/blob/master/inventoryitem.js))
+* Drag & Drop support
 * [CSS-based customization](src/style.css)
 
 ![alt text](https://raw.githubusercontent.com/warxander/vein-demo/master/demo.png)

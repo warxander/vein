@@ -33,6 +33,17 @@ globalThis.exports('setNextItemPosition', Exports.setNextItemPosition);
 globalThis.exports('setNextItemSpacing', Exports.setNextItemSpacing);
 globalThis.exports('setNextItemWidth', Exports.setNextItemWidth);
 
+globalThis.exports('beginItemDrag', Exports.beginItemDrag);
+globalThis.exports('endItemDrag', Exports.endItemDrag);
+globalThis.exports('isItemDragged', Exports.isItemDragged);
+
+globalThis.exports('getItemDragPayload', Exports.getItemDragPayload);
+globalThis.exports('setItemDragPayload', Exports.setItemDragPayload);
+
+globalThis.exports('beginItemDrop', Exports.beginItemDrop);
+globalThis.exports('endItemDrop', Exports.endItemDrop);
+globalThis.exports('isItemDropped', Exports.isItemDropped);
+
 globalThis.exports('addStyleSheet', Exports.addStyleSheet);
 globalThis.exports('resetStyle', Exports.resetStyle);
 

@@ -479,6 +479,62 @@ export function setNextItemWidth(w: number) {
 }
 
 /**
+ * @category Drag & Drop
+ */
+export function beginItemDrag(id: string): boolean {
+	return CoreFrame.getFrameChecked().beginItemDrag(id);
+}
+
+/**
+ * @category Drag & Drop
+ */
+export function endItemDrag() {
+	CoreFrame.getFrameChecked().endItemDrag();
+}
+
+/**
+ * @category Drag & Drop
+ */
+export function isItemDragged(): boolean {
+	return CoreFrame.getFrameChecked().isItemDragged();
+}
+
+/**
+ * @category Drag & Drop
+ */
+export function getItemDragPayload(): string | null {
+	return CoreFrame.getFrameChecked().getItemDragPayload();
+}
+
+/**
+ * @category Drag & Drop
+ */
+export function setItemDragPayload(payload: string | null) {
+	CoreFrame.getFrameChecked().setItemDragPayload(payload);
+}
+
+/**
+ * @category Drag & Drop
+ */
+export function beginItemDrop(): boolean {
+	return CoreFrame.getFrameChecked().beginItemDrop();
+}
+
+/**
+ * @category Drag & Drop
+ */
+export function endItemDrop() {
+	CoreFrame.getFrameChecked().endItemDrop();
+}
+
+/**
+ * @category Drag & Drop
+ */
+export function isItemDropped(): boolean {
+	return CoreFrame.getFrameChecked().isItemDropped();
+}
+
+/**
  * @category Style
  */
 export function addStyleSheet(sheet: string) {
