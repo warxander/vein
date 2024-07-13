@@ -418,11 +418,11 @@ export class Frame {
 		return this.nextItemState.disabled;
 	}
 
-	isItemClicked(): boolean {
+	isItemClicked(control = InputControl.MouseLeftButton): boolean {
 		return (
 			this.memory.itemDragState === undefined &&
 			!this.isItemDisabled() &&
-			this.input.isControlReleased(InputControl.MouseLeftButton) &&
+			this.input.isControlReleased(control) &&
 			this.isItemHovered()
 		);
 	}
@@ -435,11 +435,11 @@ export class Frame {
 		);
 	}
 
-	isItemPressed(): boolean {
+	isItemPressed(control = InputControl.MouseLeftButton): boolean {
 		return (
 			this.memory.itemDragState === undefined &&
 			!this.isItemDisabled() &&
-			this.input.isControlDown(InputControl.MouseLeftButton) &&
+			this.input.isControlDown(control) &&
 			this.isItemHovered()
 		);
 	}
