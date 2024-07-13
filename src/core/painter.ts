@@ -51,39 +51,35 @@ export class Painter {
 	}
 
 	getTextWidth(textData: TextData): number {
-		if (textData.isEmpty()) return 0;
-
 		this.setText(textData, false);
+		if (textData.text.length === 0) return 0;
 
 		BeginTextCommandGetWidth(this.getTextEntry());
 		return EndTextCommandGetWidth(true);
 	}
 
 	getTextLineCount(textData: TextData): number {
-		if (textData.isEmpty()) return 0;
-
 		this.setWrappedText(textData, false);
+		if (textData.text.length === 0) return 0;
 
 		BeginTextCommandLineCount(this.getTextEntry());
 		return EndTextCommandLineCount(this.position.x, this.position.y);
 	}
 
 	drawText(textData: TextData) {
-		if (textData.isEmpty()) return 0;
-
 		this.setText(textData, true);
-		SetTextColour(...this.color);
+		if (textData.text.length === 0) return;
 
+		SetTextColour(...this.color);
 		BeginTextCommandDisplayText(this.getTextEntry());
 		EndTextCommandDisplayText(this.position.x, this.position.y);
 	}
 
 	drawMultilineText(textData: TextData) {
-		if (textData.isEmpty()) return 0;
-
 		this.setWrappedText(textData, true);
-		SetTextColour(...this.color);
+		if (textData.text.length === 0) return;
 
+		SetTextColour(...this.color);
 		BeginTextCommandDisplayText(this.getTextEntry());
 		EndTextCommandDisplayText(this.position.x, this.position.y);
 	}
