@@ -197,10 +197,6 @@ export class Frame {
 		);
 	}
 
-	getStyleId(): string | undefined {
-		return Frame.nextState.styleId;
-	}
-
 	getScale(): number {
 		return Frame.nextState.scale ?? 1;
 	}
@@ -211,22 +207,6 @@ export class Frame {
 			Frame.nextState.spacing[0] ?? Frame.style.frame.itemSpacing.x,
 			Frame.nextState.spacing[1] ?? Frame.style.frame.itemSpacing.y
 		);
-	}
-
-	isBackgroundDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableBackground);
-	}
-
-	isBorderDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableBorder);
-	}
-
-	isInputDisabled(): boolean {
-		return !!(Frame.nextState.inputFlags & InputFlags.DisableInput);
-	}
-
-	isMoveDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
 	}
 
 	getStyleProperty(selector: string, property: string): StylePropertyValue {
@@ -512,6 +492,22 @@ export class Frame {
 		this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
 
 		this.mouseCursor = MouseCursor.Grab;
+	}
+
+	private isBorderDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableBorder);
+	}
+
+	private isInputDisabled(): boolean {
+		return !!(Frame.nextState.inputFlags & InputFlags.DisableInput);
+	}
+
+	private isBackgroundDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableBackground);
+	}
+
+	private isMoveDisabled(): boolean {
+		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
 	}
 
 	private drawBorder(selector: string, unscaledRect: Rect) {
