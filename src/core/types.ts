@@ -20,7 +20,12 @@ export enum MouseCursor {
 export class TextData {
 	static readonly Empty = new TextData('', -1, -1);
 
-	constructor(public text: string, public font: number, public scale: number, public width?: number) {}
+	constructor(
+		public readonly text: string,
+		public readonly font: number,
+		public readonly scale: number,
+		public readonly width?: number
+	) {}
 
 	isEmpty(): boolean {
 		return this.text.length === 0;

@@ -3,7 +3,7 @@ import { Rect, Vector2 } from './types';
 class LayoutState {
 	isFirstUse = true;
 
-	constructor(public orientation: LayoutOrientation, public rect: Rect) {}
+	constructor(public readonly orientation: LayoutOrientation, public readonly rect: Rect) {}
 }
 
 export enum LayoutOrientation {
@@ -12,14 +12,13 @@ export enum LayoutOrientation {
 }
 
 export class Layout {
-	private layoutStack: LayoutState[] = [];
+	private readonly layoutStack: LayoutState[] = [];
+	private readonly contentRect: Rect;
 
 	private isCustomItemPosition = false;
 	private customItemSpacing: number | undefined = undefined;
 
 	private itemRect = new Rect();
-
-	private contentRect: Rect;
 
 	constructor(x: number, y: number, private itemSpacing: Vector2) {
 		this.layoutStack.push(new LayoutState(LayoutOrientation.Vertical, new Rect(new Vector2(x, y))));

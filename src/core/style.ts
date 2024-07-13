@@ -49,9 +49,9 @@ function parseValue(value: string, propertyType: StylePropertyType): StyleProper
 }
 
 export class Style {
-	private static defaultSheet = LoadResourceFile('vein', 'src/style.css');
+	private static readonly defaultSheet = LoadResourceFile('vein', 'src/style.css');
 
-	private static propertyTypes = new Map<string, StylePropertyType>([
+	private static readonly propertyTypes = new Map<string, StylePropertyType>([
 		['accent-color', StylePropertyType.Color],
 		['background-color', StylePropertyType.Color],
 		['background-image', StylePropertyType.Image],
@@ -62,8 +62,8 @@ export class Style {
 		['placeholder-color', StylePropertyType.Color]
 	]);
 
-	private selectorProperties = new Map<string, StylePropertyValuesMap>();
-	private idToSelectorsMap = new Map<string, string>();
+	private readonly selectorProperties = new Map<string, StylePropertyValuesMap>();
+	private readonly idToSelectorsMap = new Map<string, string>();
 
 	readonly button;
 	readonly checkbox;

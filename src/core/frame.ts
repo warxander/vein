@@ -34,25 +34,26 @@ class FrameMemory {
 	rect = new Rect(new Vector2(0.33, 0.33));
 	movePosition: Vector2 | undefined = undefined;
 
-	constructor(public id: number) {}
+	constructor(public readonly id: number) {}
 }
 
 export class Frame {
 	private static readonly DEFAULT_ID = 'DEFAULT';
 	private static readonly KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
 
-	private static frameMemory = new Map<string, FrameMemory>();
-	private static style = new Style();
+	private static readonly frameMemory = new Map<string, FrameMemory>();
+	private static readonly style = new Style();
+
 	private static nextState = new FrameState();
 	private static isKeyboardOnScreen = false;
 	private static isDebugEnabled_ = false;
 
-	private memory: FrameMemory;
-	private input = new Input(Frame.nextState.inputFlags);
-	private painter: Painter;
+	private readonly memory: FrameMemory;
+	private readonly input = new Input(Frame.nextState.inputFlags);
+	private readonly painter: Painter;
+
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
-
 	private layout: Layout;
 
 	static isDebugEnabled(): boolean {
@@ -207,7 +208,6 @@ export class Frame {
 
 	end() {
 		this.endMove();
-
 
 		if (!this.isInputDisabled()) SetMouseCursorSprite(this.mouseCursor);
 		this.mouseCursor = MouseCursor.Normal;
