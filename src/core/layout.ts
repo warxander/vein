@@ -12,17 +12,16 @@ export enum LayoutOrientation {
 }
 
 export class Layout {
-	private readonly layoutStack: LayoutState[] = [];
+	private readonly stateStack: LayoutState[];
 	private readonly contentRect: Rect;
 
-	private isCustomItemPosition = false;
-	private customItemSpacing: number | undefined = undefined;
+	private isItemWithCustomPosition = false;
+	private itemCustomSpacing: number | undefined = undefined;
 
 	private itemRect = new Rect();
 
 	constructor(x: number, y: number, private itemSpacing: Vector2) {
-		this.layoutStack.push(new LayoutState(LayoutOrientation.Vertical, new Rect(new Vector2(x, y))));
-
+		this.stateStack = [new LayoutState(LayoutOrientation.Vertical, new Rect(new Vector2(x, y)))];
 		this.contentRect = new Rect(new Vector2(x, y));
 	}
 
@@ -31,7 +30,7 @@ export class Layout {
 	}
 
 	end() {
-		if (this.layoutStack.length !== 1) throw new Error('Layout.end() failed: Stack is not empty');
+		if (this.stateStack.length !== 1) throw new Error('Layout.end() failed: Stack is not empty');
 
 		const layoutSize = this.getTopLayout().rect.size;
 		this.contentRect.size.x = Math.max(this.contentRect.size.x, layoutSize.x);
@@ -39,21 +38,21 @@ export class Layout {
 	}
 
 	beginItem(position: Vector2 | undefined, spacing: number | undefined, w: number, h: number) {
-		this.isCustomItemPosition = position !== undefined;
-		this.customItemSpacing = spacing;
+		this.isItemWithCustomPosition = position !== undefined;
+		this.itemCustomSpacing = spacing;
 
 		this.itemRect = new Rect(position ?? this.getNextItemPosition(), new Vector2(w, h));
 	}
 
 	endItem() {
-		if (!this.isCustomItemPosition) this.extendTopLayout(this.itemRect.size);
+		if (!this.isItemWithCustomPosition) this.extendTopLayout(this.itemRect.size);
 
-		this.customItemSpacing = undefined;
-		this.isCustomItemPosition = false;
+		this.itemCustomSpacing = undefined;
+		this.isItemWithCustomPosition = false;
 	}
 
 	beginHorizontal(h?: number) {
-		this.layoutStack.push(
+		this.stateStack.push(
 			new LayoutState(LayoutOrientation.Horizontal, new Rect(this.getNextItemPosition(), new Vector2(0, h ?? 0)))
 		);
 	}
@@ -66,7 +65,7 @@ export class Layout {
 	}
 
 	beginVertical(w?: number) {
-		this.layoutStack.push(
+		this.stateStack.push(
 			new LayoutState(LayoutOrientation.Vertical, new Rect(this.getNextItemPosition(), new Vector2(w ?? 0, 0)))
 		);
 	}
@@ -95,7 +94,7 @@ export class Layout {
 				return new Vector2(
 					layoutRect.position.x +
 						layoutRect.size.x +
-						(layout.isFirstUse ? 0 : this.customItemSpacing ?? this.itemSpacing.x),
+						(layout.isFirstUse ? 0 : this.itemCustomSpacing ?? this.itemSpacing.x),
 					layoutRect.position.y
 				);
 			case LayoutOrientation.Vertical:
@@ -103,18 +102,18 @@ export class Layout {
 					layoutRect.position.x,
 					layoutRect.position.y +
 						layoutRect.size.y +
-						(layout.isFirstUse ? 0 : this.customItemSpacing ?? this.itemSpacing.y)
+						(layout.isFirstUse ? 0 : this.itemCustomSpacing ?? this.itemSpacing.y)
 				);
 		}
 	}
 
 	private getTopLayout(): LayoutState {
-		return this.layoutStack[this.layoutStack.length - 1];
+		return this.stateStack[this.stateStack.length - 1];
 	}
 
 	private endTopLayout() {
 		const size = this.getTopLayout().rect.size;
-		this.layoutStack.pop();
+		this.stateStack.pop();
 		this.extendTopLayout(size);
 	}
 
@@ -124,12 +123,12 @@ export class Layout {
 
 		switch (layout.orientation) {
 			case LayoutOrientation.Horizontal:
-				layoutSize.x += size.x + (layout.isFirstUse ? 0 : this.customItemSpacing ?? this.itemSpacing.x);
+				layoutSize.x += size.x + (layout.isFirstUse ? 0 : this.itemCustomSpacing ?? this.itemSpacing.x);
 				layoutSize.y = Math.max(layoutSize.y, size.y);
 				break;
 			case LayoutOrientation.Vertical:
 				layoutSize.x = Math.max(layoutSize.x, size.x);
-				layoutSize.y += size.y + (layout.isFirstUse ? 0 : this.customItemSpacing ?? this.itemSpacing.y);
+				layoutSize.y += size.y + (layout.isFirstUse ? 0 : this.itemCustomSpacing ?? this.itemSpacing.y);
 				break;
 		}
 

@@ -6,7 +6,7 @@ import { Style, StylePropertyValue } from './style';
 import { drawItemBackground } from './utils';
 
 class ItemState {
-	disabled = false;
+	isDisabled = false;
 	position: Vector2 | undefined = undefined;
 	spacing: number | undefined = undefined;
 	width: number | undefined = undefined;
@@ -46,7 +46,7 @@ class FrameState {
 
 class FrameMemory {
 	rect = new Rect(new Vector2(0.33, 0.33));
-	movePosition: Vector2 | undefined = undefined;
+	lastMovePosition: Vector2 | undefined = undefined;
 	itemDragState: ItemDragState | undefined = undefined;
 
 	constructor(public readonly id: number) {}
@@ -57,7 +57,7 @@ export class Frame {
 	private static readonly ITEM_DRAG_TIME_THRESHOLD = 175;
 	private static readonly KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
 
-	private static readonly frameMemory = new Map<string, FrameMemory>();
+	private static readonly memories = new Map<string, FrameMemory>();
 	private static readonly style = new Style();
 
 	private static isKeyboardOnScreen = false;
@@ -68,10 +68,10 @@ export class Frame {
 	private readonly memory: FrameMemory;
 	private readonly input = new Input(Frame.nextState.inputFlags);
 	private readonly painter: Painter;
+	private readonly frameLayout: Layout;
 
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
-	private frameLayout: Layout;
 
 	private layout: Layout;
 
@@ -126,12 +126,12 @@ export class Frame {
 	constructor(id: string | undefined) {
 		if (id === undefined) id = Frame.DEFAULT_ID;
 
-		let memory = Frame.frameMemory.get(id);
+		let memory = Frame.memories.get(id);
 		const isNewFrame = memory === undefined;
 
 		if (memory === undefined) {
-			memory = new FrameMemory(Frame.frameMemory.size);
-			Frame.frameMemory.set(id, memory);
+			memory = new FrameMemory(Frame.memories.size);
+			Frame.memories.set(id, memory);
 		}
 
 		this.memory = memory;
@@ -285,7 +285,7 @@ export class Frame {
 	}
 
 	setNextItemDisabled() {
-		this.nextItemState.disabled = true;
+		this.nextItemState.isDisabled = true;
 	}
 
 	setNextItemPosition(x: number, y: number) {
@@ -395,7 +395,7 @@ export class Frame {
 	}
 
 	isItemDisabled(): boolean {
-		return this.nextItemState.disabled;
+		return this.nextItemState.isDisabled;
 	}
 
 	isItemClicked(control = InputControl.MouseLeftButton): boolean {
@@ -469,27 +469,27 @@ export class Frame {
 		)
 			return;
 
-		if (this.memory.movePosition === undefined) {
+		if (this.memory.lastMovePosition === undefined) {
 			if (this.input.isControlPressed(InputControl.MouseLeftButton)) {
 				const mousePosition = this.input.getMousePosition();
-				this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
+				this.memory.lastMovePosition = new Vector2(mousePosition.x, mousePosition.y);
 			}
 		} else if (!this.input.isControlDown(InputControl.MouseLeftButton)) {
-			this.memory.movePosition = undefined;
+			this.memory.lastMovePosition = undefined;
 		}
 
-		if (!this.memory.movePosition) this.mouseCursor = MouseCursor.PreGrab;
+		if (!this.memory.lastMovePosition) this.mouseCursor = MouseCursor.PreGrab;
 	}
 
 	private endMove() {
-		if (this.memory.movePosition === undefined) return;
+		if (this.memory.lastMovePosition === undefined) return;
 
 		const mousePosition = this.input.getMousePosition();
 
-		this.memory.rect.position.x += mousePosition.x - this.memory.movePosition.x;
-		this.memory.rect.position.y += mousePosition.y - this.memory.movePosition.y;
+		this.memory.rect.position.x += mousePosition.x - this.memory.lastMovePosition.x;
+		this.memory.rect.position.y += mousePosition.y - this.memory.lastMovePosition.y;
 
-		this.memory.movePosition = new Vector2(mousePosition.x, mousePosition.y);
+		this.memory.lastMovePosition = new Vector2(mousePosition.x, mousePosition.y);
 
 		this.mouseCursor = MouseCursor.Grab;
 	}
