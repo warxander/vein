@@ -48,48 +48,6 @@ export interface Rect {
 /**
  * @category Custom Items
  */
-export interface Frame {
-	getInput(): Input;
-	getLayout(): Layout;
-	getPainter(): Painter;
-
-	getRect(): Rect;
-	getScale(): number;
-	getSpacing(): Vector2;
-
-	beginItem(w: number, h: number): void;
-	endItem(): void;
-
-	tryGetItemWidth(): number | null;
-
-	isItemDisabled(): boolean;
-
-	/**
-	 *
-	 * @param control 0 - MouseLeftButton (default), 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
-	 */
-	isItemClicked(control: number): boolean;
-
-	isItemHovered(): boolean;
-
-	/**
-	 *
-	 * @param control 0 - MouseLeftButton (default), 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
-	 */
-	isItemPressed(control: number): boolean;
-
-	setMouseCursor(mouseCursor: number): void;
-
-	showOnScreenKeyboard(title: string, text: string, maxTextLength: number): void;
-	tryGetOnScreenKeyboardResult(): string | null;
-
-	buildStyleSelector(name: string, state: string | null): string;
-	getStyleProperty(selector: string, property: string): unknown;
-}
-
-/**
- * @category Custom Items
- */
 export interface Input {
 	getMousePosition(): Vector2;
 
@@ -142,6 +100,55 @@ export interface Painter {
 
 	drawText(text: string, font: number, scale: number): void;
 	drawMultilineText(text: string, font: number, scale: number, w: number): void;
+}
+
+/**
+ * @category Custom Items
+ */
+export interface Frame {
+	getInput(): Input;
+	getLayout(): Layout;
+	getPainter(): Painter;
+	getStyle(): Style;
+
+	getRect(): Rect;
+	getScale(): number;
+	getSpacing(): Vector2;
+
+	beginItem(w: number, h: number): void;
+	endItem(): void;
+
+	tryGetItemWidth(): number | null;
+
+	isItemDisabled(): boolean;
+
+	/**
+	 *
+	 * @param control 0 - MouseLeftButton (default), 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
+	 */
+	isItemClicked(control: number): boolean;
+
+	isItemHovered(): boolean;
+
+	/**
+	 *
+	 * @param control 0 - MouseLeftButton (default), 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
+	 */
+	isItemPressed(control: number): boolean;
+
+	setMouseCursor(mouseCursor: number): void;
+
+	showOnScreenKeyboard(title: string, text: string, maxTextLength: number): void;
+	tryGetOnScreenKeyboardResult(): string | null;
+
+	buildStyleSelector(name: string, state: string | null): string;
+}
+
+/**
+ * @category Custom Items
+ */
+export interface Style {
+	getStyleProperty(selector: string, property: string): unknown;
 }
 
 export * from './items/button';
@@ -254,6 +261,16 @@ export function getFrame(): Frame {
 			};
 		},
 
+		getStyle(): Style {
+			const style = CoreFrame.Frame.getStyle();
+
+			return {
+				getStyleProperty(selector: string, property: string): unknown {
+					return style.getProperty(selector, property);
+				}
+			};
+		},
+
 		getRect(): Rect {
 			return toRect(frame.getRect());
 		},
@@ -308,10 +325,6 @@ export function getFrame(): Frame {
 
 		buildStyleSelector(name: string, state: string | null = null): string {
 			return frame.buildStyleSelector(name, state ?? undefined);
-		},
-
-		getStyleProperty(selector: string, property: string): unknown {
-			return CoreFrame.Frame.getStyleProperty(selector, property);
 		}
 	};
 }

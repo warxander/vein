@@ -2,7 +2,7 @@ import { Color, MouseCursor, Rect, Vector2 } from './types';
 import { Input, InputFlags, InputControl } from './input';
 import { Layout } from './layout';
 import { Painter } from './painter';
-import { Style, StylePropertyValue } from './style';
+import { Style } from './style';
 import { drawItemBackground } from './utils';
 
 enum FrameFlags {
@@ -128,10 +128,6 @@ export class Frame {
 
 	static getStyle(): Style {
 		return Frame.style;
-	}
-
-	static getStyleProperty(selector: string, property: string): StylePropertyValue {
-		return Frame.style.getProperty(selector, property);
 	}
 
 	constructor(id: string | undefined) {
