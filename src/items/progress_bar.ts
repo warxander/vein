@@ -11,7 +11,7 @@ export function progressBar(value: number, w: number) {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const selector = frame.buildStyleSelector('progress-bar');
+	const selector = frame.buildItemStyleSelector('progress-bar');
 
 	frame.beginItem(w, style.item.height);
 

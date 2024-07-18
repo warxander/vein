@@ -11,7 +11,7 @@ export function textArea(text: string, w: number) {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const selector = frame.buildStyleSelector('text-area');
+	const selector = 'text-area';
 	const textData = Utils.createTextData(text, selector, w);
 
 	const lc = painter.getTextLineCount(textData);

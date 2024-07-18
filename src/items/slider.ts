@@ -18,7 +18,7 @@ export function slider(value: number, min: number, max: number, w: number, text:
 
 	frame.beginItem(w, h);
 
-	const selector = frame.buildStyleSelector('slider', Utils.getStyleSelectorState(frame));
+	const selector = frame.buildItemStyleSelector('slider', Utils.getStyleSelectorState(frame));
 	const sliderTextData = Utils.createTextData(text ?? value.toFixed(2), selector);
 
 	const sliderStyle = style.slider;

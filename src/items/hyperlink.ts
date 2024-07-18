@@ -11,11 +11,11 @@ export function hyperlink(url: string, urlText: string | null = null) {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	let selector = frame.buildStyleSelector('hyperlink');
+	let selector = 'hyperlink';
 	const text = urlText ?? url;
 	const textData = Utils.createTextData(text, selector);
 
-	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(textData);
+	const w = Frame.getNextItemWidth() ?? painter.getTextWidth(textData);
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
@@ -26,7 +26,7 @@ export function hyperlink(url: string, urlText: string | null = null) {
 	}
 
 	const state = Utils.getStyleSelectorState(frame);
-	if (state !== undefined) selector = frame.buildStyleSelector('hyperlink', state);
+	if (state !== undefined) selector = frame.buildItemStyleSelector('hyperlink', state);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.move(0, (h - painter.getFontSize(textData.font, textData.scale)) / 2 + style.item.textOffset);

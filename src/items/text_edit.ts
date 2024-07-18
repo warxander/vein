@@ -17,13 +17,13 @@ export function textEdit(
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	let selector = frame.buildStyleSelector('text-edit');
+	let selector = 'text-edit';
 
 	const font = style.getPropertyAs<number>(selector, 'font-family');
 	const scale = style.getPropertyAs<number>(selector, 'font-size');
 
 	const w =
-		frame.tryGetItemWidth() ??
+		Frame.getNextItemWidth() ??
 		painter.getTextWidth(
 			new TextData(
 				'M'.repeat(Math.max(maxTextLength, placeholderText !== null ? placeholderText.length : 0)),
@@ -40,7 +40,7 @@ export function textEdit(
 	if (Frame.isKeyboardOnScreen()) resultText = frame.tryGetOnScreenKeyboardResult();
 	else if (frame.isItemClicked()) frame.showOnScreenKeyboard(keyboardTitle, text, maxTextLength);
 
-	selector = frame.buildStyleSelector('text-edit', Utils.getStyleSelectorState(frame));
+	selector = frame.buildItemStyleSelector('text-edit', Utils.getStyleSelectorState(frame));
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'background-color'));
 	painter.drawRect(w, h);

@@ -11,10 +11,10 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	let selector = frame.buildStyleSelector('collapsing-header');
+	let selector = 'collapsing-header';
 	const textData = Utils.createTextData(text, selector);
 
-	const iw = frame.tryGetItemWidth();
+	const iw = Frame.getNextItemWidth();
 
 	let w = 0;
 	if (iw !== undefined) w = iw;
@@ -31,7 +31,7 @@ export function collapsingHeader(isOpened: boolean, text: string): boolean {
 	if (frame.isItemClicked()) isOpened = !isOpened;
 
 	const state = Utils.getStyleSelectorState(frame);
-	if (state !== undefined) selector = frame.buildStyleSelector('collapsing-header', state);
+	if (state !== undefined) selector = frame.buildItemStyleSelector('collapsing-header', state);
 
 	const sh = style.collapsingHeader.sprite.width * GetAspectRatio(false);
 	painter.move(style.collapsingHeader.sprite.offset, (h - sh) / 2);

@@ -11,10 +11,10 @@ export function label(text: string) {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	const selector = frame.buildStyleSelector('label');
+	const selector = 'label';
 	const textData = Utils.createTextData(text, selector);
 
-	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(textData);
+	const w = Frame.getNextItemWidth() ?? painter.getTextWidth(textData);
 	const h = style.item.height;
 
 	frame.beginItem(w, h);

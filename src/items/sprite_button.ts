@@ -11,12 +11,12 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	let selector = frame.buildStyleSelector('sprite-button');
+	let selector = 'sprite-button';
 	const textData = text !== null ? Utils.createTextData(text, selector) : null;
 
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;
-	const iw = frame.tryGetItemWidth();
+	const iw = Frame.getNextItemWidth();
 
 	let w = 0;
 	if (iw !== undefined) w = iw;
@@ -33,7 +33,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	const isClicked = frame.isItemClicked();
 
 	const state = Utils.getStyleSelectorState(frame);
-	if (state !== undefined) selector = frame.buildStyleSelector('sprite-button', state);
+	if (state !== undefined) selector = frame.buildItemStyleSelector('sprite-button', state);
 
 	Utils.drawItemBackground(frame, selector, w, h);
 

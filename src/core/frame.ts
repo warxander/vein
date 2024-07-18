@@ -1,29 +1,14 @@
 import { Color, MouseCursor, Rect, Vector2 } from './types';
-import { Input, InputFlags, InputControl } from './input';
+import { Input, InputControl } from './input';
 import { Layout } from './layout';
 import { Painter } from './painter';
 import { Style } from './style';
 import { drawItemBackground } from './utils';
 
-enum FrameFlags {
-	None,
-	DisableBackground = 1 << 1,
-	DisableBorder = 1 << 2,
-	DisableMove = 1 << 3
-}
-
 enum FrameDrawOrder {
 	Background = 1,
 	Ui = 2,
 	DragAndDrop = 7
-}
-
-class ItemState {
-	isDisabled = false;
-	position: Vector2 | undefined = undefined;
-	spacing: number | undefined = undefined;
-	width: number | undefined = undefined;
-	styleId: string | undefined = undefined;
 }
 
 class ItemDragState {
@@ -34,14 +19,28 @@ class ItemDragState {
 	constructor(public readonly id: string) {}
 }
 
-class FrameState {
-	inputFlags = InputFlags.None;
-	flags = FrameFlags.None;
+class FrameOptions {
 	position: Vector2 | undefined = undefined;
 	scale: number | undefined = undefined;
 	size: [number | undefined, number | undefined] | undefined = undefined;
 	spacing: [number | undefined, number | undefined] | undefined = undefined;
+	disableBackground = false;
+	disableBorder = false;
+	disableInput = false;
+	disableMove = false;
 	styleId: string | undefined = undefined;
+}
+
+class ItemOptions {
+	isDisabled = false;
+	position: Vector2 | undefined = undefined;
+	spacing: number | undefined = undefined;
+	width: number | undefined = undefined;
+	styleId: string | undefined = undefined;
+}
+
+class ItemState {
+	constructor(public readonly isDisabled: boolean, public readonly styleId: string | undefined) {}
 }
 
 class FrameMemory {
@@ -64,70 +63,105 @@ export class Frame {
 	private static readonly memories = new Map<string, FrameMemory>();
 	private static readonly style = new Style();
 
-	private static keyboardState: KeyboardState | undefined = undefined;
-	private static isDebugEnabled_ = false;
-	private static leftMouseButtonPressedTime: number | undefined = undefined;
-	private static nextState = new FrameState();
+	private static _isDebugEnabled = false;
 
+	private static options = new FrameOptions();
+	private static itemOptions = new ItemOptions();
+	private static keyboardState: KeyboardState | undefined = undefined;
+	private static leftMouseButtonPressedTime: number | undefined = undefined;
+
+	private readonly scale = Frame.options.scale ?? 1;
+	private readonly spacing =
+		Frame.options.spacing !== undefined
+			? new Vector2(
+					Frame.options.spacing[0] ?? Frame.style.frame.itemSpacing.x,
+					Frame.options.spacing[1] ?? Frame.style.frame.itemSpacing.y
+			  )
+			: Frame.style.frame.itemSpacing.clone();
 	private readonly memory: FrameMemory;
-	private readonly input = new Input(Frame.nextState.inputFlags);
+	private readonly input = new Input(Frame.options.disableInput);
 	private readonly layoutStack: Layout[];
 	private readonly painter: Painter;
 
 	private itemIndex = 0;
-	private nextItemState = new ItemState();
+	private itemState: ItemState | undefined = undefined;
+
 	private mouseCursor = MouseCursor.Normal;
+
+	static isDebugEnabled(): boolean {
+		return Frame._isDebugEnabled;
+	}
+
+	static setDebugEnabled(enabled: boolean) {
+		Frame._isDebugEnabled = enabled;
+	}
 
 	static isKeyboardOnScreen(): boolean {
 		return Frame.keyboardState !== undefined;
 	}
 
-	static isDebugEnabled(): boolean {
-		return Frame.isDebugEnabled_;
-	}
-
-	static setDebugEnabled(enabled: boolean) {
-		Frame.isDebugEnabled_ = enabled;
-	}
-
 	static setNextFramePosition(x: number, y: number) {
-		Frame.nextState.position = new Vector2(x, y);
+		Frame.options.position = new Vector2(x, y);
 	}
 
 	static setNextFrameScale(scale: number) {
-		Frame.nextState.scale = scale;
+		Frame.options.scale = scale;
 	}
 
 	static setNextFrameSize(w: number | undefined, h: number | undefined) {
-		Frame.nextState.size = [w, h];
+		Frame.options.size = [w, h];
 	}
 
 	static setNextFrameSpacing(x: number | undefined, y: number | undefined) {
-		Frame.nextState.spacing = [x, y];
+		Frame.options.spacing = [x, y];
 	}
 
 	static setNextFrameStyleId(id: string) {
-		Frame.nextState.styleId = id;
+		Frame.options.styleId = id;
 	}
 
 	static setNextFrameDisableBackground() {
-		Frame.nextState.flags |= FrameFlags.DisableBackground;
+		Frame.options.disableBackground = true;
 	}
 
 	static setNextFrameDisableBorder() {
-		Frame.nextState.flags |= FrameFlags.DisableBorder;
+		Frame.options.disableBorder = true;
 	}
 
 	static setNextFrameDisableInput() {
-		Frame.nextState.inputFlags |= InputFlags.DisableInput;
+		Frame.options.disableInput = true;
 	}
 
 	static setNextFrameDisableMove() {
-		Frame.nextState.flags |= FrameFlags.DisableMove;
+		Frame.options.disableMove = true;
 	}
 
 	static getStyle(): Style {
 		return Frame.style;
+	}
+
+	static setNextItemDisabled() {
+		Frame.itemOptions.isDisabled = true;
+	}
+
+	static setNextItemPosition(x: number, y: number) {
+		Frame.itemOptions.position = new Vector2(x, y);
+	}
+
+	static setNextItemSpacing(spacing: number) {
+		Frame.itemOptions.spacing = spacing;
+	}
+
+	static getNextItemWidth(): number | undefined {
+		return Frame.itemOptions.width;
+	}
+
+	static setNextItemWidth(w: number) {
+		Frame.itemOptions.width = w;
+	}
+
+	static setNextItemStyleId(id: string) {
+		Frame.itemOptions.styleId = id;
 	}
 
 	constructor(id: string | undefined) {
@@ -143,15 +177,20 @@ export class Frame {
 
 		this.memory = memory;
 
-		if (Frame.nextState.position !== undefined) {
-			this.memory.rect.position.x = Frame.nextState.position.x;
-			this.memory.rect.position.y = Frame.nextState.position.y;
+		if (Frame.options.position !== undefined) {
+			this.memory.rect.position.x = Frame.options.position.x;
+			this.memory.rect.position.y = Frame.options.position.y;
+		}
+
+		if (Frame.options.size !== undefined) {
+			if (Frame.options.size[0] !== undefined) this.memory.rect.size.x = Frame.options.size[0];
+			if (Frame.options.size[1] !== undefined) this.memory.rect.size.y = Frame.options.size[1];
 		}
 
 		if (!this.input.isControlDown(InputControl.MouseLeftButton)) Frame.leftMouseButtonPressedTime = undefined;
 		else if (Frame.leftMouseButtonPressedTime === undefined) Frame.leftMouseButtonPressedTime = GetGameTimer();
 
-		this.beginMove();
+		if (!Frame.options.disableMove) this.beginMove();
 
 		const rect = this.getRect();
 		const scale = this.getScale();
@@ -167,21 +206,25 @@ export class Frame {
 
 		this.painter = new Painter(rect.position.x, rect.position.y, scale, `VEIN_${this.memory.id}`);
 
-		if (isNewFrame || Frame.isBackgroundDisabled()) return;
+		if (!isNewFrame) {
+			const selector = Frame.style.buildSelector('frame', Frame.options.styleId);
+			const unscaledRect = new Rect(rect.position, new Vector2(rect.size.x / scale, rect.size.y / scale));
 
-		const selector = this.buildStyleSelector('frame');
-		const unscaledRect = new Rect(rect.position, new Vector2(rect.size.x / scale, rect.size.y / scale));
+			if (!Frame.options.disableBackground) {
+				SetScriptGfxDrawOrder(FrameDrawOrder.Background);
+				drawItemBackground(this, selector, unscaledRect.size.x, unscaledRect.size.y);
+				SetScriptGfxDrawOrder(FrameDrawOrder.Ui);
+			}
 
-		SetScriptGfxDrawOrder(FrameDrawOrder.Background);
-		drawItemBackground(this, selector, unscaledRect.size.x, unscaledRect.size.y);
-		SetScriptGfxDrawOrder(FrameDrawOrder.Ui);
+			if (!Frame.options.disableBorder) {
+				SetScriptGfxDrawOrder(FrameDrawOrder.Background);
+				this.drawBorder(selector, unscaledRect);
+				this.painter.setPosition(rect.position.x, rect.position.y);
+				SetScriptGfxDrawOrder(FrameDrawOrder.Ui);
+			}
+		}
 
-		if (Frame.isBorderDisabled()) return;
-
-		SetScriptGfxDrawOrder(FrameDrawOrder.Background);
-		this.drawBorder(selector, unscaledRect);
-		this.painter.setPosition(rect.position.x, rect.position.y);
-		SetScriptGfxDrawOrder(FrameDrawOrder.Ui);
+		Frame.options = new FrameOptions();
 	}
 
 	getInput(): Input {
@@ -197,24 +240,15 @@ export class Frame {
 	}
 
 	getRect(): Rect {
-		const rect = this.memory.rect;
-		if (Frame.nextState.size === undefined) return rect;
-		return new Rect(
-			rect.position,
-			new Vector2(Frame.nextState.size[0] ?? rect.size.x, Frame.nextState.size[1] ?? rect.size.y)
-		);
+		return this.memory.rect;
 	}
 
 	getScale(): number {
-		return Frame.nextState.scale ?? 1;
+		return this.scale;
 	}
 
 	getSpacing(): Vector2 {
-		if (Frame.nextState.spacing === undefined) return Frame.style.frame.itemSpacing;
-		return new Vector2(
-			Frame.nextState.spacing[0] ?? Frame.style.frame.itemSpacing.x,
-			Frame.nextState.spacing[1] ?? Frame.style.frame.itemSpacing.y
-		);
+		return this.spacing;
 	}
 
 	end() {
@@ -223,7 +257,7 @@ export class Frame {
 		if (this.memory.itemDragState !== undefined && !this.input.isControlDown(InputControl.MouseLeftButton))
 			this.memory.itemDragState = undefined;
 
-		if (!Frame.isInputDisabled()) SetMouseCursorSprite(this.mouseCursor);
+		if (!this.input.isDisabled()) SetMouseCursorSprite(this.mouseCursor);
 		this.mouseCursor = MouseCursor.Normal;
 
 		const layout = this.getTopLayout();
@@ -237,8 +271,6 @@ export class Frame {
 			contentRect.size.x + Frame.style.frame.padding.x * scale * 2,
 			contentRect.size.y + Frame.style.frame.padding.y * scale * 2
 		);
-
-		Frame.nextState = new FrameState();
 	}
 
 	beginHorizontal(h?: number) {
@@ -262,20 +294,25 @@ export class Frame {
 		const layout = this.getTopLayout();
 
 		layout.beginItem(
-			this.nextItemState.position,
-			this.nextItemState.spacing !== undefined ? this.nextItemState.spacing * scale : undefined,
+			Frame.itemOptions.position,
+			Frame.itemOptions.spacing !== undefined ? Frame.itemOptions.spacing * scale : undefined,
 			w * scale,
 			h * scale
 		);
 
 		const itemRect = layout.getItemRect();
 		this.painter.setPosition(itemRect.position.x, itemRect.position.y);
+
+		this.itemState = new ItemState(Frame.itemOptions.isDisabled, Frame.itemOptions.styleId);
+
+		++this.itemIndex;
+		Frame.itemOptions = new ItemOptions();
 	}
 
 	endItem() {
 		const layout = this.getTopLayout();
 
-		if (Frame.isDebugEnabled_) {
+		if (Frame._isDebugEnabled) {
 			const itemRect = layout.getItemRect();
 			const scale = this.getScale();
 			const unscaledItemRect = new Rect(
@@ -289,29 +326,6 @@ export class Frame {
 		}
 
 		layout.endItem();
-
-		++this.itemIndex;
-		this.nextItemState = new ItemState();
-	}
-
-	setNextItemDisabled() {
-		this.nextItemState.isDisabled = true;
-	}
-
-	setNextItemPosition(x: number, y: number) {
-		this.nextItemState.position = new Vector2(x, y);
-	}
-
-	setNextItemSpacing(spacing: number) {
-		this.nextItemState.spacing = spacing;
-	}
-
-	setNextItemWidth(w: number) {
-		this.nextItemState.width = w;
-	}
-
-	tryGetItemWidth(): number | undefined {
-		return this.nextItemState.width;
 	}
 
 	beginItemDrag(id: string): boolean {
@@ -400,16 +414,13 @@ export class Frame {
 		return this.memory.itemDragState !== undefined && this.memory.itemDragState.isDropped;
 	}
 
-	setNextItemStyleId(id: string) {
-		this.nextItemState.styleId = id;
-	}
-
 	isAreaHovered(rect: Rect): boolean {
 		return rect.contains(this.input.getMousePosition());
 	}
 
 	isItemDisabled(): boolean {
-		return this.nextItemState.isDisabled;
+		if (this.itemState === undefined) throw new Error('Frame.isItemDisabled() failed: No item');
+		return this.itemState.isDisabled;
 	}
 
 	isItemClicked(control = InputControl.MouseLeftButton): boolean {
@@ -442,8 +453,9 @@ export class Frame {
 		this.mouseCursor = mouseCursor;
 	}
 
-	buildStyleSelector(name: string, state: string | undefined = undefined): string {
-		return Frame.style.buildSelector(name, this.nextItemState.styleId, state);
+	buildItemStyleSelector(name: string, state: string | undefined = undefined): string {
+		if (this.itemState === undefined) throw new Error('Frame.buildItemStyleSelector() failed: No item');
+		return Frame.style.buildSelector(name, this.itemState.styleId, state);
 	}
 
 	showOnScreenKeyboard(title: string, text: string, maxTextLength: number) {
@@ -471,22 +483,6 @@ export class Frame {
 		return result;
 	}
 
-	private static isBorderDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableBorder);
-	}
-
-	private static isInputDisabled(): boolean {
-		return !!(Frame.nextState.inputFlags & InputFlags.DisableInput);
-	}
-
-	private static isBackgroundDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableBackground);
-	}
-
-	private static isMoveDisabled(): boolean {
-		return !!(Frame.nextState.flags & FrameFlags.DisableMove);
-	}
-
 	private getTopLayout(): Layout {
 		return this.layoutStack[this.layoutStack.length - 1];
 	}
@@ -496,7 +492,7 @@ export class Frame {
 	}
 
 	private beginMove() {
-		if (this.memory.itemDragState !== undefined || Frame.isMoveDisabled() || Frame.isInputDisabled()) return;
+		if (this.memory.itemDragState !== undefined || this.input.isDisabled()) return;
 
 		if (
 			!this.isAreaHovered(

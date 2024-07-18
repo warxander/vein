@@ -11,10 +11,10 @@ export function button(text: string): boolean {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	let selector = frame.buildStyleSelector('button');
+	let selector = 'button';
 	const textData = Utils.createTextData(text, selector);
 
-	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(textData) + style.button.padding * 2;
+	const w = Frame.getNextItemWidth() ?? painter.getTextWidth(textData) + style.button.padding * 2;
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
@@ -22,7 +22,7 @@ export function button(text: string): boolean {
 	const isClicked = frame.isItemClicked();
 
 	const state = Utils.getStyleSelectorState(frame);
-	if (state !== undefined) selector = frame.buildStyleSelector('button', state);
+	if (state !== undefined) selector = frame.buildItemStyleSelector('button', state);
 
 	Utils.drawItemBackground(frame, selector, w, h);
 

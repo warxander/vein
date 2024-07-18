@@ -143,7 +143,7 @@ export class Style {
 		};
 	}
 
-	buildSelector(name: string, id: string | undefined, state: string | undefined): string {
+	buildSelector(name: string, id?: string, state?: string): string {
 		let selector = id !== undefined ? `${name}#${id}` : name;
 		if (state !== undefined) selector = selector.concat(':', state);
 		return selector;

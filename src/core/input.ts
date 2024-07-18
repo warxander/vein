@@ -7,11 +7,6 @@ export enum InputControl {
 	MouseScrollWheelDown = 242
 }
 
-export enum InputFlags {
-	None,
-	DisableInput
-}
-
 export class Input {
 	private static readonly DISABLED_CONTROLS = [
 		1, 2, 22, 24, 25, 36, 37, 44, 47, 53, 54, 68, 69, 70, 74, 81, 82, 83, 84, 85, 91, 92, 99, 100, 101, 102, 114,
@@ -22,14 +17,14 @@ export class Input {
 
 	private readonly mousePosition: Vector2;
 
-	constructor(private readonly inputFlags: InputFlags) {
-		if (!this.isDisabled()) SetMouseCursorActiveThisFrame();
+	constructor(private readonly _isDisabled: boolean) {
+		if (!this._isDisabled) SetMouseCursorActiveThisFrame();
 
-		this.mousePosition = this.isDisabled()
+		this.mousePosition = this._isDisabled
 			? new Vector2(-Infinity, -Infinity)
 			: new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));
 
-		if (this.isDisabled()) return;
+		if (this._isDisabled) return;
 
 		for (const control of Input.DISABLED_CONTROLS) DisableControlAction(0, control, true);
 
@@ -37,23 +32,23 @@ export class Input {
 			for (const control of Input.DISABLED_CONTROLS_IN_VEHICLE) DisableControlAction(0, control, true);
 	}
 
+	isDisabled(): boolean {
+		return this._isDisabled;
+	}
+
 	getMousePosition(): Vector2 {
 		return this.mousePosition;
 	}
 
 	isControlPressed(control: InputControl): boolean {
-		return !this.isDisabled() && IsControlJustPressed(2, control);
+		return !this._isDisabled && IsControlJustPressed(2, control);
 	}
 
 	isControlReleased(control: InputControl): boolean {
-		return !this.isDisabled() && IsControlJustReleased(2, control);
+		return !this._isDisabled && IsControlJustReleased(2, control);
 	}
 
 	isControlDown(control: InputControl): boolean {
-		return !this.isDisabled() && IsControlPressed(2, control);
-	}
-
-	private isDisabled(): boolean {
-		return !!(this.inputFlags & InputFlags.DisableInput);
+		return !this._isDisabled && IsControlPressed(2, control);
 	}
 }

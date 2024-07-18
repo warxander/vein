@@ -11,10 +11,10 @@ export function selectable(isSelected: boolean, text: string): boolean {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	let selector = frame.buildStyleSelector('selectable');
+	let selector = 'selectable';
 	const textData = Utils.createTextData(text, selector);
 
-	const w = frame.tryGetItemWidth() ?? painter.getTextWidth(textData) + style.selectable.padding * 2;
+	const w = Frame.getNextItemWidth() ?? painter.getTextWidth(textData) + style.selectable.padding * 2;
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
@@ -22,7 +22,7 @@ export function selectable(isSelected: boolean, text: string): boolean {
 	const inputIsSelected = frame.isItemClicked() ? !isSelected : isSelected;
 
 	const state = Utils.getStyleSelectorState(frame);
-	if (state !== undefined) selector = frame.buildStyleSelector('selectable', state);
+	if (state !== undefined) selector = frame.buildItemStyleSelector('selectable', state);
 
 	painter.setColor(style.getPropertyAs<Color>(selector, inputIsSelected ? 'accent-color' : 'background-color'));
 	painter.drawRect(w, h);

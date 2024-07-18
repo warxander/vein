@@ -115,10 +115,10 @@ export interface Frame {
 	getScale(): number;
 	getSpacing(): Vector2;
 
+	getNextItemWidth(): number | null;
+
 	beginItem(w: number, h: number): void;
 	endItem(): void;
-
-	tryGetItemWidth(): number | null;
 
 	isItemDisabled(): boolean;
 
@@ -141,14 +141,14 @@ export interface Frame {
 	showOnScreenKeyboard(title: string, text: string, maxTextLength: number): void;
 	tryGetOnScreenKeyboardResult(): string | null;
 
-	buildStyleSelector(name: string, state: string | null): string;
+	buildItemStyleSelector(name: string, state: string | null): string;
 }
 
 /**
  * @category Custom Items
  */
 export interface Style {
-	getStyleProperty(selector: string, property: string): unknown;
+	getProperty(selector: string, property: string): unknown;
 }
 
 export * from './items/button';
@@ -265,7 +265,7 @@ export function getFrame(): Frame {
 			const style = CoreFrame.Frame.getStyle();
 
 			return {
-				getStyleProperty(selector: string, property: string): unknown {
+				getProperty(selector: string, property: string): unknown {
 					return style.getProperty(selector, property);
 				}
 			};
@@ -283,16 +283,16 @@ export function getFrame(): Frame {
 			return toVector2(frame.getSpacing());
 		},
 
+		getNextItemWidth(): number | null {
+			return CoreFrame.Frame.getNextItemWidth() ?? null;
+		},
+
 		beginItem(w: number, h: number) {
 			frame.beginItem(w, h);
 		},
 
 		endItem() {
 			frame.endItem();
-		},
-
-		tryGetItemWidth(): number | null {
-			return frame.tryGetItemWidth() ?? null;
 		},
 
 		isItemDisabled(): boolean {
@@ -323,8 +323,8 @@ export function getFrame(): Frame {
 			return frame.tryGetOnScreenKeyboardResult();
 		},
 
-		buildStyleSelector(name: string, state: string | null = null): string {
-			return frame.buildStyleSelector(name, state ?? undefined);
+		buildItemStyleSelector(name: string, state: string | null = null): string {
+			return frame.buildItemStyleSelector(name, state ?? undefined);
 		}
 	};
 }
@@ -476,28 +476,28 @@ export function isItemPressed(control = 0): boolean {
  * @category Frame
  */
 export function setNextItemDisabled() {
-	CoreFrame.getFrameChecked().setNextItemDisabled();
+	CoreFrame.Frame.setNextItemDisabled();
 }
 
 /**
  * @category Frame
  */
 export function setNextItemPosition(x: number, y: number) {
-	CoreFrame.getFrameChecked().setNextItemPosition(x, y);
+	CoreFrame.Frame.setNextItemPosition(x, y);
 }
 
 /**
  * @category Frame
  */
 export function setNextItemSpacing(spacing: number) {
-	CoreFrame.getFrameChecked().setNextItemSpacing(spacing);
+	CoreFrame.Frame.setNextItemSpacing(spacing);
 }
 
 /**
  * @category Frame
  */
 export function setNextItemWidth(w: number) {
-	CoreFrame.getFrameChecked().setNextItemWidth(w);
+	CoreFrame.Frame.setNextItemWidth(w);
 }
 
 /**
@@ -609,7 +609,7 @@ export function setNextFrameStyleId(id: string) {
  * @category Style
  */
 export function setNextItemStyleId(id: string) {
-	CoreFrame.getFrameChecked().setNextItemStyleId(id);
+	CoreFrame.Frame.setNextItemStyleId(id);
 }
 
 /**

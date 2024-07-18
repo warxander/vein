@@ -11,14 +11,14 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	const painter = frame.getPainter();
 	const style = Frame.getStyle();
 
-	let selector = frame.buildStyleSelector('check-box');
+	let selector = 'check-box';
 	const textData = Utils.createTextData(text, selector);
 
 	const aspectRatio = GetAspectRatio(false);
 	const checkboxStyle = style.checkbox;
 	let cw = checkboxStyle.height / aspectRatio;
 
-	const iw = frame.tryGetItemWidth();
+	const iw = Frame.getNextItemWidth();
 
 	let w = 0;
 	if (iw !== undefined) w = iw;
@@ -34,7 +34,7 @@ export function checkBox(isChecked: boolean, text: string): boolean {
 	if (frame.isItemClicked()) isChecked = !isChecked;
 
 	const state = Utils.getStyleSelectorState(frame);
-	if (state !== undefined) selector = frame.buildStyleSelector('check-box', state);
+	if (state !== undefined) selector = frame.buildItemStyleSelector('check-box', state);
 
 	const vo = (h - checkboxStyle.height) / 2;
 
