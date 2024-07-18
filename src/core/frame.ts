@@ -67,13 +67,11 @@ export class Frame {
 
 	private readonly memory: FrameMemory;
 	private readonly input = new Input(Frame.nextState.inputFlags);
+	private readonly layoutStack: Layout[];
 	private readonly painter: Painter;
-	private readonly frameLayout: Layout;
 
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
-
-	private layout: Layout;
 
 	static isDebugEnabled(): boolean {
 		return Frame.isDebugEnabled_;
@@ -150,12 +148,13 @@ export class Frame {
 		const scale = this.getScale();
 		const spacing = this.getSpacing();
 
-		this.frameLayout = new Layout(
-			rect.position.x + Frame.style.frame.padding.x * scale,
-			rect.position.y + Frame.style.frame.padding.y * scale,
-			new Vector2(spacing.x * scale, spacing.y * scale)
-		);
-		this.layout = this.frameLayout;
+		this.layoutStack = [
+			new Layout(
+				rect.position.x + Frame.style.frame.padding.x * scale,
+				rect.position.y + Frame.style.frame.padding.y * scale,
+				new Vector2(spacing.x * scale, spacing.y * scale)
+			)
+		];
 
 		this.painter = new Painter(rect.position.x, rect.position.y, scale, `VEIN_${this.memory.id}`);
 
@@ -185,7 +184,7 @@ export class Frame {
 	}
 
 	getLayout(): Layout {
-		return this.layout;
+		return this.getTopLayout();
 	}
 
 	getRect(): Rect {
@@ -222,9 +221,11 @@ export class Frame {
 		if (!this.isInputDisabled()) SetMouseCursorSprite(this.mouseCursor);
 		this.mouseCursor = MouseCursor.Normal;
 
-		this.layout.end();
+		const layout = this.getTopLayout();
 
-		const contentRect = this.layout.getContentRect();
+		layout.end();
+
+		const contentRect = layout.getContentRect();
 		const scale = this.getScale();
 
 		this.memory.rect.size = new Vector2(
@@ -236,38 +237,41 @@ export class Frame {
 	}
 
 	beginHorizontal(h?: number) {
-		this.layout.beginHorizontal(h !== undefined ? h * this.getScale() : undefined);
+		this.getTopLayout().beginHorizontal(h !== undefined ? h * this.getScale() : undefined);
 	}
 
 	endHorizontal() {
-		this.layout.endHorizontal();
+		this.getTopLayout().endHorizontal();
 	}
 
 	beginVertical(w?: number) {
-		this.layout.beginVertical(w !== undefined ? w * this.getScale() : undefined);
+		this.getTopLayout().beginVertical(w !== undefined ? w * this.getScale() : undefined);
 	}
 
 	endVertical() {
-		this.layout.endVertical();
+		this.getTopLayout().endVertical();
 	}
 
 	beginItem(w: number, h: number) {
 		const scale = this.getScale();
+		const layout = this.getTopLayout();
 
-		this.layout.beginItem(
+		layout.beginItem(
 			this.nextItemState.position,
 			this.nextItemState.spacing !== undefined ? this.nextItemState.spacing * scale : undefined,
 			w * scale,
 			h * scale
 		);
 
-		const itemRect = this.layout.getItemRect();
+		const itemRect = layout.getItemRect();
 		this.painter.setPosition(itemRect.position.x, itemRect.position.y);
 	}
 
 	endItem() {
+		const layout = this.getTopLayout();
+
 		if (Frame.isDebugEnabled_) {
-			const itemRect = this.layout.getItemRect();
+			const itemRect = layout.getItemRect();
 			const scale = this.getScale();
 			const unscaledItemRect = new Rect(
 				itemRect.position,
@@ -279,7 +283,7 @@ export class Frame {
 			this.painter.drawRect(unscaledItemRect.size.x, unscaledItemRect.size.y);
 		}
 
-		this.layout.endItem();
+		layout.endItem();
 
 		this.nextItemState = new ItemState();
 	}
@@ -325,10 +329,12 @@ export class Frame {
 			const scale = this.getScale();
 			const spacing = this.getSpacing();
 
-			this.layout = new Layout(
-				mousePosition.x + Frame.style.item.dragOffset.x,
-				mousePosition.y + Frame.style.item.dragOffset.y,
-				new Vector2(spacing.x * scale, spacing.y * scale)
+			this.layoutStack.push(
+				new Layout(
+					mousePosition.x + Frame.style.item.dragOffset.x,
+					mousePosition.y + Frame.style.item.dragOffset.y,
+					new Vector2(spacing.x * scale, spacing.y * scale)
+				)
 			);
 
 			SetScriptGfxDrawOrder(FrameDrawOrder.DragAndDrop);
@@ -340,7 +346,9 @@ export class Frame {
 	endItemDrag() {
 		if (this.memory.itemDragState === undefined) return;
 
-		this.layout = this.frameLayout;
+		this.getTopLayout().end();
+		this.layoutStack.pop();
+
 		SetScriptGfxDrawOrder(FrameDrawOrder.Ui);
 
 		this.memory.itemDragState.isDragged = false;
@@ -366,7 +374,7 @@ export class Frame {
 		if (
 			this.memory.itemDragState === undefined ||
 			this.isItemDisabled() ||
-			!this.isAreaHovered(this.layout.getItemRect())
+			!this.isAreaHovered(this.getTopLayout().getItemRect())
 		)
 			return false;
 
@@ -411,7 +419,7 @@ export class Frame {
 		return (
 			this.memory.itemDragState === undefined &&
 			!this.isItemDisabled() &&
-			this.isAreaHovered(this.layout.getItemRect())
+			this.isAreaHovered(this.getTopLayout().getItemRect())
 		);
 	}
 
@@ -454,6 +462,10 @@ export class Frame {
 		Frame.isKeyboardOnScreen = false;
 
 		return result;
+	}
+
+	private getTopLayout(): Layout {
+		return this.layoutStack[this.layoutStack.length - 1];
 	}
 
 	private beginMove() {
