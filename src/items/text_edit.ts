@@ -37,7 +37,7 @@ export function textEdit(
 	frame.beginItem(w, h);
 
 	let resultText: string | null = null;
-	if (frame.isKeyboardOnScreen()) resultText = frame.tryGetOnScreenKeyboardResult();
+	if (Frame.isKeyboardOnScreen()) resultText = frame.tryGetOnScreenKeyboardResult();
 	else if (frame.isItemClicked()) frame.showOnScreenKeyboard(keyboardTitle, text, maxTextLength);
 
 	selector = frame.buildStyleSelector('text-edit', Utils.getStyleSelectorState(frame));

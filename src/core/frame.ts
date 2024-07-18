@@ -5,6 +5,19 @@ import { Painter } from './painter';
 import { Style, StylePropertyValue } from './style';
 import { drawItemBackground } from './utils';
 
+enum FrameFlags {
+	None,
+	DisableBackground = 1 << 1,
+	DisableBorder = 1 << 2,
+	DisableMove = 1 << 3
+}
+
+enum FrameDrawOrder {
+	Background = 1,
+	Ui = 2,
+	DragAndDrop = 7
+}
+
 class ItemState {
 	isDisabled = false;
 	position: Vector2 | undefined = undefined;
@@ -19,19 +32,6 @@ class ItemDragState {
 	payload: string | null = null;
 
 	constructor(public readonly id: string) {}
-}
-
-enum FrameFlags {
-	None,
-	DisableBackground = 1 << 1,
-	DisableBorder = 1 << 2,
-	DisableMove = 1 << 3
-}
-
-enum FrameDrawOrder {
-	Background = 1,
-	Ui = 2,
-	DragAndDrop = 7
 }
 
 class FrameState {
@@ -52,6 +52,10 @@ class FrameMemory {
 	constructor(public readonly id: number) {}
 }
 
+class KeyboardState {
+	constructor(public readonly frameItemId: string) {}
+}
+
 export class Frame {
 	private static readonly DEFAULT_ID = 'DEFAULT';
 	private static readonly ITEM_DRAG_TIME_THRESHOLD = 175;
@@ -60,7 +64,7 @@ export class Frame {
 	private static readonly memories = new Map<string, FrameMemory>();
 	private static readonly style = new Style();
 
-	private static isKeyboardOnScreen = false;
+	private static keyboardState: KeyboardState | undefined = undefined;
 	private static isDebugEnabled_ = false;
 	private static leftMouseButtonPressedTime: number | undefined = undefined;
 	private static nextState = new FrameState();
@@ -70,8 +74,13 @@ export class Frame {
 	private readonly layoutStack: Layout[];
 	private readonly painter: Painter;
 
+	private itemIndex = 0;
 	private nextItemState = new ItemState();
 	private mouseCursor = MouseCursor.Normal;
+
+	static isKeyboardOnScreen(): boolean {
+		return Frame.keyboardState !== undefined;
+	}
 
 	static isDebugEnabled(): boolean {
 		return Frame.isDebugEnabled_;
@@ -285,6 +294,7 @@ export class Frame {
 
 		layout.endItem();
 
+		++this.itemIndex;
 		this.nextItemState = new ItemState();
 	}
 
@@ -440,32 +450,37 @@ export class Frame {
 		return Frame.style.buildSelector(name, this.nextItemState.styleId, state);
 	}
 
-	isKeyboardOnScreen(): boolean {
-		return Frame.isKeyboardOnScreen;
-	}
-
 	showOnScreenKeyboard(title: string, text: string, maxTextLength: number) {
-		if (Frame.isKeyboardOnScreen) return;
+		if (Frame.keyboardState !== undefined) return;
 
 		CancelOnscreenKeyboard();
 
 		AddTextEntry(Frame.KEYBOARD_TITLE_ENTRY, title);
 		DisplayOnscreenKeyboard(1, Frame.KEYBOARD_TITLE_ENTRY, '', text, '', '', '', maxTextLength);
 
-		Frame.isKeyboardOnScreen = true;
+		Frame.keyboardState = new KeyboardState(this.getItemId());
 	}
 
 	tryGetOnScreenKeyboardResult(): string | null {
-		if (!Frame.isKeyboardOnScreen || UpdateOnscreenKeyboard() <= 0) return null;
+		if (
+			Frame.keyboardState === undefined ||
+			Frame.keyboardState.frameItemId !== this.getItemId() ||
+			UpdateOnscreenKeyboard() <= 0
+		)
+			return null;
 
 		const result = GetOnscreenKeyboardResult();
-		Frame.isKeyboardOnScreen = false;
+		Frame.keyboardState = undefined;
 
 		return result;
 	}
 
 	private getTopLayout(): Layout {
 		return this.layoutStack[this.layoutStack.length - 1];
+	}
+
+	private getItemId(): string {
+		return `${this.memory.id}_${this.itemIndex}`;
 	}
 
 	private beginMove() {
