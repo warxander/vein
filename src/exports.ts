@@ -311,7 +311,7 @@ export function getFrame(): Frame {
 		},
 
 		getStyleProperty(selector: string, property: string): unknown {
-			return frame.getStyleProperty(selector, property);
+			return CoreFrame.Frame.getStyleProperty(selector, property);
 		}
 	};
 }
