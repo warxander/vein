@@ -80,7 +80,6 @@ export interface Frame {
 
 	setMouseCursor(mouseCursor: number): void;
 
-	isKeyboardOnScreen(): boolean;
 	showOnScreenKeyboard(title: string, text: string, maxTextLength: number): void;
 	tryGetOnScreenKeyboardResult(): string | null;
 
@@ -297,10 +296,6 @@ export function getFrame(): Frame {
 
 		setMouseCursor(mouseCursor: number) {
 			frame.setMouseCursor(mouseCursor);
-		},
-
-		isKeyboardOnScreen(): boolean {
-			return frame.isKeyboardOnScreen();
 		},
 
 		showOnScreenKeyboard(title: string, text: string, maxTextLength: number) {
@@ -602,6 +597,13 @@ export function setNextFrameStyleId(id: string) {
  */
 export function setNextItemStyleId(id: string) {
 	CoreFrame.getFrameChecked().setNextItemStyleId(id);
+}
+
+/**
+ * @category Misc
+ */
+export function isKeyboardOnScreen(): boolean {
+	return CoreFrame.Frame.isKeyboardOnScreen();
 }
 
 /**

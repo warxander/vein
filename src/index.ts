@@ -71,4 +71,5 @@ globalThis.exports('spriteButton', Exports.spriteButton);
 globalThis.exports('textArea', Exports.textArea);
 globalThis.exports('textEdit', Exports.textEdit);
 
+globalThis.exports('isKeyboardOnScreen', Exports.isKeyboardOnScreen);
 globalThis.exports('openUrl', Exports.openUrl);
