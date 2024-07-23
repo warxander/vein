@@ -15,6 +15,8 @@ export class Input {
 
 	private static readonly DISABLED_CONTROLS_IN_VEHICLE = [80, 106, 122, 135, 282, 283, 284, 285];
 
+	private static readonly controlDownPositions = new Map<InputControl, Vector2>();
+
 	private readonly mousePosition: Vector2;
 
 	constructor(private readonly _isDisabled: boolean) {
@@ -23,6 +25,8 @@ export class Input {
 		this.mousePosition = this._isDisabled
 			? new Vector2(-Infinity, -Infinity)
 			: new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));
+
+		this.updateControlDownPosition(InputControl.MouseLeftButton);
 
 		if (this._isDisabled) return;
 
@@ -50,5 +54,16 @@ export class Input {
 
 	isControlDown(control: InputControl): boolean {
 		return !this._isDisabled && IsControlPressed(2, control);
+	}
+
+	getControlDownPosition(control: InputControl): Vector2 | undefined {
+		if (this._isDisabled) return undefined;
+		return Input.controlDownPositions.get(control);
+	}
+
+	private updateControlDownPosition(control: InputControl) {
+		if (!this.isControlDown(control)) Input.controlDownPositions.delete(control);
+		else if (!Input.controlDownPositions.has(control))
+			Input.controlDownPositions.set(control, this.getMousePosition());
 	}
 }

@@ -29,6 +29,10 @@ export class TextData {
 export class Vector2 {
 	constructor(public x: number = 0, public y: number = 0) {}
 
+	squareDistance(v: Vector2): number {
+		return Math.pow(v.x - this.x, 2) + Math.pow(v.y - this.y, 2);
+	}
+
 	clone(): Vector2 {
 		return new Vector2(this.x, this.y);
 	}

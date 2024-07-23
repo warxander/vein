@@ -57,7 +57,7 @@ class KeyboardState {
 
 export class Frame {
 	private static readonly DEFAULT_ID = 'DEFAULT';
-	private static readonly ITEM_DRAG_TIME_THRESHOLD = 175;
+	private static readonly ITEM_DRAG_DISTANCE_SQUARED_THRESHOLD = Math.pow(0.0125, 2);
 	private static readonly KEYBOARD_TITLE_ENTRY = 'VEIN_EDIT_KEYBOARD_TITLE';
 
 	private static readonly memories = new Map<string, FrameMemory>();
@@ -68,7 +68,6 @@ export class Frame {
 	private static options = new FrameOptions();
 	private static itemOptions = new ItemOptions();
 	private static keyboardState: KeyboardState | undefined = undefined;
-	private static leftMouseButtonPressedTime: number | undefined = undefined;
 
 	private readonly scale = Frame.options.scale ?? 1;
 	private readonly spacing =
@@ -186,9 +185,6 @@ export class Frame {
 			if (Frame.options.size[0] !== undefined) this.memory.rect.size.x = Frame.options.size[0];
 			if (Frame.options.size[1] !== undefined) this.memory.rect.size.y = Frame.options.size[1];
 		}
-
-		if (!this.input.isControlDown(InputControl.MouseLeftButton)) Frame.leftMouseButtonPressedTime = undefined;
-		else if (Frame.leftMouseButtonPressedTime === undefined) Frame.leftMouseButtonPressedTime = GetGameTimer();
 
 		if (!Frame.options.disableMove) this.beginMove();
 
@@ -329,13 +325,16 @@ export class Frame {
 	}
 
 	beginItemDrag(id: string): boolean {
-		if (Frame.leftMouseButtonPressedTime === undefined) return false;
+		const controlDownPosition = this.input.getControlDownPosition(InputControl.MouseLeftButton);
+		if (controlDownPosition === undefined) return false;
+
+		const mousePosition = this.input.getMousePosition();
 
 		if (
 			this.memory.itemDragState === undefined &&
 			!this.isItemDisabled() &&
-			this.isItemHovered() &&
-			GetGameTimer() - Frame.leftMouseButtonPressedTime >= Frame.ITEM_DRAG_TIME_THRESHOLD
+			this.getLayout().getItemRect().contains(controlDownPosition) &&
+			controlDownPosition.squareDistance(mousePosition) >= Frame.ITEM_DRAG_DISTANCE_SQUARED_THRESHOLD * this.scale
 		)
 			this.memory.itemDragState = new ItemDragState(id);
 
@@ -345,7 +344,6 @@ export class Frame {
 			this.memory.itemDragState.id === id;
 
 		if (isItemDragging) {
-			const mousePosition = this.input.getMousePosition();
 			const scale = this.getScale();
 			const spacing = this.getSpacing();
 
