@@ -13,8 +13,9 @@ export function selectable(isSelected: boolean, text: string): boolean {
 
 	let selector = 'selectable';
 	const textData = Utils.createTextData(text, selector);
+	const textWidth = painter.getTextWidth(textData);
 
-	const w = Frame.getNextItemWidth() ?? painter.getTextWidth(textData) + style.selectable.padding * 2;
+	const w = Frame.getNextItemWidth() ?? textWidth + style.selectable.padding * 2;
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
@@ -29,7 +30,7 @@ export function selectable(isSelected: boolean, text: string): boolean {
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.move(
-		style.selectable.padding,
+		(w - textWidth) / 2,
 		(h - painter.getFontSize(textData.font, textData.scale)) / 2 + style.item.textOffset
 	);
 	painter.drawText(textData);

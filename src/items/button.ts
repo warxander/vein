@@ -13,8 +13,9 @@ export function button(text: string): boolean {
 
 	let selector = 'button';
 	const textData = Utils.createTextData(text, selector);
+	const textWidth = painter.getTextWidth(textData);
 
-	const w = Frame.getNextItemWidth() ?? painter.getTextWidth(textData) + style.button.padding * 2;
+	const w = Frame.getNextItemWidth() ?? textWidth + style.button.padding * 2;
 	const h = style.item.height;
 
 	frame.beginItem(w, h);
@@ -28,7 +29,7 @@ export function button(text: string): boolean {
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 	painter.move(
-		style.button.padding,
+		(w - textWidth) / 2,
 		(h - painter.getFontSize(textData.font, textData.scale)) / 2 + style.item.textOffset
 	);
 	painter.drawText(textData);

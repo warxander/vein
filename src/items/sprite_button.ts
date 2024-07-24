@@ -13,6 +13,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 
 	let selector = 'sprite-button';
 	const textData = text !== null ? Utils.createTextData(text, selector) : null;
+	const textWidth = textData !== null ? painter.getTextWidth(textData) : 0;
 
 	const spriteButtonStyle = style.spriteButton;
 	const sw = spriteButtonStyle.spriteWidth;
@@ -22,8 +23,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 	if (iw !== undefined) w = iw;
 	else {
 		w += sw + style.button.padding * 2;
-		const tw = textData !== null ? painter.getTextWidth(textData) : 0;
-		if (tw !== 0) w += tw + spriteButtonStyle.padding;
+		if (textWidth !== 0) w += textWidth + spriteButtonStyle.padding;
 	}
 
 	const h = style.item.height;
@@ -42,7 +42,7 @@ export function spriteButton(dict: string, name: string, text: string | null = n
 
 	painter.setColor(style.getPropertyAs<Color>(selector, 'color'));
 
-	painter.move(style.button.padding, so);
+	painter.move((w - (textWidth !== 0 ? textWidth + spriteButtonStyle.padding : 0) - sw) / 2, so);
 	painter.drawSprite(dict, name, sw, sh);
 
 	if (textData !== null) {
