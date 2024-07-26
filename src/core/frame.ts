@@ -82,7 +82,7 @@ export class Frame {
 	private readonly layoutStack: Layout[];
 	private readonly painter: Painter;
 
-	private itemIndex = 0;
+	private itemIndex = -1;
 	private itemState: ItemState | undefined = undefined;
 
 	private mouseCursor = MouseCursor.Normal;
