@@ -40,6 +40,10 @@ class ItemOptions {
 }
 
 class ItemState {
+	isHovered: boolean | undefined = undefined;
+	pressedControlStates = new Map<InputControl, boolean>();
+	clickedControlStates = new Map<InputControl, boolean>();
+
 	constructor(public readonly isDisabled: boolean, public readonly styleId: string | undefined) {}
 }
 
@@ -409,6 +413,8 @@ export class Frame {
 	}
 
 	isItemDropped(): boolean {
+		if (this.itemState === undefined) throw new Error('Frame.isItemDropped() failed: No item');
+
 		return this.memory.itemDragState !== undefined && this.memory.itemDragState.isDropped;
 	}
 
@@ -422,29 +428,51 @@ export class Frame {
 	}
 
 	isItemClicked(control = InputControl.MouseLeftButton): boolean {
-		return (
+		if (this.itemState === undefined) throw new Error('Frame.isItemClicked() failed: No item');
+
+		let isClicked = this.itemState.clickedControlStates.get(control);
+		if (isClicked !== undefined) return isClicked;
+
+		isClicked =
 			this.memory.itemDragState === undefined &&
 			!this.isItemDisabled() &&
 			this.input.isControlReleased(control) &&
-			this.isItemHovered()
-		);
+			this.isItemHovered();
+
+		this.itemState.clickedControlStates.set(control, isClicked);
+
+		return isClicked;
 	}
 
 	isItemHovered(): boolean {
-		return (
+		if (this.itemState === undefined) throw new Error('Frame.isItemHovered() failed: No item');
+
+		if (this.itemState.isHovered !== undefined) return this.itemState.isHovered;
+
+		const isHovered =
 			this.memory.itemDragState === undefined &&
 			!this.isItemDisabled() &&
-			this.isAreaHovered(this.getTopLayout().getItemRect())
-		);
+			this.isAreaHovered(this.getTopLayout().getItemRect());
+
+		this.itemState.isHovered = isHovered;
+		return isHovered;
 	}
 
 	isItemPressed(control = InputControl.MouseLeftButton): boolean {
-		return (
+		if (this.itemState === undefined) throw new Error('Frame.isItemPressed() failed: No item');
+
+		let isPressed = this.itemState.pressedControlStates.get(control);
+		if (isPressed !== undefined) return isPressed;
+
+		isPressed =
 			this.memory.itemDragState === undefined &&
 			!this.isItemDisabled() &&
 			this.input.isControlDown(control) &&
-			this.isItemHovered()
-		);
+			this.isItemHovered();
+
+		this.itemState.pressedControlStates.set(control, isPressed);
+
+		return isPressed;
 	}
 
 	setMouseCursor(mouseCursor: MouseCursor) {
