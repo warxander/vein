@@ -55,6 +55,12 @@ export interface Input {
 	 *
 	 * @param control 0 - MouseLeftButton, 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
 	 */
+	isMouseControlDown(control: number): boolean;
+
+	/**
+	 *
+	 * @param control 0 - MouseLeftButton, 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
+	 */
 	isMouseControlPressed(control: number): boolean;
 
 	/**
@@ -62,12 +68,6 @@ export interface Input {
 	 * @param control 0 - MouseLeftButton, 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
 	 */
 	isMouseControlReleased(control: number): boolean;
-
-	/**
-	 *
-	 * @param control 0 - MouseLeftButton, 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
-	 */
-	isMouseControlDown(control: number): boolean;
 }
 
 /**
@@ -183,16 +183,16 @@ export function getFrame(): Frame {
 					return toVector2(input.getMousePosition());
 				},
 
+				isMouseControlDown(control: number): boolean {
+					return input.isControlDown(toInputMouseControl(control));
+				},
+
 				isMouseControlPressed(control: number): boolean {
 					return input.isControlPressed(toInputMouseControl(control));
 				},
 
 				isMouseControlReleased(control: number): boolean {
 					return input.isControlReleased(toInputMouseControl(control));
-				},
-
-				isMouseControlDown(control: number): boolean {
-					return input.isControlDown(toInputMouseControl(control));
 				}
 			};
 		},

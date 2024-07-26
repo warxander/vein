@@ -17,7 +17,11 @@ export class Input {
 
 	private static readonly controlDownPositions = new Map<InputControl, Vector2>();
 
-	private readonly mousePosition: Vector2;
+	private mousePosition: Vector2 | undefined = undefined;
+
+	private readonly downControlStates = new Map<InputControl, boolean>();
+	private readonly pressedControlStates = new Map<InputControl, boolean>();
+	private readonly releasedControlStates = new Map<InputControl, boolean>();
 
 	constructor(private readonly _isDisabled: boolean) {
 		if (!this._isDisabled) SetMouseCursorActiveThisFrame();
@@ -41,19 +45,50 @@ export class Input {
 	}
 
 	getMousePosition(): Vector2 {
-		return this.mousePosition;
-	}
+		if (this.mousePosition !== undefined) return this.mousePosition;
 
-	isControlPressed(control: InputControl): boolean {
-		return !this._isDisabled && IsControlJustPressed(2, control);
-	}
+		const mousePosition = this._isDisabled
+			? new Vector2(-Infinity, -Infinity)
+			: new Vector2(GetControlNormal(2, 239), GetControlNormal(2, 240));
+		this.mousePosition = mousePosition;
 
-	isControlReleased(control: InputControl): boolean {
-		return !this._isDisabled && IsControlJustReleased(2, control);
+		return mousePosition;
 	}
 
 	isControlDown(control: InputControl): boolean {
-		return !this._isDisabled && IsControlPressed(2, control);
+		if (this._isDisabled) return false;
+
+		let down = this.downControlStates.get(control);
+		if (down !== undefined) return down;
+
+		down = IsControlPressed(2, control);
+		this.downControlStates.set(control, down);
+
+		return down;
+	}
+
+	isControlPressed(control: InputControl): boolean {
+		if (this._isDisabled) return false;
+
+		let pressed = this.pressedControlStates.get(control);
+		if (pressed !== undefined) return pressed;
+
+		pressed = IsControlJustPressed(2, control);
+		this.pressedControlStates.set(control, pressed);
+
+		return pressed;
+	}
+
+	isControlReleased(control: InputControl): boolean {
+		if (this._isDisabled) return false;
+
+		let released = this.releasedControlStates.get(control);
+		if (released !== undefined) return released;
+
+		released = IsControlJustReleased(2, control);
+		this.releasedControlStates.set(control, released);
+
+		return released;
 	}
 
 	getControlDownPosition(control: InputControl): Vector2 | undefined {
