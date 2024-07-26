@@ -1,6 +1,9 @@
 import { Color, TextData, Vector2 } from './types';
 
 export class Painter {
+	private static readonly FONT_SIZES_MAX_COUNT = 32;
+	private static readonly fontSizes = new Map<string, number>();
+
 	private readonly position: Vector2;
 
 	private color: Color = [0, 0, 0, 255];
@@ -47,7 +50,15 @@ export class Painter {
 	}
 
 	getFontSize(font: number, scale: number): number {
-		return GetRenderedCharacterHeight(scale, font);
+		const fontKey = this.getFontKey(font, scale);
+
+		let fontSize = Painter.fontSizes.get(fontKey);
+		if (fontSize !== undefined) return fontSize;
+
+		fontSize = GetRenderedCharacterHeight(scale, font);
+		if (Painter.fontSizes.size < Painter.FONT_SIZES_MAX_COUNT) Painter.fontSizes.set(fontKey, fontSize);
+
+		return fontSize;
 	}
 
 	getTextWidth(textData: TextData): number {
@@ -86,6 +97,10 @@ export class Painter {
 
 	private getTextEntry(): string {
 		return `${this.textEntryPrefix}_${this.textEntryIndex}`;
+	}
+
+	private getFontKey(font: number, scale: number): string {
+		return `${font}_${scale}`;
 	}
 
 	private setText(textData: TextData, useScaling: boolean) {
