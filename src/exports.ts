@@ -120,7 +120,11 @@ export interface Frame {
 	beginItem(w: number, h: number): void;
 	endItem(): void;
 
-	isItemDisabled(): boolean;
+	/**
+	 *
+	 * @param control 0 - MouseLeftButton (default), 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
+	 */
+	isItemActive(control: number): boolean;
 
 	/**
 	 *
@@ -128,13 +132,15 @@ export interface Frame {
 	 */
 	isItemClicked(control: number): boolean;
 
+	isItemDisabled(): boolean;
+
 	isItemHovered(): boolean;
 
 	/**
 	 *
 	 * @param control 0 - MouseLeftButton (default), 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
 	 */
-	isItemActive(control: number): boolean;
+	isItemPressed(control: number): boolean;
 
 	setMouseCursor(mouseCursor: number): void;
 
@@ -295,20 +301,24 @@ export function getFrame(): Frame {
 			frame.endItem();
 		},
 
-		isItemDisabled(): boolean {
-			return frame.isItemDisabled();
+		isItemActive(control = 0): boolean {
+			return frame.isItemActive(toInputMouseControl(control));
 		},
 
 		isItemClicked(control = 0): boolean {
 			return frame.isItemClicked(toInputMouseControl(control));
 		},
 
+		isItemDisabled(): boolean {
+			return frame.isItemDisabled();
+		},
+
 		isItemHovered(): boolean {
 			return frame.isItemHovered();
 		},
 
-		isItemActive(control = 0): boolean {
-			return frame.isItemActive(toInputMouseControl(control));
+		isItemPressed(control = 0): boolean {
+			return frame.isItemPressed(control);
 		},
 
 		setMouseCursor(mouseCursor: number) {
@@ -451,9 +461,10 @@ export function endVertical() {
 
 /**
  * @category Frame
+ * @param control 0 - MouseLeftButton (default), 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
  */
-export function isItemHovered(): boolean {
-	return CoreFrame.getFrameChecked().isItemHovered();
+export function isItemActive(control = 0): boolean {
+	return CoreFrame.getFrameChecked().isItemActive(toInputMouseControl(control));
 }
 
 /**
@@ -466,10 +477,17 @@ export function isItemClicked(control = 0): boolean {
 
 /**
  * @category Frame
+ */
+export function isItemHovered(): boolean {
+	return CoreFrame.getFrameChecked().isItemHovered();
+}
+
+/**
+ * @category Frame
  * @param control 0 - MouseLeftButton (default), 1 - MouseRightButton, 2 - MouseScrollWheelUp, 3 - MouseScrollWheelDown
  */
-export function isItemActive(control = 0): boolean {
-	return CoreFrame.getFrameChecked().isItemActive(toInputMouseControl(control));
+export function isItemPressed(control = 0): boolean {
+	return CoreFrame.getFrameChecked().isItemPressed(toInputMouseControl(control));
 }
 
 /**

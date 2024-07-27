@@ -24,9 +24,10 @@ globalThis.exports('endHorizontal', Exports.endHorizontal);
 globalThis.exports('beginVertical', Exports.beginVertical);
 globalThis.exports('endVertical', Exports.endVertical);
 
-globalThis.exports('isItemHovered', Exports.isItemHovered);
-globalThis.exports('isItemClicked', Exports.isItemClicked);
 globalThis.exports('isItemActive', Exports.isItemActive);
+globalThis.exports('isItemClicked', Exports.isItemClicked);
+globalThis.exports('isItemHovered', Exports.isItemHovered);
+globalThis.exports('isItemPressed', Exports.isItemPressed);
 
 globalThis.exports('setNextItemDisabled', Exports.setNextItemDisabled);
 globalThis.exports('setNextItemPosition', Exports.setNextItemPosition);

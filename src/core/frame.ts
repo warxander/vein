@@ -43,6 +43,7 @@ class ItemState {
 	isHovered: boolean | undefined = undefined;
 	activeControlStates = new Map<InputControl, boolean>();
 	clickedControlStates = new Map<InputControl, boolean>();
+	pressedControlStates = new Map<InputControl, boolean>();
 
 	constructor(public readonly isDisabled: boolean, public readonly styleId: string | undefined) {}
 }
@@ -427,6 +428,23 @@ export class Frame {
 		return this.itemState.isDisabled;
 	}
 
+	isItemActive(control = InputControl.MouseLeftButton): boolean {
+		if (this.itemState === undefined) throw new Error('Frame.isItemActive() failed: No item');
+
+		let isPressed = this.itemState.activeControlStates.get(control);
+		if (isPressed !== undefined) return isPressed;
+
+		isPressed =
+			this.memory.itemDragState === undefined &&
+			!this.isItemDisabled() &&
+			this.input.isControlDown(control) &&
+			this.isItemHovered();
+
+		this.itemState.activeControlStates.set(control, isPressed);
+
+		return isPressed;
+	}
+
 	isItemClicked(control = InputControl.MouseLeftButton): boolean {
 		if (this.itemState === undefined) throw new Error('Frame.isItemClicked() failed: No item');
 
@@ -458,19 +476,19 @@ export class Frame {
 		return isHovered;
 	}
 
-	isItemActive(control = InputControl.MouseLeftButton): boolean {
-		if (this.itemState === undefined) throw new Error('Frame.isItemActive() failed: No item');
+	isItemPressed(control = InputControl.MouseLeftButton): boolean {
+		if (this.itemState === undefined) throw new Error('Frame.isItemPressed() failed: No item');
 
-		let isPressed = this.itemState.activeControlStates.get(control);
+		let isPressed = this.itemState.pressedControlStates.get(control);
 		if (isPressed !== undefined) return isPressed;
 
 		isPressed =
 			this.memory.itemDragState === undefined &&
 			!this.isItemDisabled() &&
-			this.input.isControlDown(control) &&
+			this.input.isControlPressed(control) &&
 			this.isItemHovered();
 
-		this.itemState.activeControlStates.set(control, isPressed);
+		this.itemState.pressedControlStates.set(control, isPressed);
 
 		return isPressed;
 	}
