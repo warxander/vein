@@ -41,7 +41,7 @@ class ItemOptions {
 
 class ItemState {
 	isHovered: boolean | undefined = undefined;
-	pressedControlStates = new Map<InputControl, boolean>();
+	activeControlStates = new Map<InputControl, boolean>();
 	clickedControlStates = new Map<InputControl, boolean>();
 
 	constructor(public readonly isDisabled: boolean, public readonly styleId: string | undefined) {}
@@ -458,10 +458,10 @@ export class Frame {
 		return isHovered;
 	}
 
-	isItemPressed(control = InputControl.MouseLeftButton): boolean {
-		if (this.itemState === undefined) throw new Error('Frame.isItemPressed() failed: No item');
+	isItemActive(control = InputControl.MouseLeftButton): boolean {
+		if (this.itemState === undefined) throw new Error('Frame.isItemActive() failed: No item');
 
-		let isPressed = this.itemState.pressedControlStates.get(control);
+		let isPressed = this.itemState.activeControlStates.get(control);
 		if (isPressed !== undefined) return isPressed;
 
 		isPressed =
@@ -470,7 +470,7 @@ export class Frame {
 			this.input.isControlDown(control) &&
 			this.isItemHovered();
 
-		this.itemState.pressedControlStates.set(control, isPressed);
+		this.itemState.activeControlStates.set(control, isPressed);
 
 		return isPressed;
 	}

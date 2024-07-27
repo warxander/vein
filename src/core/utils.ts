@@ -30,7 +30,7 @@ export function drawItemBackground(frame: Frame, selector: string, w: number, h:
 export function getStyleSelectorState(frame: Frame): string | undefined {
 	return frame.isItemDisabled()
 		? 'disabled'
-		: frame.isItemPressed()
+		: frame.isItemActive()
 		? 'active'
 		: frame.isItemHovered()
 		? 'hover'

@@ -26,7 +26,7 @@ globalThis.exports('endVertical', Exports.endVertical);
 
 globalThis.exports('isItemHovered', Exports.isItemHovered);
 globalThis.exports('isItemClicked', Exports.isItemClicked);
-globalThis.exports('isItemPressed', Exports.isItemPressed);
+globalThis.exports('isItemActive', Exports.isItemActive);
 
 globalThis.exports('setNextItemDisabled', Exports.setNextItemDisabled);
 globalThis.exports('setNextItemPosition', Exports.setNextItemPosition);
