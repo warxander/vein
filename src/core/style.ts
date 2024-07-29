@@ -1,5 +1,5 @@
 import { Color, Image, Vector2 } from './types';
-import { parse, CssRuleAST, CssTypes, CssDeclarationAST } from '@adobe/css-tools';
+import { parse, CssRuleAST, CssTypes, CssDeclarationAST, CssAtRuleAST } from '@adobe/css-tools';
 
 type StylePropertyValuesMap = Map<string, StylePropertyValue>;
 
@@ -13,13 +13,13 @@ export enum StylePropertyType {
 }
 
 const stylePropertyParseFuncs = new Map<StylePropertyType, Function>([
-	[StylePropertyType.Color, parseValueAsColor],
+	[StylePropertyType.Color, parseColorValue],
 	[StylePropertyType.Float, parseFloat],
-	[StylePropertyType.Image, parseValueAsImage],
+	[StylePropertyType.Image, parseImageValue],
 	[StylePropertyType.Integer, parseInt]
 ]);
 
-function parseValueAsColor(value: string): Color {
+function parseColorValue(value: string): Color {
 	if (value.match(/^#([0-9a-f]{6})$/i))
 		return [
 			parseInt(value.substring(1, 3), 16),
@@ -32,14 +32,14 @@ function parseValueAsColor(value: string): Color {
 	if (match)
 		return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), Math.round(parseFloat(match[4]) * 255)];
 
-	throw new Error(`parseValueAsColor() failed: Wrong value ${value}`);
+	throw new Error(`parseColorValue() failed: Wrong value ${value}`);
 }
 
-function parseValueAsImage(value: string): Image {
+function parseImageValue(value: string): Image {
 	const match = value.match(/^url\('(\S+)',\s*'(\S+)'\)$/);
 	if (match) return [match[1], match[2]];
 
-	throw new Error(`parseValueAsImage() failed: Wrong value ${value}`);
+	throw new Error(`parseImageValue() failed: Wrong value ${value}`);
 }
 
 function parseValue(value: string, propertyType: StylePropertyType): StylePropertyValue {
@@ -49,7 +49,7 @@ function parseValue(value: string, propertyType: StylePropertyType): StyleProper
 }
 
 export class Style {
-	private static readonly defaultSheet = LoadResourceFile('vein', 'src/style.css');
+	private static readonly defaultRules = parse(LoadResourceFile('vein', 'src/style.css')).stylesheet.rules;
 
 	private static readonly propertyTypes = new Map<string, StylePropertyType>([
 		['accent-color', StylePropertyType.Color],
@@ -79,7 +79,7 @@ export class Style {
 	readonly frame;
 
 	constructor() {
-		this.reset();
+		this.setRules(Style.defaultRules);
 
 		this.button = {
 			padding: 0.0045
@@ -189,26 +189,29 @@ export class Style {
 	}
 
 	registerProperty(property: string, type: StylePropertyType) {
-		if (!Style.propertyTypes.has(property)) Style.propertyTypes.set(property, type);
+		if (Style.propertyTypes.has(property))
+			throw new Error(`Style.registerProperty() failed: ${property} is already registered`);
+
+		Style.propertyTypes.set(property, type);
 	}
 
-	addSheet(sheet: string) {
+	setStyleSheet(css: string) {
 		try {
-			this.addSheetImpl(sheet);
+			this.setRules(parse(css).stylesheet.rules);
 		} catch (e: unknown) {
-			console.log(`Failed to add style sheet: ${e}`);
+			console.log(`Failed to set style sheet:\n${e}`);
 		}
 	}
 
-	reset() {
+	resetStyleSheet() {
 		this.selectorProperties.clear();
-		this.addSheet(Style.defaultSheet);
+		this.idToSelectorsMap.clear();
+
+		this.setRules(Style.defaultRules);
 	}
 
-	private addSheetImpl(sheet: string) {
-		const styleSheetAst = parse(sheet);
-
-		for (const rule of styleSheetAst.stylesheet.rules) {
+	private setRules(rules: Array<CssAtRuleAST>) {
+		for (const rule of rules) {
 			if (rule.type != CssTypes.rule) continue;
 
 			const properties = new Map<string, StylePropertyValue>();

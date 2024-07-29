@@ -45,13 +45,13 @@ globalThis.exports('beginItemDrop', Exports.beginItemDrop);
 globalThis.exports('endItemDrop', Exports.endItemDrop);
 globalThis.exports('isItemDropped', Exports.isItemDropped);
 
-globalThis.exports('addStyleSheet', Exports.addStyleSheet);
-globalThis.exports('resetStyle', Exports.resetStyle);
+globalThis.exports('setStyleSheet', Exports.setStyleSheet);
+globalThis.exports('resetStyleSheet', Exports.resetStyleSheet);
 
-globalThis.exports('registerStylePropertyAsColor', Exports.registerStylePropertyAsColor);
-globalThis.exports('registerStylePropertyAsFloat', Exports.registerStylePropertyAsFloat);
-globalThis.exports('registerStylePropertyAsImage', Exports.registerStylePropertyAsImage);
-globalThis.exports('registerStylePropertyAsInteger', Exports.registerStylePropertyAsInteger);
+globalThis.exports('registerStyleColorProperty', Exports.registerStyleColorProperty);
+globalThis.exports('registerStyleFloatProperty', Exports.registerStyleFloatProperty);
+globalThis.exports('registerStyleImageProperty', Exports.registerStyleImageProperty);
+globalThis.exports('registerStyleIntegerProperty', Exports.registerStyleIntegerProperty);
 
 globalThis.exports('setNextItemStyleId', Exports.setNextItemStyleId);
 

@@ -577,42 +577,42 @@ export function isItemDropped(): boolean {
 /**
  * @category Style
  */
-export function addStyleSheet(sheet: string) {
-	CoreFrame.Frame.getStyle().addSheet(sheet);
+export function setStyleSheet(css: string) {
+	CoreFrame.Frame.getStyle().setStyleSheet(css);
 }
 
 /**
  * @category Style
  */
-export function resetStyle() {
-	CoreFrame.Frame.getStyle().reset();
+export function resetStyleSheet() {
+	CoreFrame.Frame.getStyle().resetStyleSheet();
 }
 
 /**
  * @category Style
  */
-export function registerStylePropertyAsColor(property: string) {
+export function registerStyleColorProperty(property: string) {
 	CoreFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Color);
 }
 
 /**
  * @category Style
  */
-export function registerStylePropertyAsFloat(property: string) {
+export function registerStyleFloatProperty(property: string) {
 	CoreFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Float);
 }
 
 /**
  * @category Style
  */
-export function registerStylePropertyAsImage(property: string) {
+export function registerStyleImageProperty(property: string) {
 	CoreFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Image);
 }
 
 /**
  * @category Style
  */
-export function registerStylePropertyAsInteger(property: string) {
+export function registerStyleIntegerProperty(property: string) {
 	CoreFrame.Frame.getStyle().registerProperty(property, StylePropertyType.Integer);
 }
 
