@@ -78,8 +78,8 @@ export class Painter {
 	}
 
 	drawText(textData: TextData) {
-		this.setText(textData, true);
 		if (textData.text.length === 0) return;
+		this.setText(textData, true);
 
 		SetTextColour(...this.color);
 		BeginTextCommandDisplayText(this.getTextEntry());
@@ -87,8 +87,8 @@ export class Painter {
 	}
 
 	drawMultilineText(textData: TextData) {
-		this.setWrappedText(textData, true);
 		if (textData.text.length === 0) return;
+		this.setWrappedText(textData, true);
 
 		SetTextColour(...this.color);
 		BeginTextCommandDisplayText(this.getTextEntry());
