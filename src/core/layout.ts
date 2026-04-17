@@ -58,6 +58,9 @@ export class Layout {
 	}
 
 	endHorizontal() {
+		if (this.stateStack.length <= 1)
+			throw new Error('Layout.endHorizontal() failed: No matching beginHorizontal()');
+
 		if (this.getTopLayout().orientation !== LayoutOrientation.Horizontal)
 			throw new Error('Layout.endHorizontal() failed: Vertical layout is active');
 
@@ -71,6 +74,9 @@ export class Layout {
 	}
 
 	endVertical() {
+		if (this.stateStack.length <= 1)
+			throw new Error('Layout.endVertical() failed: No matching beginVertical()');
+
 		if (this.getTopLayout().orientation !== LayoutOrientation.Vertical)
 			throw new Error('Layout.endVertical() failed: Horizontal layout is active');
 
@@ -93,16 +99,16 @@ export class Layout {
 			case LayoutOrientation.Horizontal:
 				return new Vector2(
 					layoutRect.position.x +
-						layoutRect.size.x +
-						(layout.isFirstUse ? 0 : this.itemCustomSpacing ?? this.itemSpacing.x),
+					layoutRect.size.x +
+					(layout.isFirstUse ? 0 : this.itemCustomSpacing ?? this.itemSpacing.x),
 					layoutRect.position.y
 				);
 			case LayoutOrientation.Vertical:
 				return new Vector2(
 					layoutRect.position.x,
 					layoutRect.position.y +
-						layoutRect.size.y +
-						(layout.isFirstUse ? 0 : this.itemCustomSpacing ?? this.itemSpacing.y)
+					layoutRect.size.y +
+					(layout.isFirstUse ? 0 : this.itemCustomSpacing ?? this.itemSpacing.y)
 				);
 		}
 	}
